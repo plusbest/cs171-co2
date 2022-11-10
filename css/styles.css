@@ -20,3 +20,27 @@
 	border-width: 1px;
 	background: #F4F7F3
 }
+
+
+
+/*SANKEY VIS STYLES*/
+
+.node rect {
+  fill-opacity: .9;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .2;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+}

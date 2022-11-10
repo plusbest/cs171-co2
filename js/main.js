@@ -16,7 +16,8 @@ let selectedState = '';
 // load data using promises
 let promises = [
     d3.csv("data/owid-co2-data.csv"),
-    d3.csv("data/owid-energy-data.csv")
+    d3.csv("data/owid-energy-data.csv"),
+    d3.csv("data/sankey.csv")   // sankey test data
 ];
 
 Promise.all(promises)
@@ -37,8 +38,9 @@ function initMainPage(dataArray) {
 
     // init map
     mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
-    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[1], dataArray[2]);
-    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[0], dataArray[1], dataArray[2]);
+    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[1]);
+    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[0], dataArray[1]);
+
 }
 
 // NOTE: for opening CORS disabled Chrome browser window

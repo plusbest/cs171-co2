@@ -1,0 +1,13 @@
+source,target,value
+Production,Export,5
+Production,Consume,9
+Production,Energy,3
+Energy,Coal,1
+Energy,Gas,1
+Energy,Solar,1
+Export,CO2,3
+Export,Gas,2
+Consume,Coal,3
+Consume,CO2,3
+Consume,Gas,2
+Consume,Solar,1
