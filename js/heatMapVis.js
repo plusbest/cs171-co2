@@ -16,7 +16,7 @@ class HeatMapVis {
         this.duration = 1500; // transition duration
         this.delay = 500;
         this.selectedCategory = "percapita";
-        this.sortNum = 50;
+        this.sortNum = 75;
         // call initVis method
         this.initVis()
     }
@@ -37,8 +37,11 @@ class HeatMapVis {
 
         vis.svg = d3.select("#" + vis.parentElement)
             .append("svg")
-            .attr("width", vis.width + vis.margin.left + vis.margin.right)
-            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+
+            //.attr("width", vis.width + vis.margin.left + vis.margin.right)
+            //.attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            .attr("width", vis.width)
+            .attr("height", vis.height)
             .append("g")
             .attr("transform",
                 "translate(" + vis.margin.left + "," + vis.margin.top + ")");
@@ -46,8 +49,8 @@ class HeatMapVis {
 
         // tooltip
         vis.tooltip = d3.select("body").append('div')
-            .attr('class', "tooltip")
-            .attr('id', 'barTooltip');
+            .attr('class', "heatmap_tooltip")
+            .attr('id', 'heatmapTooltip');
 
         vis.color = d3.scaleSequential()
             .interpolator(d3.interpolateOranges);
@@ -185,7 +188,7 @@ class HeatMapVis {
 
             vis.maxVal
         ]);
-        
+
         // Reference: https://d3-graph-gallery.com/graph/treemap_basic.html
         // stratify the data: reformatting for d3.js
         vis.root = d3.stratify()
@@ -197,7 +200,7 @@ class HeatMapVis {
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
-            .size([vis.width, vis.height])
+            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.top + vis.margin.bottom)])
             .padding(4)
             (vis.root)
 

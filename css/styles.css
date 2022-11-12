@@ -45,6 +45,21 @@
   stroke-opacity: .5;
 }
 
+
+/*HEATMAP VIS STYLES*/
+.heatmap_tooltip {
+	position: absolute;
+	text-align: center;
+	font: 12px sans-serif;
+	/*  pointer-events: none;	This line needs to be removed */
+}
+.heatmap_tooltip h3,h4 {
+	text-align: left;
+}
+.heatmap_tooltip h4 {
+	font: 14px sans-serif;
+}
+
 .heatmap_rect_names {
 	font-size: xx-small;
 	stroke-width: 0.5px;
