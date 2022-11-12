@@ -185,7 +185,8 @@ class HeatMapVis {
 
             vis.maxVal
         ]);
-
+        
+        // Reference: https://d3-graph-gallery.com/graph/treemap_basic.html
         // stratify the data: reformatting for d3.js
         vis.root = d3.stratify()
             .id(function(d) { return d.name; })   // Name of the entity (column name is name in csv)
