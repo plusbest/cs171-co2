@@ -69,9 +69,16 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col">
-                            <div class="row" style="height: 50vh;">
+                            <div class="row" style="height: 100vh;">
+
                                 <div class="content-section" id="heatMapDiv">
                                 <div class="section-title">heat map</div>
+                                    <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
+                                        <option value="percapita" selected>Per Capita</option>
+                                        <option value="bycountry">By Country</option>
+
+
+                                    </select>
                                 </div>
                             </div>
                         </div>

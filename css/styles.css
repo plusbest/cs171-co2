@@ -44,3 +44,11 @@
 .link:hover {
   stroke-opacity: .5;
 }
+
+.heatmap_rect_names {
+	font-size: xx-small;
+	stroke-width: 0.5px;
+	stroke: mediumblue;
+
+
+}
