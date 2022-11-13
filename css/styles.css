@@ -112,8 +112,3 @@ html {
     opacity: 0;
     stroke-width: 10;
 }
-
-.line-label-hover {
-    fill: none;
-    opacity: 0;
-}
