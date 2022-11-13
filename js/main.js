@@ -10,7 +10,8 @@ let myDataTable,
     myBrushVis,
     myHeatMapVis,
     mySankeyVis,
-    myBumpChart;
+    myBumpChart,
+    myMainPointVis;
 
 let selectedTimeRange = [];
 let selectedState = '';
@@ -65,6 +66,8 @@ function initMainPage(dataArray) {
     // init map
     mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
+    myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
+
 
     myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[0], dataArray[1]);
 
