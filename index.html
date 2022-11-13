@@ -1,13 +1,11 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>CS171 CO2 FINAL PROJECT</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css">
-
 </head>
 <body>
 
@@ -25,8 +23,7 @@
                     Change
                 </h1>
                 <a href="#hook-row">
-                    <object id="scroll-prompt" alt="Click here to scroll down"
-                            data="/static/angles-down-solid.svg" type="image/svg+xml">
+                    <object id="scroll-prompt" data="/static/angles-down-solid.svg" type="image/svg+xml">
                         <span class="text-light">Click to Scroll</span>
                     </object>
                 </a>
@@ -107,6 +104,7 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
             </div>
         </div>
     </div>
@@ -125,10 +123,15 @@
     <div class="row w-100" id="heatmap-row">
         <!-- HEAT MAP SECTION -->
         <div class="col-12 p-5">
-            <div class="row"  style="height: 50vh;">
+            <div class="row" style="height: 100vh;">
                 <div class="col-10 offset-1">
                     <div class="section-title">heat map</div>
                     <div class="content-section" id="heatMapDiv">
+                        <!-- Todo: Add label-->
+                        <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
+                            <option value="percapita" selected>Per Capita</option>
+                            <option value="bycountry">By Country</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -191,6 +194,8 @@
 <!-- OWN JS -->
 <script src="js/sankeyVis.js"></script>
 <script src="js/heatMapVis.js"></script>
+<script src="js/mainPointVis.js"></script>
+
 <script src="js/bumpChartVis.js"></script>
 <script src="js/main.js"></script>
 </body>

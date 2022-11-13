@@ -5,7 +5,7 @@ html {
     scroll-behavior: smooth;
 }
 
-/* TODO: May need to make some of these selectors more specific, so styles don't interfere across graphs */
+/* TODO: May need to make some of these selectors more specific/unify name conventions, so styles don't interfere across graphs */
 
 /*.section-title {*/
 /*	font-family: 'Roboto', sans-serif;*/
@@ -108,6 +108,7 @@ html {
   stroke-opacity: .5;
 }
 
+
 /*BUMP CHART VIS STYLES*/
 
 .hover-line {
@@ -115,4 +116,30 @@ html {
     stroke: #d2d2d2;
     opacity: 0;
     stroke-width: 10;
+}
+
+
+/*HEATMAP VIS STYLES*/
+.heatmap_tooltip {
+	position: absolute;
+	text-align: center;
+	font: 12px sans-serif;
+	/*  pointer-events: none;	This line needs to be removed */
+}
+.heatmap_tooltip h3,h4 {
+	text-align: left;
+}
+.heatmap_tooltip h4 {
+	font: 14px sans-serif;
+}
+
+.heatmap_rect_names {
+	font-size: xx-small;
+	stroke-width: 0.5px;
+	stroke: mediumblue;
+}
+
+#categorySelector {
+	margin-top: 5px;
+	margin-left: 20px;
 }
