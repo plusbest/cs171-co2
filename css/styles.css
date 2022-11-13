@@ -106,3 +106,14 @@ html {
 }
 
 /*BUMP CHART VIS STYLES*/
+.hover-line {
+    fill: none;
+    stroke: #d2d2d2;
+    opacity: 0;
+    stroke-width: 10;
+}
+
+.line-label-hover {
+    fill: none;
+    opacity: 0;
+}

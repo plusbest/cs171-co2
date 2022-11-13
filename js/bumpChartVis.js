@@ -4,11 +4,12 @@
 
 
 class BumpChartVis {
+    // TODO: Add bumps (?) and hover tooltips
 
     constructor(parentElement, co2Data, energyData) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
-        this.energyData = energyData;
+        this.energyData = energyData; // Probably unnecessary; TODO: Delete
         this.displayData = [];
     	this.parseDate = d3.timeParse("%Y");
         this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
@@ -36,14 +37,14 @@ class BumpChartVis {
             .append("g")
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
-        // Scales and axes
+        // Set up scales and axes
         vis.x = d3.scaleTime()
             .range([0, vis.width]);
 
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
 
-        vis.z = d3.scaleOrdinal(d3.schemeCategory10);
+        vis.z = d3.scaleOrdinal(d3.schemeCategory10); // color scale; TODO: might update to use this.colors
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y);
@@ -52,6 +53,7 @@ class BumpChartVis {
             .scale(vis.x)
             .tickFormat(d3.timeFormat("%Y"));
 
+        // Draw the axes & labels
         vis.svg.append("g")
             .attr("class", "y-axis axis")
             .append("text")
@@ -88,6 +90,7 @@ class BumpChartVis {
 
         vis.displayData = filteredData;
 
+        // Reorganize data to more easily display multiple lines
         vis.fields = vis.columnsToShow.map(function(field) {
 
             return {
@@ -98,8 +101,8 @@ class BumpChartVis {
             };
         });
 
-        console.log("displayData", vis.displayData);
-        console.log("fields", vis.fields);
+        // console.log("displayData", vis.displayData);
+        // console.log("fields", vis.fields);
 
         vis.updateVis();
 	}
@@ -124,31 +127,74 @@ class BumpChartVis {
 
         vis.z.domain(vis.fields.map(function(field) { return field.field; }));
 
-        const co2Lines = vis.svg.selectAll(".co2")
-            .data(vis.fields)
-            .enter().append("g")
-            .attr("class", "co2");
-
-        var line = d3.line()
+        // Draw the lines
+        const lineGenerator = d3.line()
             .curve(d3.curveBasis)
             .x(function(d) { return vis.x(d.year); })
             .y(function(d) { return vis.y(d.co2); });
 
-        co2Lines.append("path")
+        vis.co2Lines = vis.svg.selectAll(".co2")
+            .data(vis.fields)
+            .enter().append("g")
+            .attr("class", function(d) { return d.field; });
+
+        vis.co2Lines.append("path")
             .attr("class", "line")
-            .attr("d", function(d) { return line(d.values); })
+            .attr("d", function(d) { return lineGenerator(d.values); })
             .style("fill", "none")
             .style("stroke", function(d) { return vis.z(d.field); });
 
-        co2Lines.append("text")
+        // Add some labels
+        vis.co2Lines.append("text")
+            .attr("class", "line-label")
             .datum(function(d) { return {field: d.field, value: d.values[d.values.length - 1]}; })
             .attr("transform", function(d) { return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")"; })
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
-            .style("fill", function(d) { return vis.z(d.field); })
+            .style("fill", "#cccccc")
             .text(function(d) { return d.field; });
 
+        // Create some thicker lines on hover
+        vis.hoverLines = vis.co2Lines.append("path")
+            .attr("class", "hover-line")
+            .attr("d", function(d) { return lineGenerator(d.values); });
+
+        vis.svg.selectAll(".hover-line")
+            .on('mouseover', function() {
+                // Emphasize the selected line
+                const selection = d3.select(this).raise();
+                selection
+                    .transition()
+                    .delay("100")
+                    .duration("10")
+                    .style("stroke", function(d) { return vis.z(d.field); })
+                    .style("opacity","1")
+                    .style("stroke-width","3");
+
+                // Highlight the corresponding text label
+                const parentGroup = d3.select(this.parentNode);
+                parentGroup.selectAll("text.line-label")
+                    .style("fill", function(d) { return vis.z(d.field); });
+
+                // TODO: need to also maybe re-draw this element, so that it's always on top
+            })
+            .on('mouseout', function() {
+                // De-emphasize the selected line
+                const selection = d3.select(this)
+                selection
+                    .transition()
+                    .delay("100")
+                    .duration("10")
+                    .style("stroke", function(d) { return vis.z(d.field); })
+                    .style("opacity","0")
+                    .style("stroke-width","10");
+
+                // Un-highlight the label
+                const parentGroup = d3.select(this.parentNode);
+                parentGroup.selectAll("text.line-label")
+                    .style("fill", "#cccccc");
+            });
 
         // Update axes
         vis.svg.select(".y-axis.axis").call(vis.yAxis);
