@@ -184,7 +184,5 @@ class MainPointVis {
             .text("Per country CO2 Consumption: Rank 2 (33% share of global emissions)")
             .attr("x", 30)
             .attr("y",50);
-
-        
     }
 }
