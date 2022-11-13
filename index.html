@@ -1,132 +1,174 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>CS171 CO2 FINAL PROJECT</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css">
-
 </head>
 <body>
 
 <!-- WRAPPER -->
-<div class="container-fluid" style="height: 100vh; padding-top: 1vh">
-    <div class="row">
-        <div class="col-10 offset-1">
-
-            <!-- HEADING -->
-            <div class="row d-flex justify-content-center" style="height: 5vh; padding: 0; background: #729B79;">
-                <div class="align-self-center">
-                </div>
+<div class="container-fluid p-0">
+    <div class="row vh-100 w-100 m-0" id="bg-image">
+    </div>
+    <div class="row vh-100 w-100 m-0" id="intro-row">
+        <!-- INTRODUCTION SECTION -->
+        <div class="col-12 section">
+            <div class="content-section" id="firstSection">
+                <h1 class="mb-5">
+                    Impacts of<br/>
+                    Climate<br/>
+                    Change
+                </h1>
+                <a href="#hook-row">
+                    <object id="scroll-prompt" data="/static/angles-down-solid.svg" type="image/svg+xml">
+                        <span class="text-light">Click to Scroll</span>
+                    </object>
+                </a>
             </div>
-
-            <!-- CONTENT -->
-            <div class="row" style="height: 100vh; background: white; padding: 0;">
-
-
-                <!-- INTRODUCTION SECTION -->
-                <div class="col-12 section">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 40vh;">
-                                <div class="content-section" id="firstSection">
-                                <div class="section-title">introduction</div>
+        </div>
+    </div>
+    <div class="row m-0 min-vh-100 m-0" id="hook-row">
+        <!-- HOOK SECTION -->
+        <div class="col-12">
+            <div class="row">
+                <div class="col-10 offset-1">
+                    <div class="content-section py-5 gap-2" id="hookSection">
+                        <h2 class="text-light">Climate Change Will Result in Global Consequences </h2>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img class="img-fluid border border-2 rounded" src="/static/phillip-flores-flood.jpg"
+                                     alt="road closed due to flood" />
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Sea Level Rise</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">A side effect of melting glaciers</h6>
+                                        <p class="card-text">
+                                            Some quick example text to build on the card title and make up the bulk of
+                                            the card's content.
+                                        </p>
+                                        <a href="#" class="card-link">Card link</a>
+                                        <a href="#" class="card-link">Another link</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-5">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Higher, Dryer Temperatures</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">
+                                            Natural disasters like wildfires, droughts more common
+                                        </h6>
+                                        <p class="card-text">
+                                            Some quick example text to build on the card title and make up the bulk of
+                                            the card's content.
+                                        </p>
+                                        <a href="#" class="card-link">Card link</a>
+                                        <a href="#" class="card-link">Another link</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <img class="img-fluid border border-2 rounded" src="/static/matt-palmer-wildfires.jpg"
+                                     alt="wildfire rages at sunset in coniferous forest" />
+                            </div>
+                        </div>
+                        <div class="row my-5">
+                            <div class="col-md-6">
+                                <img class="img-fluid border border-2 rounded" src="/static/matt-palmer-deforestation.jpg"
+                                     alt="heavily deforested region" />
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Business As Usual... Isn't Sustainable</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">
+                                            Resource extraction means more CO2 emissions and fewer carbon sinks
+                                        </h6>
+                                        <p class="card-text">
+                                            Some quick example text to build on the card title and make up the bulk of
+                                            the card's content.
+                                        </p>
+                                        <a href="#" class="card-link">Card link</a>
+                                        <a href="#" class="card-link">Another link</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- HOOK SECTION -->
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 60vh;">
-                                <div class="content-section" id="firstSection">
-                                <div class="section-title">hook</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SANKEY SECTION -->
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 50vh;">
-                                <div class="content-section" id="sankeyDiv">
-                                <div class="section-title">sankey</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- HEAT MAP SECTION -->
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 100vh;">
-
-                                <div class="content-section" id="heatMapDiv">
-                                <div class="section-title">heat map</div>
-                                    <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
-                                        <option value="percapita" selected>Per Capita</option>
-                                        <option value="bycountry">By Country</option>
-
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MAIN POINT SECTION -->
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 20vh;">
-                                <div class="content-section" id="mainPointDiv">
-                                <div class="section-title">main point</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BUMP CHART SECTION -->
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 50vh;">
-                                <div class="content-section" id="bumpChartDiv">
-                                <div class="section-title">bump graph</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SOLUTION/RESOLUTION SECTION -->
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row" style="height: 40vh;">
-                                <div class="content-section" id="solutionDiv">
-                                <div class="section-title">solution resolution</div>
-                                </div>
-                            </div>
-                        </div>
+<<<<<<< HEAD
+            </div>
+        </div>
+    </div>
+    <div class="row w-100" id="sankey-row">
+        <!-- SANKEY SECTION -->
+        <div class="col-12 p-5">
+            <div class="row" style="height: 50vh;">
+                <div class="col-10 offset-1">
+                    <div class="section-title">sankey</div>
+                    <div class="content-section" id="sankeyDiv">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="row w-100" id="heatmap-row">
+        <!-- HEAT MAP SECTION -->
+        <div class="col-12 p-5">
+            <div class="row" style="height: 100vh;">
+                <div class="col-10 offset-1">
+                    <div class="section-title">heat map</div>
+                    <div class="content-section" id="heatMapDiv">
+                        <!-- Todo: Add label-->
+                        <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
+                            <option value="percapita" selected>Per Capita</option>
+                            <option value="bycountry">By Country</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100" id="mainpoint-row">
+        <!-- MAIN POINT SECTION -->
+        <div class="col-12 p-5">
+            <div class="row" style="height: 20vh;">
+                <div class="col-10 offset-1">
+                    <div class="section-title">main point</div>
+                    <div class="content-section" id="mainPointDiv">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100" id="bumpchart-row">
+        <!-- BUMP CHART SECTION -->
+        <div class="col-12 p-5">
+            <div class="row" style="height: 50vh;">
+                <div class="col-10 offset-1">
+                    <h2 class="section-title">Trends in U.S. CO2 Emissions Over Time (1800 - 2020)</h2>
+                    <div class="content-section" id="bumpChartDiv">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100" style="height: 40vh;">
+        <!-- SOLUTION/RESOLUTION SECTION -->
+        <div class="col-12 p-5">
+            <div class="section-title">solution resolution</div>
+            <div class="content-section" id="solutionDiv">
+            </div>
+        </div>
+    </div>
 </div>
 
 

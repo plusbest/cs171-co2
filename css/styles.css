@@ -1,26 +1,89 @@
 /*Google Font Import*/
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap');
 
-
-.section-title {
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
-	margin-left: 20px;
-	margin-top: 20px;
-	color: #726D74;
-	font-style: italic;
+html {
+    scroll-behavior: smooth;
 }
+
+/* TODO: May need to make some of these selectors more specific/unify name conventions, so styles don't interfere across graphs */
+
+/*.section-title {*/
+/*	font-family: 'Roboto', sans-serif;*/
+/*	font-size: 16px;*/
+/*	margin-left: 20px;*/
+/*	margin-top: 20px;*/
+/*	color: #726D74;*/
+/*	font-style: italic;*/
+/*}*/
 
 .content-section {
 	font-family: 'Roboto', sans-serif;
 	height: 100%;
-	width:100%; 
-	border-style: solid;
-	border-color: #BACDB0;
-	border-width: 1px;
-	background: #F4F7F3
+	width:100%;
 }
 
+#firstSection.content-section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#bg-image {
+    background: url("/static/sophia-simoes-glacier.jpg");
+    background-position: center;
+    background-size: cover;
+    filter: blur(3px);
+    -webkit-filter: blur(3px);
+}
+
+#intro-row {
+    position: absolute;
+    top: 0;
+    background-color: rgba(0,10,25,0.65);
+    color: white;
+}
+
+#intro-row h1 {
+    font-size: 9rem;
+    font-weight: 600;
+    line-height: 9rem;
+}
+
+#scroll-prompt {
+    pointer-events: none; /* Allow object to be clickable */
+    width: 5.5rem;
+
+    /* Animate up and down a bit */
+    -webkit-animation: mover 1.5s infinite  alternate;
+    animation: mover 1.5s infinite  alternate;
+
+}
+
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+
+#scroll-prompt svg {
+    fill: #ffffff;
+}
+
+#hook-row {
+    min-height: 60vh;
+    background-color: steelblue;
+}
+
+#heatmap-row,
+#bumpchart-row {
+    background-color: rgba(0,0,0,0.05);
+    margin: 0;
+}
 
 
 /*SANKEY VIS STYLES*/
@@ -46,6 +109,16 @@
 }
 
 
+/*BUMP CHART VIS STYLES*/
+
+.hover-line {
+    fill: none;
+    stroke: #d2d2d2;
+    opacity: 0;
+    stroke-width: 10;
+}
+
+
 /*HEATMAP VIS STYLES*/
 .heatmap_tooltip {
 	position: absolute;
@@ -64,8 +137,6 @@
 	font-size: xx-small;
 	stroke-width: 0.5px;
 	stroke: mediumblue;
-
-
 }
 
 #categorySelector {
