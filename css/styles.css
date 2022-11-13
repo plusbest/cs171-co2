@@ -4,6 +4,9 @@
 html {
     scroll-behavior: smooth;
 }
+
+/* TODO: May need to make some of these selectors more specific, so styles don't interfere across graphs */
+
 /*.section-title {*/
 /*	font-family: 'Roboto', sans-serif;*/
 /*	font-size: 16px;*/
@@ -106,6 +109,7 @@ html {
 }
 
 /*BUMP CHART VIS STYLES*/
+
 .hover-line {
     fill: none;
     stroke: #d2d2d2;
