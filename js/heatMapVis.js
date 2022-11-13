@@ -13,8 +13,8 @@ class HeatMapVis {
         this.displayData = [];
         this.sortedData = [];
 
-        this.duration = 1500; // transition duration
-        this.delay = 500;
+        this.duration = 1000; // transition duration
+        this.delay = 100;
         this.selectedCategory = "percapita";
         this.sortNum = 75;
         // call initVis method
@@ -56,15 +56,84 @@ class HeatMapVis {
             .interpolator(d3.interpolateOranges);
 
         // call next method in pipeline
+        this.computeData();
+
+        //Add the initial vis
+
+
+        // Reference: https://d3-graph-gallery.com/graph/treemap_basic.html
+        // stratify the data: reformatting for d3.js
+        vis.root = d3.stratify()
+            .id(function(d) { return d.name; })   // Name of the entity (column name is name in csv)
+            .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
+            (vis.sortedData);
+        vis.root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
+        console.log(vis.root);
+        // Then d3.treemap computes the position of each element of the hierarchy
+        // The coordinates are added to the root object above
+        d3.treemap()
+            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.top + vis.margin.bottom)])
+            .padding(4)
+            (vis.root)
+
+        console.log(vis.root.leaves());
+        // use this information to add rectangles:
+
+        vis.svg.selectAll("rect")
+            .data(vis.root.leaves(), function(d){ return d.iso_code; })
+            .enter()
+            .append("rect")
+            .on('mouseover', function(event, d){
+                //console.log(d);
+                d3.select(this)
+                    .attr('stroke-width', '2px')
+                    .attr("stroke", 'red');
+
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + 20 + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+         <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
+             <h3> ${ d.data.name}</h3>
+             <h4> Rank: ${d.data.rank}</h4>       
+             <h4> ${d.data.type}: ${d.data.value}</h4>       
+             
+ 
+
+         </div>`);
+
+            })
+            .on('mouseout', function(event, d){
+                d3.select(this)
+                    .attr('stroke-width', '1px')
+                    .attr('stroke', 'black');
+
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            });
+
+        vis.svg
+            .selectAll("text")
+            .data(vis.root.leaves(), function(d){ return d.iso_code; })
+
+            .enter()
+            .append("text")
+            .attr("class","heatmap_rect_names")
+
+
+            .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
+            .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
+            .text(function(d){ return d.data.iso_code});
+
         this.wrangleData();
     }
 
-    // wrangleData method
-    wrangleData() {
+    computeData() {
         let vis = this;
-
-
-
 
         console.log(vis.co2Data[0]);
 
@@ -119,8 +188,7 @@ class HeatMapVis {
 
         vis.sortedData = vis.displayData.slice(0,vis.sortNum);
 
-        vis.maxVal = vis.sortedData[0].value;
-        vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
+
 
         // Read data
         /*
@@ -170,27 +238,13 @@ class HeatMapVis {
         );
 
         console.log(vis.sortedData);
-
-
-        vis.updateVis();
-
     }
-
-    // updateVis method
-    updateVis() {
+    // wrangleData method
+    wrangleData() {
         let vis = this;
-        // append the svg object to the body of the page
 
-
-
-        vis.color.domain([
-            0,
-
-            vis.maxVal
-        ]);
-
-        // Reference: https://d3-graph-gallery.com/graph/treemap_basic.html
-        // stratify the data: reformatting for d3.js
+        vis.computeData();
+        //will recalculate data only if years change
         vis.root = d3.stratify()
             .id(function(d) { return d.name; })   // Name of the entity (column name is name in csv)
             .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
@@ -205,7 +259,27 @@ class HeatMapVis {
             (vis.root)
 
         console.log(vis.root.leaves());
-        // use this information to add rectangles:
+
+
+        vis.updateVis();
+
+    }
+
+    // updateVis method
+    updateVis() {
+        let vis = this;
+        // append the svg object to the body of the page
+
+
+        vis.maxVal = vis.sortedData[0].value;
+        vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
+
+        vis.color.domain([
+            0,
+
+            vis.maxVal
+        ]);
+
 
 
         vis.rect = vis.svg
@@ -220,11 +294,19 @@ class HeatMapVis {
             .delay(vis.delay)
 
             .style("opacity", 1e-6)
+            //.attr("x", -10)
+            //.attr("y", -10)
+
             .remove();
 
         vis.rect
             .enter()
             .append("rect")
+            .attr('x', function (d) { return d.x0; })
+            .attr('y', function (d) { return d.y0; })
+            .attr('width', function (d) { return d.x1 - d.x0; })
+            .attr('height', function (d) { return d.y1 - d.y0; })
+            .attr('opacity','80%')
             .on('mouseover', function(event, d){
                 //console.log(d);
                 d3.select(this)
@@ -284,20 +366,16 @@ class HeatMapVis {
             .data(vis.root.leaves(), function(d){ return d.iso_code; });
 
         //vis.text.exit().remove();
-        vis.text.exit()
-            .style("opacity", 1)
-            .transition().duration(vis.duration)
-            .delay(vis.delay)
 
-            .style("opacity", 1e-6)
-            .remove();
 
         vis.text
 
             .enter()
             .append("text")
             .attr("class","heatmap_rect_names")
-
+            .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
+            .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
+            .text(function(d){ return d.data.iso_code})
             .merge(vis.text)
             .transition()
             .delay(vis.delay)
@@ -306,6 +384,16 @@ class HeatMapVis {
             .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
             .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
             .text(function(d){ return d.data.iso_code});
+
+        vis.text.exit()
+            .style("opacity", 1)
+            .transition().duration(vis.duration)
+            .delay(vis.delay)
+            //.attr("x", -10)
+            //.attr("y", -10)
+
+            .style("opacity", 1e-6)
+            .remove();
 
     }
 

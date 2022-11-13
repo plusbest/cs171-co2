@@ -3,11 +3,7 @@
 * * * * * * * * * * * * * */
 
 // init global variables & switches
-let myDataTable,
-    myMapVis,
-    myBarVisOne,
-    myBarVisTwo,
-    myBrushVis,
+let
     myHeatMapVis,
     mySankeyVis,
     myBumpChart,
@@ -66,6 +62,7 @@ function initMainPage(dataArray) {
     // init map
     mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
+
     myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
 
 
@@ -73,8 +70,7 @@ function initMainPage(dataArray) {
 
 }
 
-// NOTE: for opening CORS disabled Chrome browser window
-// open -a Google\ Chrome --args --disable-web-security --user-data-dir --allow-file-access-from-files
+
 
 
 
@@ -84,9 +80,11 @@ function categoryChange() {
     console.log("on category change");
     console.log(selectedCategory);
 
-    // call wrangle data on the two bar charts
+    // update the heatmap
     myHeatMapVis.selectedCategory = selectedCategory;
     myHeatMapVis.wrangleData();
+
+
 
 
 
