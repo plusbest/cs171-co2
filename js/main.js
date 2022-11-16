@@ -40,7 +40,11 @@ let promises = [
     d3.csv("data/owid-energy-data.csv"),
     d3.csv("data/sankey.csv"),   // sankey test data
     excludedCountries, // to exclude continents from heatmap Viz
+    d3.csv("data/owid-co2-data.csv"),
     d3.csv("data/owid-co2-data.csv")
+    //separate promises to workaround the shallow copy bug
+    // - change of co2 data in 1 viz impacts others with default shallow
+
 
 
 ];
@@ -64,7 +68,7 @@ function initMainPage(dataArray) {
 
     // init map
 
-    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
+    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[5], dataArray[1], dataArray[2]);
 
     myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
 
