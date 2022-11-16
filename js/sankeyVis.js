@@ -55,6 +55,9 @@ class SankeyVis {
         // Set path group
         vis.path = vis.sankey.links();
 
+        vis.link = vis.svg.append("g").selectAll(".link");
+
+        vis.node = vis.svg.append("g").selectAll(".node");
 
         vis.wrangleData();
 
@@ -133,43 +136,14 @@ class SankeyVis {
         })
 
         console.log("JW -- displayData", vis.displayData)
+
+
+
         // TODO: Descending order sort
+        // *******
+        // *******
 
-
-
-
-// consumption co2 per capita for US -> production co2 per capita  ->  coal,
-//                                      trade per capita               oil,
-//                                                                     gas,
-//                                                                     flaring,
-
-// source,target,value
-
-
-// co2
-
-// consumption_co2
-// consumption_co2_per_capita
-
-// trade_co2
-
-// coal_co2
-// coal_co2_per_capita
-// cement_co2
-// cement_co2_per_capita
-// flaring_co2
-// flaring_co2_per_capita
-// gas_co2
-// gas_co2_per_capita
-
-
-        vis.updateVis()
-
-	}
-
-	updateVis() {
-		let vis = this;
-
+        // empty nodes and links
         vis.sankeydata.nodes = []
         vis.sankeydata.links = []
 
@@ -183,6 +157,7 @@ class SankeyVis {
         });
 
         console.log("JW --- sankeydata", vis.sankeydata)
+        
         // return only the distinct / unique nodes
         vis.sankeydata.nodes = Array.from(
             d3.group(vis.sankeydata.nodes, d => d.name),
@@ -207,16 +182,45 @@ class SankeyVis {
         });
 
 
+        // co2
+
+        // consumption_co2
+        // consumption_co2_per_capita
+
+        // trade_co2
+
+        // coal_co2
+        // coal_co2_per_capita
+        // cement_co2
+        // cement_co2_per_capita
+        // flaring_co2
+        // flaring_co2_per_capita
+        // gas_co2
+        // gas_co2_per_capita
+
+
+        vis.updateVis()
+
+	}
+
+	updateVis() {
+		let vis = this;
+
         // // init sankey graph object
         vis.graph = vis.sankey(vis.sankeydata);
 
         // add in the links
-        vis.link = vis.svg.append("g").selectAll(".link")
+        vis.link = vis.svg.selectAll(".link")
             .data(vis.graph.links)
+
+        vis.link
             .enter().append("path")
             .attr("class", "link")
+            .merge(vis.link)
             .attr("d", d3.sankeyLinkHorizontal())
-            .attr("stroke-width", function(d) { return d.width; });
+            .attr("stroke-width", function(d) { return d.width; })
+
+        vis.link.exit().remove();
 
         // add the link titles
         vis.link.append("title")
@@ -225,14 +229,27 @@ class SankeyVis {
                 d.target.name + "\n" + vis.format(d.value);
             });
 
+        console.log("JW --- graphNodes", vis.graph.nodes)
+        
         // add in the nodes
-        vis.node = vis.svg.append("g").selectAll(".node")
+        vis.node = vis.svg.selectAll(".node")
             .data(vis.graph.nodes)
-            .enter().append("g")
-            .attr("class", "node");
 
-        // add node rectangles
-        vis.node.append("rect")
+        vis.node
+            .enter().append("g")
+            .attr("class", "node")
+            .merge(vis.node)
+
+        vis.node.exit().remove();
+        // NODES PROPERLY REMOVE AND EXIT
+
+
+        vis.rects = vis.node.selectAll("rect")
+            .data(vis.graph.nodes)
+
+        vis.rects
+            .enter().append("rect")
+            .merge(vis.rects)
             .attr("x", function(d) { return d.x0; })
             .attr("y", function(d) { return d.y0; })
             .attr("height", function(d) { return d.y1 - d.y0; })
@@ -243,10 +260,17 @@ class SankeyVis {
                 return d3.rgb(d.color).darker(2); })
             .append("title")
             .text(function(d) { 
-                return d.name + "\n" + vis.format(d.value); });
+                return d.name + "\n" + vis.format(d.value); })
+        // NODES PROPERLY UPDATE
 
-        // add node text
-        vis.node.append("text")
+
+        vis.labels = vis.node.selectAll("text")
+            .data(vis.graph.nodes)
+
+
+        vis.labels
+            .enter().append("text")
+            .merge(vis.labels)
             .attr("x", function(d) { return d.x0 - 6; })
             .attr("y", function(d) { return (d.y1 + d.y0) / 2; })
             .attr("dy", "0.35em")
@@ -255,7 +279,7 @@ class SankeyVis {
             .filter(function(d) { return d.x0 < vis.width / 2; })
             .attr("x", function(d) { return d.x1 + 6; })
             .attr("text-anchor", "start");
-
+        // LABELS PROPERLY UPDATE
 
 	}
 
