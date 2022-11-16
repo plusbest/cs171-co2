@@ -20,6 +20,7 @@ class SankeyVis {
         this.country = country;
         this.year = year;
         this.selectedCategory = 'percapita';
+        this.selectedYear = 1988
 
         this.initVis()
 		}
@@ -62,15 +63,16 @@ class SankeyVis {
 	wrangleData() {
         let vis = this
 
+        vis.displayData = []
+
         console.log("JW --- co2data", vis.co2Data)
         console.log("JW --- visparams", vis.country, vis.year)
-        console.log("JW --- testCategory", vis.selectedCategory)
-        console.log("JW --- testcountry", vis.country, typeof(vis.country))
-        console.log("JW --- testyear", vis.year, typeof(vis.year))
+        console.log("JW --- selectedCategory", vis.selectedCategory)
+        console.log("JW --- selectedYear", vis.selectedYear)
 
         // iterate co2 data rows
         vis.co2Data.forEach(function(d) {
-            if (d.country == "United States" && d.year == 2000) {
+            if (d.country == "United States" && d.year == vis.selectedYear) {
                 console.log(d.year)
                 let co2 = vis.selectedCategory === 'percapita' ? d.co2_per_capita : d.co2;
                 let coal_co2 = vis.selectedCategory === 'percapita' ? d.coal_co2_per_capita : d.coal_co2;
@@ -78,7 +80,6 @@ class SankeyVis {
                 let flaring_co2 =  vis.selectedCategory === 'percapita' ? d.flaring_co2_per_capita : d.flaring_co2;
                 let gas_co2 =  vis.selectedCategory === 'percapita' ? d.gas_co2_per_capita : d.gas_co2;
 
-                console.log("JW --- co2", co2)
                 // calc per capital factor to get trade per capita value
                 let trade_co2 = vis.selectedCategory === 'percapita' ? (d.co2_per_capita/d.co2) * d.trade_co2 : d.trade_co2;
 
@@ -171,6 +172,7 @@ class SankeyVis {
 
         vis.sankeydata.nodes = []
         vis.sankeydata.links = []
+
         // populate displaydata
         vis.displayData.forEach(function (d) {
             vis.sankeydata.nodes.push({ "name": d.source });
@@ -214,7 +216,7 @@ class SankeyVis {
             .enter().append("path")
             .attr("class", "link")
             .attr("d", d3.sankeyLinkHorizontal())
-            .attr("stroke-width", function(d) { return d.width; });  
+            .attr("stroke-width", function(d) { return d.width; });
 
         // add the link titles
         vis.link.append("title")

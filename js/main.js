@@ -63,19 +63,10 @@ function initMainPage(dataArray) {
 
 
     // init map
-<<<<<<< HEAD
-    let country = "United States";
-    let year = 2000;
-
-    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], country, year);
-    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
-=======
 
     mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
->>>>>>> a009c09b9d09d099090b6a5d9c4d945c94970b2e
 
     myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
-
 
     myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4], dataArray[1]);
 
@@ -97,6 +88,13 @@ function categoryChange() {
     // update the heatmap
     myHeatMapVis.selectedCategory = selectedCategory;
     myHeatMapVis.wrangleData();
+}
 
 
+function yearChange() {
+
+    selectedYear =  document.getElementById('yearSelector').value;
+
+    mySankeyVis.selectedYear = selectedYear;
+    mySankeyVis.wrangleData();
 }
