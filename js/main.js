@@ -60,7 +60,10 @@ function initMainPage(dataArray) {
     console.log('hi team :)')
 
     // init map
-    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
+    let country = "United States";
+    let year = 2000;
+
+    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], country, year);
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
 
     myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
@@ -72,20 +75,18 @@ function initMainPage(dataArray) {
 
 
 
-
-
 function categoryChange() {
 
     selectedCategory =  document.getElementById('categorySelector').value;
     console.log("on category change");
     console.log(selectedCategory);
 
+    mySankeyVis.selectedCategory = selectedCategory;
+    mySankeyVis.wrangleData();
+
     // update the heatmap
     myHeatMapVis.selectedCategory = selectedCategory;
     myHeatMapVis.wrangleData();
-
-
-
 
 
 }

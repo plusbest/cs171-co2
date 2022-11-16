@@ -5,15 +5,21 @@
 
 class SankeyVis {
 
-    constructor(parentElement, co2Data, energyData, testData) {
+    constructor(parentElement, co2Data, energyData, country, year) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
         this.energyData = energyData;
-        this.testData = testData;
         this.displayData = [];
     	this.parseDate = d3.timeParse("%m/%d/%Y");
         this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
                         "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
+
+        //set up graph in same style as original example but empty
+        this.sankeydata = {"nodes" : [], "links" : []};
+
+        this.country = country;
+        this.year = year;
+        this.selectedCategory = 'percapita';
 
         this.initVis()
 		}
@@ -45,14 +51,128 @@ class SankeyVis {
             .nodePadding(40)
             .size([vis.width, vis.height]);
 
+        // Set path group
         vis.path = vis.sankey.links();
 
 
-        //set up graph in same style as original example but empty
-        vis.sankeydata = {"nodes" : [], "links" : []};
+        vis.wrangleData();
 
+	}
+
+	wrangleData() {
+        let vis = this
+
+        console.log("JW --- co2data", vis.co2Data)
+        console.log("JW --- visparams", vis.country, vis.year)
+        console.log("JW --- testCategory", vis.selectedCategory)
+        console.log("JW --- testcountry", vis.country, typeof(vis.country))
+        console.log("JW --- testyear", vis.year, typeof(vis.year))
+
+        // iterate co2 data rows
+        vis.co2Data.forEach(function(d) {
+            if (d.country == "United States" && d.year == 2000) {
+                console.log(d.year)
+                let co2 = vis.selectedCategory === 'percapita' ? d.co2_per_capita : d.co2;
+                let coal_co2 = vis.selectedCategory === 'percapita' ? d.coal_co2_per_capita : d.coal_co2;
+                let cement_co2 =  vis.selectedCategory === 'percapita' ? d.cement_co2_per_capita : d.cement_co2;
+                let flaring_co2 =  vis.selectedCategory === 'percapita' ? d.flaring_co2_per_capita : d.flaring_co2;
+                let gas_co2 =  vis.selectedCategory === 'percapita' ? d.gas_co2_per_capita : d.gas_co2;
+
+                console.log("JW --- co2", co2)
+                // calc per capital factor to get trade per capita value
+                let trade_co2 = vis.selectedCategory === 'percapita' ? (d.co2_per_capita/d.co2) * d.trade_co2 : d.trade_co2;
+
+                var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2)
+
+                console.log("JW -- targetDataRow", d)
+                // first stage pushes
+                vis.displayData.push({
+                    source: "Consumption",
+                    target: "Production",
+                    value: co2
+                    })
+                vis.displayData.push({
+                    source: "Consumption",
+                    target: "Trade",
+                    value: (Math.abs(trade_co2)).toString()
+                })
+                // second stage pushes
+                vis.displayData.push({
+                    source: "Production",
+                    target: "Coal",
+                    value: coal_co2
+                })
+                vis.displayData.push({
+                    source: "Production",
+                    target: "Cement",
+                    value: cement_co2
+                })
+                vis.displayData.push({
+                    source: "Production",
+                    target: "Flaring",
+                    value: flaring_co2
+                })
+                vis.displayData.push({
+                    source: "Production",
+                    target: "Gas",
+                    value: gas_co2
+                })
+                vis.displayData.push({
+                    source: "Production",
+                    target: "Other",
+                    value: remainder
+                })
+                // Null connection to keep Trade in second column with production
+                vis.displayData.push({
+                    source: "Trade",
+                    target: "\u2000",  // invisible ascii code
+                    value: 0
+                })    
+            }
+        })
+
+        console.log("JW -- displayData", vis.displayData)
+        // TODO: Descending order sort
+
+
+
+
+// consumption co2 per capita for US -> production co2 per capita  ->  coal,
+//                                      trade per capita               oil,
+//                                                                     gas,
+//                                                                     flaring,
+
+// source,target,value
+
+
+// co2
+
+// consumption_co2
+// consumption_co2_per_capita
+
+// trade_co2
+
+// coal_co2
+// coal_co2_per_capita
+// cement_co2
+// cement_co2_per_capita
+// flaring_co2
+// flaring_co2_per_capita
+// gas_co2
+// gas_co2_per_capita
+
+
+        vis.updateVis()
+
+	}
+
+	updateVis() {
+		let vis = this;
+
+        vis.sankeydata.nodes = []
+        vis.sankeydata.links = []
         // populate displaydata
-        vis.testData.forEach(function (d) {
+        vis.displayData.forEach(function (d) {
             vis.sankeydata.nodes.push({ "name": d.source });
             vis.sankeydata.nodes.push({ "name": d.target });
             vis.sankeydata.links.push({ "source": d.source,
@@ -60,6 +180,7 @@ class SankeyVis {
                                        "value": +d.value });
         });
 
+        console.log("JW --- sankeydata", vis.sankeydata)
         // return only the distinct / unique nodes
         vis.sankeydata.nodes = Array.from(
             d3.group(vis.sankeydata.nodes, d => d.name),
@@ -76,13 +197,15 @@ class SankeyVis {
                 .indexOf(vis.sankeydata.links[i].target);
         });
 
+
         // now loop through each nodes to make nodes an array of objects
         // rather than an array of strings
         vis.sankeydata.nodes.forEach(function (d, i) {
             vis.sankeydata.nodes[i] = { "name": d };
         });
 
-        // init sankey graph object
+
+        // // init sankey graph object
         vis.graph = vis.sankey(vis.sankeydata);
 
         // add in the links
@@ -105,29 +228,6 @@ class SankeyVis {
             .data(vis.graph.nodes)
             .enter().append("g")
             .attr("class", "node");
-
-        // MERGE EXIT REMOVE REFERENCE
-        // let bars = vis.svg.selectAll(".bar")
-        //     .data(this.displayData);
-
-        // bars.enter().append("rect")
-        //     .attr("class", "bar")
-
-        //     .merge(bars)
-        //     .transition()
-        //     .attr("width", vis.x.bandwidth())
-        //     .attr("height", function (d) {
-        //         return vis.height - vis.y(d);
-        //     })
-        //     .attr("x", function (d, index) {
-        //         return vis.x(index);
-        //     })
-        //     .attr("y", function (d) {
-        //         return vis.y(d);
-        //     })
-
-        // bars.exit().remove();
-
 
         // add node rectangles
         vis.node.append("rect")
@@ -154,24 +254,6 @@ class SankeyVis {
             .attr("x", function(d) { return d.x1 + 6; })
             .attr("text-anchor", "start");
 
-
-
-	   vis.wrangleData();
-
-	}
-
-	wrangleData() {
-        let vis = this
-
-        let filteredData = [];
-
-
-        vis.updateVis()
-
-	}
-
-	updateVis() {
-		let vis = this;
 
 	}
 

@@ -2,7 +2,7 @@ source,target,value
 Consume,Export,5
 Consume,Production,9
 Consume,Energy,3
-Energy,Coal,1
+Energy,Coal,.3
 Energy,Gas,1
 Energy,Solar,1
 Export,CO2,3
