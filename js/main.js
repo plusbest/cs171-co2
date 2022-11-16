@@ -39,7 +39,9 @@ let promises = [
     d3.csv("data/owid-co2-data.csv"),
     d3.csv("data/owid-energy-data.csv"),
     d3.csv("data/sankey.csv"),   // sankey test data
-    excludedCountries // to exclude continents from heatmap Viz
+    excludedCountries, // to exclude continents from heatmap Viz
+    d3.csv("data/owid-co2-data.csv")
+
 
 ];
 
@@ -57,19 +59,27 @@ function initMainPage(dataArray) {
     // log data
     console.log('co2 data:', dataArray[0]);
     console.log('energy data:', dataArray[1]);
-    console.log('hi team :)')
+    console.log('hi team :)');
+
 
     // init map
+<<<<<<< HEAD
     let country = "United States";
     let year = 2000;
 
     mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], country, year);
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
+=======
+
+    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[0], dataArray[1], dataArray[2]);
+>>>>>>> a009c09b9d09d099090b6a5d9c4d945c94970b2e
 
     myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
 
 
-    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[0], dataArray[1]);
+    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4], dataArray[1]);
+
+    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
 
 }
 
