@@ -154,6 +154,8 @@ class HeatMapVis {
         let  valueToStore = 0;
         let valueType = '';
         for(let i = 0; i < vis.co2Data.length; i++) {
+
+            //test
             if (vis.co2Data[i].year == 2019 && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
@@ -176,6 +178,7 @@ class HeatMapVis {
                         rank: i
                     }
                 );
+
             }
         }
         console.log(vis.displayData);
