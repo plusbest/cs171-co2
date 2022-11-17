@@ -114,12 +114,8 @@
                 <div class="col-10 offset-1">
                     <div class="section-title">sankey</div>
                     <div class="content-section" id="sankeyDiv">
-                        <select id='yearSelector' class="custom-select align-self-center" style="width: 50%" onchange="yearChange()">
-                            <option value="1988">1988</option>
-                            <option value="1990">1990</option>
-                            <option value="1995">1995</option>
-                            <option value="2000">2000</option>
-                        </select>
+<label for="customRange2" class="form-label">Example range</label>
+<input type="range" class="form-range" min="1900" max="2020" step="1" style="width: 50%" id="yearSlider" onchange="yearSlider()">
                     </div>
                 </div>
             </div>

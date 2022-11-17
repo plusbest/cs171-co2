@@ -98,11 +98,12 @@ function categoryChange() {
     myHeatMapVis.wrangleData();
 }
 
+function yearSlider() {
 
-function yearChange() {
-
-    selectedYear =  document.getElementById('yearSelector').value;
-
+    selectedYear =  document.getElementById('yearSlider').value;
     mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
 }
+
+
+
