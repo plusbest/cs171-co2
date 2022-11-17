@@ -24,7 +24,7 @@ class HeatMapVis {
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 20, right: 20, bottom: 20, left: 20};
+        vis.margin = {top: 50, right: 20, bottom: 20, left: 20};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
         vis.cellHeight = 15;
@@ -72,7 +72,7 @@ class HeatMapVis {
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
-            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.top + vis.margin.bottom)])
+            .size([vis.width - vis.margin.right, vis.height - 1 * (vis.margin.bottom)])
             .padding(4)
             (vis.root)
 
@@ -257,7 +257,7 @@ class HeatMapVis {
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
-            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.top + vis.margin.bottom)])
+            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.bottom)])
             .padding(4)
             (vis.root)
 

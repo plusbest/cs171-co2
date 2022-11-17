@@ -128,15 +128,26 @@
     <div class="row w-100" id="heatmap-row">
         <!-- HEAT MAP SECTION -->
         <div class="col-12 p-5">
-            <div class="row" style="height: 100vh;">
-                <div class="col-10 offset-1">
-                    <div class="section-title">heat map</div>
+            <div class="row" style="height: 50vh;">
+                <div class="col-5 offset-1">
+                    <div class="section-title offset-1">
+
+                    <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
+                        <option value="percapita" selected>Per Capita</option>
+                        <option value="bycountry">By Country</option>
+                    </select>
+                    </div>
+                    <div class="content-section" id="mapDiv">
+                        <!-- Todo: Add label-->
+
+                    </div>
+                </div>
+                <div class="col-5 offset-1">
+                    <div class="section-title offset-1">Heat Map</div>
+
                     <div class="content-section" id="heatMapDiv">
                         <!-- Todo: Add label-->
-                        <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
-                            <option value="percapita" selected>Per Capita</option>
-                            <option value="bycountry">By Country</option>
-                        </select>
+
                     </div>
                 </div>
             </div>
@@ -195,10 +206,11 @@
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v2.min.js"></script>
 <script src="https://d3js.org/d3-geo.v1.min.js"></script>
-
 <!-- OWN JS -->
 <script src="js/sankeyVis.js"></script>
 <script src="js/heatMapVis.js"></script>
+<script src="js/mapVis.js"></script>
+
 <script src="js/mainPointVis.js"></script>
 
 <script src="js/bumpChartVis.js"></script>

@@ -41,9 +41,11 @@ let promises = [
     d3.csv("data/sankey.csv"),   // sankey test data
     excludedCountries, // to exclude continents from heatmap Viz
     d3.csv("data/owid-co2-data.csv"),
-    d3.csv("data/owid-co2-data.csv")
+    d3.csv("data/owid-co2-data.csv"),
     //separate promises to workaround the shallow copy bug
     // - change of co2 data in 1 viz impacts others with default shallow
+    d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json")
+
 
 
 
@@ -75,6 +77,8 @@ function initMainPage(dataArray) {
     myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4], dataArray[1]);
 
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
+
+    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[3], dataArray[6]);
 
 }
 
