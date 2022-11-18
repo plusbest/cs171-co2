@@ -12,7 +12,7 @@ class HeatMapVis {
         this.excludedCountries = excludedCountries;
         this.displayData = [];
         this.sortedData = [];
-
+        this.selectedYear = 2019;
         this.duration = 1000; // transition duration
         this.delay = 100;
         this.selectedCategory = "percapita";
@@ -153,10 +153,11 @@ class HeatMapVis {
          */
         let  valueToStore = 0;
         let valueType = '';
+        console.log('selected year:' + vis.selectedYear);
         for(let i = 0; i < vis.co2Data.length; i++) {
 
             //test
-            if (vis.co2Data[i].year == 2019 && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
+            if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
@@ -272,7 +273,10 @@ class HeatMapVis {
     updateVis() {
         let vis = this;
         // append the svg object to the body of the page
+        // update the title
 
+        //d3.select(('#heatMapTitle').attr("text","Default Text");
+        //= "Heat Map for " + vis.selectedYear;
 
         vis.maxVal = vis.sortedData[0].value;
         vis.minVal = vis.sortedData[vis.sortedData.length-1].value;

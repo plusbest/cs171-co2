@@ -107,6 +107,51 @@
             </div>
         </div>
     </div>
+
+    <div class="row w-100" id="heatmap-row">
+        <!-- HEAT MAP SECTION -->
+        <div class="col-12 p-5">
+            <div class="row" style="height: 5vh;">
+                <div class="col-5 offset-1">
+
+                    <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
+                        <option value="percapita" selected>Per Capita</option>
+                        <option value="bycountry">By Country</option>
+                    </select>
+                </div>
+
+                <div class="col-5 offset-1">
+
+                    <input type="range" class="form-range" min="1990" max="2019" step="1" style="width: 50%" id="yearSlider" onchange="yearSlider()">
+                </div>
+            </div>
+            <div class="row" style="height: 50vh;">
+
+
+
+                <div class="col-5 offset-1">
+                    <div class="section-title offset-3">
+
+
+
+                    </div>
+                    <div class="content-section" id="mapDiv">
+                        <!-- Todo: Add label-->
+
+                    </div>
+                </div>
+
+                <div class="col-5 offset-1">
+                    <div class="section-title" id="heatMapTitle"></div>
+
+                    <div class="content-section" id="heatMapDiv">
+                        <!-- Todo: Add label-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row w-100" id="sankey-row">
         <!-- SANKEY SECTION -->
         <div class="col-12 p-5">
@@ -114,36 +159,7 @@
                 <div class="col-10 offset-1">
                     <div class="section-title">sankey</div>
                     <div class="content-section" id="sankeyDiv">
-<label for="customRange2" class="form-label">Example range</label>
-<input type="range" class="form-range" min="1900" max="2020" step="1" style="width: 50%" id="yearSlider" onchange="yearSlider()">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row w-100" id="heatmap-row">
-        <!-- HEAT MAP SECTION -->
-        <div class="col-12 p-5">
-            <div class="row" style="height: 50vh;">
-                <div class="col-5 offset-1">
-                    <div class="section-title offset-1">
-
-                    <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
-                        <option value="percapita" selected>Per Capita</option>
-                        <option value="bycountry">By Country</option>
-                    </select>
-                    </div>
-                    <div class="content-section" id="mapDiv">
-                        <!-- Todo: Add label-->
-
-                    </div>
-                </div>
-                <div class="col-5 offset-1">
-                    <div class="section-title offset-1">Heat Map</div>
-
-                    <div class="content-section" id="heatMapDiv">
-                        <!-- Todo: Add label-->
-
+                        <label for="customRange2" class="form-label">Example range</label>
                     </div>
                 </div>
             </div>

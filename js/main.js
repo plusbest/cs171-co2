@@ -11,7 +11,7 @@ let
 
 let selectedTimeRange = [];
 let selectedState = '';
-
+let selectedYear = 2019;
 
 
 let excludedCountries = [
@@ -103,6 +103,10 @@ function yearSlider() {
     selectedYear =  document.getElementById('yearSlider').value;
     mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
+
+    myHeatMapVis.selectedYear = selectedYear;
+    console.log(selectedYear);
+    myHeatMapVis.wrangleData();
 }
 
 
