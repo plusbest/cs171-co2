@@ -5,11 +5,12 @@
 
 class MapVis {
 
-    constructor(parentElement, co2Data, excludedCountries, geoData) {
+    constructor(parentElement, co2Data, excludedCountries, geoData, isoCodes) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
         this.excludedCountries = excludedCountries;
         this.geoData = geoData;
+        this.isoCodes = isoCodes;
         this.displayData = [];
         this.sortedData = [];
 
@@ -17,6 +18,7 @@ class MapVis {
         this.delay = 100;
         this.selectedCategory = "percapita";
         this.sortNum = 75;
+        this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b']
 
         this.initVis()
     }
@@ -137,10 +139,11 @@ class MapVis {
 
     wrangleData() {
         let vis = this;
-
+        console.log(vis.isoCodes);
         // create random data structure with information for each land
         vis.countryInfo = {};
         vis.geoData.objects.countries.geometries.forEach(d => {
+            //console.log(d);
             let randomCountryValue = Math.random() * 4
             vis.countryInfo[d.properties.name] = {
                 name: d.properties.name,

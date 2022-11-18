@@ -44,7 +44,9 @@ let promises = [
     d3.csv("data/owid-co2-data.csv"),
     //separate promises to workaround the shallow copy bug
     // - change of co2 data in 1 viz impacts others with default shallow
-    d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json")
+    d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json"),
+    d3.csv("data/all.csv")
+    // Reference: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes
 
 
 
@@ -78,7 +80,7 @@ function initMainPage(dataArray) {
 
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
 
-    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[3], dataArray[6]);
+    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[3], dataArray[6], dataArray[7]);
 
 }
 
