@@ -360,6 +360,9 @@ class HeatMapVis {
                 mySankeyVis.selectedYear = vis.selectedYear;
                 mySankeyVis.country_iso_code = d.data.iso_code;
                 mySankeyVis.wrangleData();
+                //call bump chart
+                myBumpChart.country_iso_code = d.data.iso_code;
+                myBumpChart.wrangleData();
             })
             .merge(vis.rect)
             .transition()

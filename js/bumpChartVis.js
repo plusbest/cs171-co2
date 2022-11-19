@@ -17,6 +17,7 @@ class BumpChartVis {
 
         this.columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "methane",
             "nitrous_oxide", "oil_co2"];
+        this.country_iso_code = 'USA';
 
         this.initVis()
     }
@@ -81,7 +82,8 @@ class BumpChartVis {
 
         // Filter out all countries but the US
         let filteredData = this.co2Data.filter((row) => {
-            if (row.country === "United States") {
+            //if (row.country === "United States") {
+            if (row.iso_code === vis.country_iso_code) {
                 row.year = vis.parseDate(row.year);
                 return row;
             }

@@ -149,7 +149,6 @@ class MapVis {
         vis.co2DataFiltered = [];
         vis.consumption_co2_per_capita_total = 0;
         vis.consumption_co2_total = 0;
-
         for (let i=0; i < vis.co2Data.length; i++) {
             if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
                 vis.consumption_co2_per_capita_total += parseFloat(vis.co2Data[i].consumption_co2_per_capita);
@@ -270,7 +269,8 @@ class MapVis {
 
             vis.maxVal
         ]);
-
+        console.log(vis.isoCodesDict);
+        console.log(vis.isoCodesDict[682]);
         vis.countries
             .on('mouseover', function(event, d){
                 d3.select(this)
@@ -301,6 +301,21 @@ class MapVis {
                     .style("left", 0)
                     .style("top", 0)
                     .html(``);
+            })
+            .on('click', function(event, d){
+                console.log('clicked');
+                console.log(d);
+                //call sankey
+                mySankeyVis.selectedYear = vis.selectedYear;
+                console.log(d.id);
+
+                mySankeyVis.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
+                console.log(mySankeyVis.country_iso_code);
+                mySankeyVis.wrangleData();
+
+                //call bump chart
+                myBumpChart.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
+                myBumpChart.wrangleData();
             })
             .merge(vis.countries)
             .transition()
