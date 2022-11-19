@@ -82,7 +82,8 @@ class HeatMapVis {
         vis.svg.selectAll("rect")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
             .enter()
-            .append("rect")
+            .append("rect");
+            /*
             .on('mouseover', function(event, d){
                 //console.log(d);
                 d3.select(this)
@@ -115,7 +116,7 @@ class HeatMapVis {
                     .style("top", 0)
                     .html(``);
             });
-
+            */
         vis.svg
             .selectAll("text")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
@@ -351,6 +352,14 @@ class HeatMapVis {
                     .style("left", 0)
                     .style("top", 0)
                     .html(``);
+            })
+            .on('click', function(event, d){
+                console.log('clicked');
+                console.log(d);
+                //call sankey
+                mySankeyVis.selectedYear = vis.selectedYear;
+                mySankeyVis.country_iso_code = d.data.iso_code;
+                mySankeyVis.wrangleData();
             })
             .merge(vis.rect)
             .transition()
