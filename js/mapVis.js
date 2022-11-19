@@ -18,7 +18,9 @@ class MapVis {
         this.delay = 100;
         this.selectedCategory = "percapita";
         this.sortNum = 75;
-        this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b']
+        this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
+        this.selectedYear = 2019;
+
 
         this.initVis()
     }
@@ -81,10 +83,13 @@ class MapVis {
 
 
 
-
+        /*
         vis.color = d3.scaleLinear()
             .domain([0,25,50,75])
             .range(vis.colors);
+        */
+        vis.color = d3.scaleSequential()
+            .interpolator(d3.interpolateOranges);
 
         console.log(vis.color(99));
         vis.legend = vis.svg.append("g")
@@ -140,16 +145,64 @@ class MapVis {
     wrangleData() {
         let vis = this;
         console.log(vis.isoCodes);
+        vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['country-code'], x['alpha-3']]));
+        vis.co2DataFiltered = [];
+
+        for (let i=0; i < vis.co2Data.length; i++) {
+            if (vis.co2Data[i].year == vis.selectedYear) {
+                vis.co2DataFiltered.push(
+                    {
+                        name: vis.co2Data[i].country,
+                        iso_code: vis.co2Data[i].iso_code,
+                        consumption_co2_per_capita: vis.co2Data[i].consumption_co2_per_capita,
+                        consumption_co2: vis.co2Data[i].consumption_co2
+                    }
+                )
+            }
+        }
+
+        console.log(vis.co2DataFiltered);
+
+
+
+        vis.co2DataDict = Object.fromEntries(vis.co2DataFiltered.map(
+                x => [x.iso_code, [x.name, x.consumption_co2_per_capita, x.consumption_co2]]
+
+        ));
+
+
+        console.log(vis.isoCodesDict);
+        console.log(vis.co2DataDict);
+        console.log(vis.isoCodesDict['Zimbabwe']);
         // create random data structure with information for each land
         vis.countryInfo = {};
         vis.geoData.objects.countries.geometries.forEach(d => {
             //console.log(d);
+            console.log(d.id);
+            let isoCodeVal = vis.isoCodesDict[d.id];
+            console.log(isoCodeVal);
+            let country_name = '';
+            let country_val = 0;
+
+            if (isoCodeVal in vis.co2DataDict) {
+                 country_name = vis.co2DataDict[isoCodeVal][0];
+                 country_val = vis.co2DataDict[isoCodeVal][1];
+            }
+            else {
+                 country_name = '';
+                country_val = 0;
+
+            }
+
             let randomCountryValue = Math.random() * 4
-            vis.countryInfo[d.properties.name] = {
-                name: d.properties.name,
+            vis.countryInfo[d.id] = {
+
+                //name: d.properties.name,
+                name: country_name,
+
                 category: 'category_' + Math.floor(randomCountryValue),
                 color: vis.colors[Math.floor(randomCountryValue)],
-                value: randomCountryValue / 4 * 100
+                value: country_val
             }
         })
         console.log(vis.countryInfo);
@@ -161,7 +214,14 @@ class MapVis {
 
         // TODO
         console.log(vis.countryInfo);
+        //vis.maxVal = vis.sortedData[0].value;
+        //vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
 
+        vis.color.domain([
+            0,
+
+            40
+        ]);
         vis.countries
             .on('mouseover', function(event, d){
                 d3.select(this)
@@ -174,9 +234,9 @@ class MapVis {
                     .style("top", event.pageY + "px")
                     .html(`
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
-             <h4> category: ${vis.countryInfo[d.properties.name].category}</h4>      
-             <h4> name: ${d.properties.name}</h4>
-             <h4> value: ${Math.round(vis.countryInfo[d.properties.name].value)*100/100}</h4>   
+             <h4> category: ${vis.countryInfo[d.id].category}</h4>      
+             <h4> name: ${vis.countryInfo[d.id].name}</h4>
+             <h4> value: ${Math.round(vis.countryInfo[d.id].value)*100/100}</h4>   
          </div>`);
             })
             .on('mouseout', function(event, d){
@@ -192,7 +252,7 @@ class MapVis {
             })
             .merge(vis.countries)
             .style("fill", function(d, index) {
-                return vis.countryInfo[d.properties.name].color;
+                return vis.color(vis.countryInfo[d.id].value);
             });
 
 
