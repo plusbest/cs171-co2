@@ -97,7 +97,7 @@ class HeatMapVis {
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h3> ${ d.data.name}</h3>
              <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.type}: ${d.data.value}</h4>       
+             <h4> ${d.data.value}</h4>       
              
  
 
@@ -154,10 +154,15 @@ class HeatMapVis {
         let  valueToStore = 0;
         let valueType = '';
         console.log('selected year:' + vis.selectedYear);
+        vis.consumption_co2_per_capita_total = 0;
+        vis.consumption_co2_total = 0;
         for(let i = 0; i < vis.co2Data.length; i++) {
 
             //test
             if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
+                vis.consumption_co2_per_capita_total += parseFloat(vis.co2Data[i].consumption_co2_per_capita);
+                vis.consumption_co2_total += parseFloat(vis.co2Data[i].consumption_co2);
+
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
@@ -328,7 +333,8 @@ class HeatMapVis {
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h3> ${ d.data.name}</h3>
              <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.type}: ${d.data.value}</h4>       
+             <h4> ${d.data.value}</h4>       
+            
              
  
 

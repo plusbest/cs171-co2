@@ -111,18 +111,20 @@
     <div class="row w-100" id="heatmap-row">
         <!-- HEAT MAP SECTION -->
         <div class="col-12 p-5">
+            <div class="section-title">Different countries around the globe contribute vastly different amount of CO2 consumption emissions</div>
+
             <div class="row" style="height: 5vh;">
                 <div class="col-5 offset-1">
-
-                    <select id='categorySelector' class="custom-select align-self-center" style="width: 50%" onchange="categoryChange()">
-                        <option value="percapita" selected>Per Capita</option>
+                    <select id="categorySelector" class="custom-select  justify-content-end" style="width: 100%" onchange="categoryChange()">
+                        <option value="percapita" selected="">Per Capita</option>
                         <option value="bycountry">By Country</option>
                     </select>
+
                 </div>
 
                 <div class="col-5 offset-1">
 
-                    <input type="range" class="form-range" min="1990" max="2019" step="1" style="width: 50%" id="yearSlider" onchange="yearSlider()">
+                    <input type="range" class="form-range   justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" style="width: 50%" id="yearSlider" onchange="yearSlider()">
                 </div>
             </div>
             <div class="row" style="height: 50vh;">

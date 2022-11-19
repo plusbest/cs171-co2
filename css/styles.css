@@ -141,5 +141,14 @@ html {
 
 #categorySelector {
 	margin-top: 0px;
-	margin-left: 25px;
+	margin-left: 50px;
+    align-content: right;
+}
+
+.section-title {
+    font-size: large;
+    font-family: Ayuthaya;
+    text-align: center;
+    margin-bottom: 20px;
+
 }

@@ -99,6 +99,11 @@ function categoryChange() {
     // update the heatmap
     myHeatMapVis.selectedCategory = selectedCategory;
     myHeatMapVis.wrangleData();
+
+    //update the earth map
+    myMapVis.selectedCategory = selectedCategory;
+    myMapVis.wrangleData();
+
 }
 
 function yearSlider() {
