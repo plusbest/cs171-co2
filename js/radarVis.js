@@ -26,7 +26,7 @@ class RadarVis {
         vis.containerHeight = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
 
         // Make sure it doesn't get ridiculously huge on wide screens by limiting width
-        vis.maxDiameter = 600;
+        vis.maxDiameter = 600 > vis.containerWidth ? vis.containerWidth : 600;
         vis.maxRadius = vis.maxDiameter / 2;
 
         // Keep track of version with margin for passing into scale
@@ -39,7 +39,7 @@ class RadarVis {
             vis.height = vis.maxDiameter;
         } else {
             vis.width = this.containerWidth;
-            vis.height = this.containerHeight;
+            vis.height = this.containerWidth;
         }
 
         // Init drawing area
