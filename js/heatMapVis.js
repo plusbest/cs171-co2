@@ -363,6 +363,9 @@ class HeatMapVis {
                 //call bump chart
                 myBumpChart.country_iso_code = d.data.iso_code;
                 myBumpChart.wrangleData();
+                //call radar vis
+                myRadarVis.selectedCountryCode = d.data.iso_code;
+                myRadarVis.wrangleData();
             })
             .merge(vis.rect)
             .transition()

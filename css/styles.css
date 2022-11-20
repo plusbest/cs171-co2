@@ -79,11 +79,28 @@ html {
     background-color: steelblue;
 }
 
+#hook2-row {
+    min-height: 40vh;
+    font-family: Ayuthaya;
+}
+
+.big-stat {
+    font-size: xxx-large;
+    font-weight: bold;
+    color: darkred;
+}
+
+.stat-highlight {
+    color: orangered;
+}
+
 #heatmap-row,
-#bumpchart-row {
+#bumpchart-row,
+#mainpoint-row {
     background-color: rgba(0,0,0,0.05);
     margin: 0;
 }
+
 
 
 /*SANKEY VIS STYLES*/
@@ -151,4 +168,23 @@ html {
     text-align: center;
     margin-bottom: 20px;
 
+}
+
+/*MAIN POINT STYLES*/
+
+#mainpoint-row {
+    min-height: 40vh;
+    font-family: Ayuthaya;
+}
+
+#mainpoint-vis-row {
+    min-height: 100vh;
+}
+
+#us-rank-compared-to-selected {
+    font-size: xxx-large;
+}
+
+#bottom-row {
+    background-color: #2e2e2e;
 }

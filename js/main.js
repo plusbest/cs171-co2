@@ -7,14 +7,17 @@ let
     myHeatMapVis,
     mySankeyVis,
     myBumpChart,
-    myMainPointVis;
+    myMainPointVis,
+    myMapVis,
+    myRadarVis;
 
 let selectedTimeRange = [];
-let selectedState = '';
+let selectedCountryCode = "GBR";
 let selectedYear = 2019;
 
 
-let excludedCountries = [
+
+const excludedCountries = [
     "Asia",
     "Asia (excl. China & India)",
     "Europe",
@@ -35,7 +38,7 @@ let excludedCountries = [
 ];
 
 // load data using promises
-let promises = [
+const promises = [
     d3.csv("data/owid-co2-data.csv"),
     d3.csv("data/owid-energy-data.csv"),
     d3.csv("data/sankey.csv"),   // sankey test data
@@ -48,10 +51,6 @@ let promises = [
     d3.csv("data/all.csv"),
     // Reference: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes
     d3.csv("data/owid-co2-data.csv")
-
-
-
-
 ];
 
 Promise.all(promises)
@@ -75,13 +74,13 @@ function initMainPage(dataArray) {
 
     mySankeyVis = new SankeyVis('sankeyDiv', dataArray[5], dataArray[1], dataArray[2]);
 
-    myMainPointVis = new MainPointVis('mainPointDiv', dataArray[0], dataArray[3]);
-
     myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4], dataArray[1]);
 
     myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3]);
 
     myMapVis = new MapVis('mapDiv', dataArray[8], dataArray[3], dataArray[6], dataArray[7]);
+
+    myRadarVis = new RadarVis('radarDiv', dataArray[0]);
 
 }
 

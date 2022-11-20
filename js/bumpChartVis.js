@@ -15,8 +15,7 @@ class BumpChartVis {
         this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
                         "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
-        this.columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "methane",
-            "nitrous_oxide", "oil_co2"];
+        this.columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "oil_co2"];
         this.country_iso_code = 'USA';
 
         this.initVis()
