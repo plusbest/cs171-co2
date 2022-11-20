@@ -185,6 +185,12 @@ html {
     font-family: Ayuthaya;
 }
 
+
+.focused {
+    stroke: blue;
+    stroke-width: 1;
+}
+
 #mainpoint-vis-row {
     min-height: 100vh;
 }
