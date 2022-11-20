@@ -328,7 +328,7 @@ class HeatMapVis {
                 mySankeyVis.country_iso_code = d.data.iso_code;
                 mySankeyVis.wrangleData();
                 //call bump chart
-                myBumpChart.country_iso_code = d.data.iso_code;
+                myBumpChart.selectedCountryCode = d.data.iso_code;
                 myBumpChart.wrangleData();
                 //call radar vis
                 myRadarVis.selectedCountryCode = d.data.iso_code;

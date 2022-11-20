@@ -15,8 +15,8 @@ class BumpChartVis {
         this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
                         "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
-        this.columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "oil_co2"];
-        this.country_iso_code = 'USA';
+        this.currentView = "ALL" // Can also be same as selected country OR "USA"
+        this.selectedCountryCode = selectedCountryCode; // setting default in above
 
         this.initVis()
     }
@@ -79,10 +79,76 @@ class BumpChartVis {
 	wrangleData() {
         let vis = this;
 
+        if (vis.currentView === "ALL") {
+            vis.wrangleDataGlobal();
+        } else if (vis.currentView === "USA") {
+            vis.wrangleDataCountry(vis.currentView);
+        } else if (vis.currentView === vis.selectedCountryCode) {
+            vis.wrangleDataCountry(vis.selectedCountryCode);
+        } else {
+            throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
+        }
+
+        console.log("bumpChart displayData", vis.displayData);
+        console.log("bumpChart fields", vis.fields);
+
+        vis.updateVis();
+	}
+
+    wrangleDataGlobal() {
+        let vis = this;
+
+        // Filter out everything except global data
+        let filteredData = this.co2Data.filter((row) => {
+            console.log()
+            if (
+                row.country === "World" ||
+                row.country === "United States" ||
+                row.iso_code === vis.selectedCountryCode
+            ) {
+                row.year = vis.parseDate(row.year);
+                return row;
+            }
+            return null;
+        });
+
+        // Reorganize data to more easily display multiple lines
+        vis.fields = [
+            { field: "world_co2", values: [] },
+            { field: "usa_co2", values: [] },
+            { field: "selected_co2", values: [] }
+        ];
+
+        filteredData.forEach(function(row) {
+            const { country, iso_code, year, co2 } = row;
+
+            if (!year) { return; } // Do nothing
+
+            const thisData = { year, co2: +co2 };
+
+            // Add data to the
+            if (country === "World") {
+                vis.fields[0].values.push(thisData);
+            } else if (country === "United States") {
+                vis.fields[1].values.push(thisData);
+            } else if (iso_code === vis.selectedCountryCode) {
+                vis.fields[2].values.push(thisData);
+            } else {
+                throw new Error("Error in bumpChartVis while wrangling global data");
+            }
+        });
+
+        vis.displayData = filteredData;
+        console.log("THIS IS THE GLOBAL DATA", vis.displayData)
+    }
+
+    wrangleDataCountry(countryCode) {
+        let vis = this;
+
         // Filter out all countries but the US
         let filteredData = this.co2Data.filter((row) => {
             //if (row.country === "United States") {
-            if (row.iso_code === vis.country_iso_code) {
+            if (row.iso_code === countryCode) {
                 row.year = vis.parseDate(row.year);
                 return row;
             }
@@ -92,7 +158,8 @@ class BumpChartVis {
         vis.displayData = filteredData;
 
         // Reorganize data to more easily display multiple lines
-        vis.fields = vis.columnsToShow.map(function(field) {
+        const columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "oil_co2"];
+        vis.fields = columnsToShow.map(function(field) {
 
             return {
                 field,
@@ -101,12 +168,7 @@ class BumpChartVis {
                 })
             };
         });
-
-        // console.log("displayData", vis.displayData);
-        // console.log("fields", vis.fields);
-
-        vis.updateVis();
-	}
+    }
 
 	updateVis() {
 		let vis = this;
@@ -149,7 +211,7 @@ class BumpChartVis {
         vis.co2Lines.append("text")
             .attr("class", "line-label")
             .datum(function(d) { return {field: d.field, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")"; })
+            .attr("transform", function(d) { console.log("d", d); return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")"; })
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
