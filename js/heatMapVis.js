@@ -340,6 +340,9 @@ class HeatMapVis {
                 myBumpChart.country_iso_code = d.data.iso_code;
                 myBumpChart.wrangleData();
 
+                //call radar vis
+                myRadarVis.selectedCountryCode = d.data.iso_code;
+                myRadarVis.wrangleData();
 
                 //to rotate globe to country being clicked
                 //Reference: https://plnkr.co/edit/MeAA55fbY5dMZETCXpFo?p=preview&preview
@@ -389,6 +392,7 @@ class HeatMapVis {
                             };
                         })
                 })();
+
             })
 
             .merge(vis.rect)

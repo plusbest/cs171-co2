@@ -107,11 +107,21 @@
             </div>
         </div>
     </div>
-
+    <div class="row w-100" id="hook2-row">
+        <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
+            <div>
+                In 2021, CO2 was responsible for about
+            </div>
+            <div class="big-stat">2/3</div>
+            <div>
+                of the <span class="stat-highlight text-underline">total heating influence</span> of all human-produced greenhouse gases.
+            </div>
+        </div>
+    </div>
     <div class="row w-100" id="heatmap-row">
         <!-- HEAT MAP SECTION -->
         <div class="col-12 p-5">
-            <div class="section-title">Different countries around the globe contribute vastly different amount of CO2 consumption emissions</div>
+            <div class="section-title">Different countries around the globe contribute vastly different amounts of CO2 consumption emissions</div>
 
             <div class="row" style="height: 5vh;">
                 <div class="col-5 offset-1">
@@ -171,12 +181,18 @@
         </div>
     </div>
     <div class="row w-100" id="mainpoint-row">
+        <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
+                The United States ranks <span id="us-rank-compared-to-selected">higher</span>
+                <div class="d-inline">than <span id="selected-country-name">{{SELECTED COUNTRY}}</span> in global emissions.</div>
+        </div>
+    </div>
+    <div class="row w-100" id="mainpoint-vis-row">
         <!-- MAIN POINT SECTION -->
         <div class="col-12 p-5">
-            <div class="row" style="height: 20vh;">
+            <div class="row h-100">
                 <div class="col-10 offset-1">
-                    <div class="section-title">main point</div>
-                    <div class="content-section" id="mainPointDiv">
+                    <div class="section-title">In 2020, their emissions were divided like this:</div>
+                    <div class="content-section" id="radarDiv">
                     </div>
                 </div>
             </div>
@@ -187,7 +203,7 @@
         <div class="col-12 p-5">
             <div class="row" style="height: 50vh;">
                 <div class="col-10 offset-1">
-                    <h2 class="section-title">Trends in U.S. CO2 Emissions Over Time (1800 - 2020)</h2>
+                    <h2 class="section-title">And their emissions compared to the global averages over time (1800 - 2020), in the following ways: </h2>
                     <div class="content-section" id="bumpChartDiv">
                     </div>
                 </div>
@@ -200,6 +216,56 @@
             <div class="section-title">solution resolution</div>
             <div class="content-section" id="solutionDiv">
             </div>
+        </div>
+    </div>
+    <div class="row w-100 text-light bg-dark m-0" style="min-height: 40vh;" id="footer-row">
+        <!-- FOOTER SECTION -->
+        <div class="col-12 p-5">
+            <div class="row">
+                <div class="col-10 offset-1">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="section-title">About the Authors</div>
+                            This project was created by:
+                            <ul>
+                                <li>Vinod Iyer</li>
+                                <li>Jerry Wycoco</li>
+                                <li>
+                                    <a class="text-warning" href="https://biancamorris.com" target="_blank">
+                                        Bianca Morris
+                                    </a>
+                                </li>
+                            </ul>
+                            for CS171 at Harvard Extension School
+                        </div>
+                        <div class="col-md-4">
+                            <div class="section-title">Data Sources</div>
+                            We primarily used data from
+                            <a class="text-warning" href="https://github.com/owid/co2-data" target="_blank">
+                            One World in Data</a>, but supplemented it with data from the
+                            following sources: {{list any additional sources}}.
+                            <!-- TODO: List additional sources in Data Sources and Credits -->
+                        </div>
+                        <div class="col-md-4">
+                            <div class="section-title">Credits</div>
+                            Images are from Matt Palmer, Philip Flores, and Sophia Simoes on
+                            <a href="https://www.unsplash.com" class="text-warning" target="_blank">Unsplash</a>. Visualizations
+                            were created with the help of D3 docs,
+                            <a href="https://www.oreilly.com/library/view/interactive-data-visualization/9781449340223/"
+                               target="_blank" class="text-warning text-decoration-underline">Interactive Visualization for the Web</a> by Scott Murray,
+                            <a class="text-warning"
+                               href="https://yangdanny97.github.io/blog/2019/03/01/D3-Spider-Chart" target="_blank">
+                                a tutorial by Danny Yang</a>, and more.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100 text-light m-0" id="bottom-row">
+        <!-- BOTTOM BAR -->
+        <div class="col-12 text-center">
+            <small>Made with 💛 and  ☕</small>
         </div>
     </div>
 </div>
@@ -229,9 +295,8 @@
 <script src="js/sankeyVis.js"></script>
 <script src="js/heatMapVis.js"></script>
 <script src="js/mapVis.js"></script>
-
+<script src="js/radarVis.js"></script>
 <script src="js/mainPointVis.js"></script>
-
 <script src="js/bumpChartVis.js"></script>
 <script src="js/main.js"></script>
 </body>

@@ -77,7 +77,7 @@ class MapVis {
         vis.color = d3.scaleSequential()
             .interpolator(d3.interpolateOranges);
 
-        console.log(vis.color(99));
+        // console.log(vis.color(99));
 
         vis.legend = vis.svg.append("g")
             .attr('class', 'legend')
@@ -126,7 +126,7 @@ class MapVis {
 
     wrangleData() {
         let vis = this;
-        console.log(vis.isoCodes);
+        // console.log(vis.isoCodes);
         vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['country-code'], x['alpha-3']]));
         vis.co2DataFiltered = [];
         vis.consumption_co2_per_capita_total = 0;
@@ -146,11 +146,11 @@ class MapVis {
                 )
             }
         }
-        console.log(vis.consumption_co2_per_capita_total);
-
-        console.log(vis.consumption_co2_total);
-
-        console.log(vis.co2DataFiltered);
+        // console.log(vis.consumption_co2_per_capita_total);
+        //
+        // console.log(vis.consumption_co2_total);
+        //
+        // console.log(vis.co2DataFiltered);
 
 
 
@@ -160,8 +160,8 @@ class MapVis {
         ));
 
 
-        console.log(vis.isoCodesDict);
-        console.log(vis.co2DataDict);
+        // console.log(vis.isoCodesDict);
+        // console.log(vis.co2DataDict);
         // create random data structure with information for each land
         vis.countryInfo = {};
         vis.geoData.objects.countries.geometries.forEach(d => {
@@ -176,7 +176,7 @@ class MapVis {
             if (isoCodeVal in vis.co2DataDict) {
                  country_name = vis.co2DataDict[isoCodeVal][0];
                  if (vis.selectedCategory == "percapita") {
-                     console.log(vis.co2DataDict[isoCodeVal][1]);
+                     // console.log(vis.co2DataDict[isoCodeVal][1]);
                      if(vis.co2DataDict[isoCodeVal][1] !=''){
                          country_val = parseFloat(vis.co2DataDict[isoCodeVal][1]);
                          country_val_percent = parseFloat(country_val)/parseFloat(vis.consumption_co2_per_capita_total);
@@ -209,7 +209,7 @@ class MapVis {
                 country_val_percent = 0.0;
 
             }
-            console.log(country_val);
+            // console.log(country_val);
             // let randomCountryValue = Math.random() * 4
             vis.countryInfo[d.id] = {
 
@@ -222,7 +222,7 @@ class MapVis {
                 value_percent: parseFloat(country_val_percent)
             }
         })
-        console.log(vis.countryInfo);
+        // console.log(vis.countryInfo);
         vis.updateVis()
     }
 
@@ -230,7 +230,7 @@ class MapVis {
         let vis = this;
 
 
-        console.log(vis.countryInfo);
+        // console.log(vis.countryInfo);
         if(vis.selectedCategory == 'percapita') {
             vis.maxVal = Math.max.apply(null, vis.co2DataFiltered.map(o => o.consumption_co2_per_capita));
 
@@ -244,15 +244,15 @@ class MapVis {
 
         //vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
 
-        console.log(vis.maxVal);
+        // console.log(vis.maxVal);
 
         vis.color.domain([
             0,
 
             vis.maxVal
         ]);
-        console.log(vis.isoCodesDict);
-        console.log(vis.isoCodesDict[682]);
+        // console.log(vis.isoCodesDict);
+        // console.log(vis.isoCodesDict[682]);
         vis.countries
             .on('mouseover', function(event, d){
                 d3.select(this)
