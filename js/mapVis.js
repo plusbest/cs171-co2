@@ -287,16 +287,24 @@ class MapVis {
             .on('click', function(event, d){
                 console.log('clicked');
                 console.log(d);
+
+                const isocode = vis.isoCodesDict[parseInt(d.id)];
+                
+                //update global variables and update index doc
+                selectedCountryCode = isocode;
+                selectedCountry = isoCodeToCountryNameMap[isocode];
+                updateStatBlock();
+
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
                 console.log(d.id);
 
-                mySankeyVis.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
+                mySankeyVis.country_iso_code = isocode;
                 console.log(mySankeyVis.country_iso_code);
                 mySankeyVis.wrangleData();
 
                 //call bump chart
-                myBumpChart.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
+                myBumpChart.country_iso_code = isocode;
                 myBumpChart.wrangleData();
             })
             .merge(vis.countries)

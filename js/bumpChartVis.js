@@ -16,7 +16,6 @@ class BumpChartVis {
                         "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
         this.currentView = "ALL" // Can also be same as selected country OR "USA"
-        this.selectedCountryCode = selectedCountryCode; // setting default in above
 
         this.initVis()
     }
@@ -83,8 +82,8 @@ class BumpChartVis {
             vis.wrangleDataGlobal();
         } else if (vis.currentView === "USA") {
             vis.wrangleDataCountry(vis.currentView);
-        } else if (vis.currentView === vis.selectedCountryCode) {
-            vis.wrangleDataCountry(vis.selectedCountryCode);
+        } else if (vis.currentView === selectedCountryCode) {
+            vis.wrangleDataCountry(selectedCountryCode);
         } else {
             throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
         }
@@ -103,7 +102,7 @@ class BumpChartVis {
             if (
                 row.country === "World" ||
                 row.country === "United States" ||
-                row.iso_code === vis.selectedCountryCode
+                row.iso_code === selectedCountryCode
             ) {
                 // Don't double parse
                 if (typeof row.year !== "object") {
@@ -133,7 +132,7 @@ class BumpChartVis {
                 vis.fields[0].values.push(thisData);
             } else if (country === "United States") {
                 vis.fields[1].values.push(thisData);
-            } else if (iso_code === vis.selectedCountryCode) {
+            } else if (iso_code === selectedCountryCode) {
                 vis.fields[2].values.push(thisData);
             } else {
                 throw new Error("Error in bumpChartVis while wrangling global data");
@@ -277,8 +276,8 @@ class BumpChartVis {
                 // Change views
                 if (vis.currentView !== "USA" && field === "usa_co2") {
                     vis.changeCurrentView("USA");
-                } else if (vis.currentView !== vis.selectedCountryCode && field === "selected_co2") {
-                    vis.changeCurrentView(vis.selectedCountryCode);
+                } else if (vis.currentView !== selectedCountryCode && field === "selected_co2") {
+                    vis.changeCurrentView(selectedCountryCode);
                 } else {
                     // console.log("something else happened");
                 }
@@ -295,8 +294,10 @@ class BumpChartVis {
         vis.currentView = newView;
 
         // Update title
-        if (newView === "USA" || newView === vis.selectedCountryCode) {
-            d3.select("#bumpchart-row .section-title").text(`Breakdown of emissions over time for ${newView}`);
+        if (newView === "USA" || newView === selectedCountryCode) {
+            console.log("selectedCountry", selectedCountry, selectedCountryCode)
+            const displayTitle = newView === selectedCountryCode ? selectedCountry: "United States";
+            d3.select("#bumpchart-row .section-title").text(`Breakdown of emissions over time for ${displayTitle}`);
 
             // Append the reset button
             d3.select("#bumpchart-row .section-title")
@@ -307,7 +308,8 @@ class BumpChartVis {
                 .text("Reset to global comparison")
 
         } else {
-            d3.select("#bumpchart-row .section-title").html("And their emissions compared to the world's total over time in the following ways:")
+            d3.select("#bumpchart-row .section-title")
+                .html("And their emissions compared to the world's total over time in the following ways:")
         }
 
         vis.wrangleData();

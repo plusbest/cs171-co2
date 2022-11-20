@@ -36,8 +36,9 @@
             <div class="row">
                 <div class="col-10 offset-1">
                     <div class="content-section py-5 gap-2" id="hookSection">
-                        <h2 class="text-light">Climate Change Will Result in Global Consequences </h2>
-                        <hr/>
+                        <h2 class="text-light text-largest section-title text-center">
+                            Climate Change Will Result in Global Consequences
+                        </h2>
                         <div class="row">
                             <div class="col-md-6">
                                 <img class="img-fluid border border-2 rounded" src="/static/phillip-flores-flood.jpg"
@@ -182,8 +183,10 @@
     </div>
     <div class="row w-100" id="mainpoint-row">
         <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
-                The United States ranks <span id="us-rank-compared-to-selected">higher</span>
-                <div class="d-inline">than <span id="selected-country-name">{{SELECTED COUNTRY}}</span> in global emissions.</div>
+                The United States currently (2020) ranks <span id="us-rank-compared-to-selected">higher</span>
+                <div id="mainpoint-suffix" class="d-inline">
+                    than <span id="selected-country-name">Great Britain</span> in global emissions.
+                </div>
         </div>
     </div>
     <div class="row w-100" id="mainpoint-vis-row">
@@ -201,9 +204,9 @@
     <div class="row w-100" id="bumpchart-row">
         <!-- BUMP CHART SECTION -->
         <div class="col-12 p-5">
-            <div class="row" style="height: 50vh;">
+            <div class="row" style="min-height: 50vh;">
                 <div class="col-10 offset-1">
-                    <h2 class="section-title">And their emissions compared to the world's total over time, in the following ways:</h2>
+                    <h2 class="section-title">And their emissions compared to the world's total over time in the following ways:</h2>
                     <div class="content-section" id="bumpChartDiv">
                     </div>
                 </div>

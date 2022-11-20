@@ -11,10 +11,16 @@ let
     myMapVis,
     myRadarVis;
 
+// TODO: See if these can be used? Perhaps for shared brushing data between sankey and heatmap/globe?
 let selectedTimeRange = [];
-let selectedCountryCode = "GBR";
 let selectedYear = 2019;
 
+// TODO: update all visualizations to use global vars
+let selectedCountryCode = "GBR";
+let selectedCountry = "Great Britain";
+
+// Keep track of mappings for easier updating of selectedCountryCode
+const isoCodeToCountryNameMap = { };
 
 
 const excludedCountries = [
@@ -71,6 +77,12 @@ function initMainPage(dataArray) {
     console.log('energy data:', dataArray[1]);
     console.log('hi team :)');
 
+    // Build a map of iso codes to countries
+    dataArray[0].forEach((row) => {
+        if (!isoCodeToCountryNameMap[row.iso_code]) {
+            isoCodeToCountryNameMap[row.iso_code] = row.country;
+        }
+    });
 
     // init map
 
@@ -126,5 +138,20 @@ function yearSliderChange(selectedYear) {
 
 }
 
-
-
+function updateStatBlock(){
+    d3.select("#selected-country-name").text(selectedCountry);
+    if (selectedCountry === "China" && selectedCountryCode === "CHN") {
+        d3.select("#us-rank-compared-to-selected").text("LOWER");
+        d3.select("#mainpoint-suffix").html(`
+             than <span id="selected-country-name">${selectedCountry}</span> in global emissions.
+        `);
+    } else if (selectedCountry === "United States" && selectedCountryCode === "USA") {
+        d3.select("#us-rank-compared-to-selected").text("#2 in the world");
+        d3.select("#mainpoint-suffix").html(`in global emissions.`);
+    } else {
+        d3.select("#us-rank-compared-to-selected").text("HIGHER");
+        d3.select("#mainpoint-suffix").html(`
+             than <span id="selected-country-name">${selectedCountry}</span> in global emissions.
+        `);
+    }
+}
