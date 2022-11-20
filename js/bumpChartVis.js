@@ -9,13 +9,10 @@ class BumpChartVis {
     constructor(parentElement, co2Data, energyData) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
-        this.energyData = energyData; // Probably unnecessary; TODO: Delete
         this.displayData = [];
     	this.parseDate = d3.timeParse("%Y");
-        this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
-                        "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
-        this.currentView = "ALL" // Can also be same as selected country OR "USA"
+        this.currentView = "ALL" // Can also be same as selected country OR "USA" OR "WORLD"
 
         this.initVis()
     }
@@ -84,8 +81,13 @@ class BumpChartVis {
             vis.wrangleDataCountry(vis.currentView);
         } else if (vis.currentView === selectedCountryCode) {
             vis.wrangleDataCountry(selectedCountryCode);
+        } else if (vis.currentView === "WORLD") {
+            vis.wrangleDataCountry("WLD");
         } else {
-            throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
+            // reset to global state and re-start
+            vis.changeCurrentView("ALL")
+            return;
+            // throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
         }
 
         // console.log("bumpChart displayData", vis.displayData);
@@ -147,18 +149,23 @@ class BumpChartVis {
         });
 
         vis.displayData = filteredData;
-        // console.log("THIS IS THE GLOBAL DATA", vis.displayData)
+        console.log("THIS IS THE GLOBAL DATA", vis.displayData)
     }
 
     wrangleDataCountry(countryCode) {
         let vis = this;
 
+
         // Filter out all countries but the US
         let filteredData = this.co2Data.filter((row) => {
-            if (row.iso_code === countryCode) {
+            const { iso_code = null, country, year } = row;
+            if (
+                (countryCode === "WLD" && this.currentView === "WORLD" && country === "World") ||
+                iso_code === countryCode
+            ) {
                 // Don't double parse
-                if (typeof row.year !== "object") {
-                    row.year = vis.parseDate(row.year);
+                if (typeof year !== "object") {
+                    row.year = vis.parseDate(year);
                 }
 
                 return row;
@@ -167,6 +174,7 @@ class BumpChartVis {
         });
 
         vis.displayData = filteredData;
+        console.log("biancam THIS IS THE FILTERED DATA", filteredData);
 
         // Reorganize data to more easily display multiple lines
         const columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "oil_co2"];
@@ -285,8 +293,8 @@ class BumpChartVis {
                     vis.changeCurrentView("USA");
                 } else if (vis.currentView !== selectedCountryCode && field === "selected_co2") {
                     vis.changeCurrentView(selectedCountryCode);
-                } else {
-                    // console.log("something else happened");
+                } else if (vis.currentView !== "WORLD" & field === "world_co2") {
+                    vis.changeCurrentView("WORLD");
                 }
             });
 
@@ -301,9 +309,10 @@ class BumpChartVis {
         vis.currentView = newView;
 
         // Update title
-        if (newView === "USA" || newView === selectedCountryCode) {
+        if (newView === "USA" || newView === selectedCountryCode || newView === "WORLD") {
             console.log("selectedCountry", selectedCountry, selectedCountryCode)
-            const displayTitle = newView === selectedCountryCode ? selectedCountry: "United States";
+            const displayTitle = newView === selectedCountryCode ? selectedCountry:
+                                        newView === "USA" ? "United States": "the world";
             d3.select("#bumpchart-row .section-title").text(`Breakdown of emissions over time for ${displayTitle}`);
 
             // Append the reset button
