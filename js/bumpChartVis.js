@@ -89,8 +89,8 @@ class BumpChartVis {
             throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
         }
 
-        console.log("bumpChart displayData", vis.displayData);
-        console.log("bumpChart fields", vis.fields);
+        // console.log("bumpChart displayData", vis.displayData);
+        // console.log("bumpChart fields", vis.fields);
 
         vis.updateVis();
 	}
@@ -100,7 +100,6 @@ class BumpChartVis {
 
         // Filter out everything except global data
         let filteredData = this.co2Data.filter((row) => {
-            console.log()
             if (
                 row.country === "World" ||
                 row.country === "United States" ||
@@ -142,7 +141,7 @@ class BumpChartVis {
         });
 
         vis.displayData = filteredData;
-        console.log("THIS IS THE GLOBAL DATA", vis.displayData)
+        // console.log("THIS IS THE GLOBAL DATA", vis.displayData)
     }
 
     wrangleDataCountry(countryCode) {
@@ -202,10 +201,15 @@ class BumpChartVis {
             .x(function(d) { return vis.x(d.year); })
             .y(function(d) { return vis.y(d.co2); });
 
-        vis.co2Lines = vis.svg.selectAll(".co2")
+
+        // TODO: Need to figure out how to accomplish this via the enter-update-remove pattern
+        // Tried a lot of different means and this was the only one I could get to work in time for prototype deadline
+        vis.svg.selectAll("g.co2").remove();
+
+        vis.co2Lines = vis.svg.selectAll("g.co2")
             .data(vis.fields)
             .enter().append("g")
-            .attr("class", function(d) { return d.field; });
+            .attr("class", function(d) { return "co2 " + d.field; });
 
         vis.co2Lines.append("path")
             .attr("class", "line")
@@ -217,7 +221,10 @@ class BumpChartVis {
         vis.co2Lines.append("text")
             .attr("class", "line-label")
             .datum(function(d) { return {field: d.field, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { console.log("d", d); return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")"; })
+            .attr("transform", function(d) {
+                // console.log("d", d);
+                return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")";
+            })
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
@@ -273,7 +280,7 @@ class BumpChartVis {
                 } else if (vis.currentView !== vis.selectedCountryCode && field === "selected_co2") {
                     vis.changeCurrentView(vis.selectedCountryCode);
                 } else {
-                    console.log("something else happened");
+                    // console.log("something else happened");
                 }
             });
 
@@ -287,8 +294,28 @@ class BumpChartVis {
 
         vis.currentView = newView;
 
-        console.log("changing view to:", newView);
+        // Update title
+        if (newView === "USA" || newView === vis.selectedCountryCode) {
+            d3.select("#bumpchart-row .section-title").text(`Breakdown of emissions over time for ${newView}`);
+
+            // Append the reset button
+            d3.select("#bumpchart-row .section-title")
+                .append("button")
+                .attr("id", "bumpchart-reset")
+                .attr("class", "btn btn-link btn-sm d-block m-auto")
+                .on("click", (e) => vis.resetButtonOnClick(e))
+                .text("Reset to global comparison")
+
+        } else {
+            d3.select("#bumpchart-row .section-title").html("And their emissions compared to the world's total over time in the following ways:")
+        }
+
         vis.wrangleData();
+    }
+
+    resetButtonOnClick(e) {
+        const vis = this;
+        vis.changeCurrentView('ALL');
     }
 
 }
