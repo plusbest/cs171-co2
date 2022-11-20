@@ -83,40 +83,7 @@ class HeatMapVis {
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
             .enter()
             .append("rect");
-            /*
-            .on('mouseover', function(event, d){
-                //console.log(d);
-                d3.select(this)
-                    .attr('stroke-width', '2px')
-                    .attr("stroke", 'red');
 
-                vis.tooltip
-                    .style("opacity", 1)
-                    .style("left", event.pageX + 20 + "px")
-                    .style("top", event.pageY + "px")
-                    .html(`
-         <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
-             <h3> ${ d.data.name}</h3>
-             <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.value}</h4>       
-             
- 
-
-         </div>`);
-
-            })
-            .on('mouseout', function(event, d){
-                d3.select(this)
-                    .attr('stroke-width', '1px')
-                    .attr('stroke', 'black');
-
-                vis.tooltip
-                    .style("opacity", 0)
-                    .style("left", 0)
-                    .style("top", 0)
-                    .html(``);
-            });
-            */
         vis.svg
             .selectAll("text")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })

@@ -105,9 +105,12 @@ function categoryChange() {
 
 }
 
-function yearSlider() {
+function yearSliderChange(selectedYear) {
+    //selectedYear =  document.getElementById('yearSlider').value;
 
-    selectedYear =  document.getElementById('yearSlider').value;
+    document.getElementById('yearSliderLabel').innerText = 'You selected: ' + selectedYear + ' (between 1990 and 2019)';
+    //yearSliderText.text("test");
+
     mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
 

@@ -160,6 +160,15 @@ html {
 	margin-top: 0px;
 	margin-left: 50px;
     align-content: right;
+    font-size: small;
+}
+
+#yearSliderLabel {
+    font-size: small;
+}
+.legendSequential {
+    font-size: small;
+
 }
 
 .section-title {
@@ -171,7 +180,6 @@ html {
 }
 
 /*MAIN POINT STYLES*/
-
 #mainpoint-row {
     min-height: 40vh;
     font-family: Ayuthaya;
