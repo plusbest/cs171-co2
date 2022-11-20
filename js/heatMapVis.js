@@ -15,7 +15,7 @@ class HeatMapVis {
         this.selectedYear = 2019;
         this.duration = 500; // transition duration
         this.delay = 100;
-        this.selectedCategory = "percapita";
+        this.selectedCategory = "percountry";
         this.sortNum = 75;
         this.isoCodes = isoCodes;
 
