@@ -345,6 +345,9 @@ class HeatMapVis {
                 myRadarVis.wrangleData();
 
                 //to rotate globe to country being clicked
+                myMapVis.selected_country_iso_code = d.data.iso_code;
+                myMapVis.rotateEarth(myMapVis.selected_country_iso_code,vis.isoCodesDict);
+                /*
                 //Reference: https://plnkr.co/edit/MeAA55fbY5dMZETCXpFo?p=preview&preview
                 let rotate = myMapVis.projection.rotate();
                 let focusedCountry = 682;
@@ -392,7 +395,7 @@ class HeatMapVis {
                             };
                         })
                 })();
-
+            */
             })
 
             .merge(vis.rect)
