@@ -16,7 +16,7 @@ class MapVis {
 
         this.duration = 500; // transition duration
         this.delay = 100;
-        this.selectedCategory = "percapita";
+        this.selectedCategory = "percountry";
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
         this.selectedYear = 2019;
@@ -128,7 +128,7 @@ class MapVis {
     wrangleData() {
         let vis = this;
         // console.log(vis.isoCodes);
-        vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['country-code'], x['alpha-3']]));
+        vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [parseInt(x['country-code']), x['alpha-3']]));
         vis.co2DataFiltered = [];
         vis.consumption_co2_per_capita_total = 0;
         vis.consumption_co2_total = 0;
@@ -160,20 +160,20 @@ class MapVis {
 
         ));
 
+        console.log(vis.co2DataDict);
 
         // console.log(vis.isoCodesDict);
         // console.log(vis.co2DataDict);
         // create random data structure with information for each land
         vis.countryInfo = {};
         vis.geoData.objects.countries.geometries.forEach(d => {
-
-            //console.log(d.id);
+            console.log(d);
+            console.log(d.id);
             let isoCodeVal = vis.isoCodesDict[d.id];
             //console.log(isoCodeVal);
             let country_name = '';
             let country_val = 0.00;
             let country_val_percent = 0.00;
-
             if (isoCodeVal in vis.co2DataDict) {
                  country_name = vis.co2DataDict[isoCodeVal][0];
                  if (vis.selectedCategory == "percapita") {
@@ -212,6 +212,7 @@ class MapVis {
             }
             // console.log(country_val);
             // let randomCountryValue = Math.random() * 4
+
             vis.countryInfo[d.id] = {
 
                 //name: d.properties.name,
@@ -222,8 +223,10 @@ class MapVis {
                 value: parseFloat(country_val),
                 value_percent: parseFloat(country_val_percent)
             }
+
+
         })
-        // console.log(vis.countryInfo);
+
         vis.updateVis()
     }
 
