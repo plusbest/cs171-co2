@@ -106,7 +106,10 @@ class BumpChartVis {
                 row.country === "United States" ||
                 row.iso_code === vis.selectedCountryCode
             ) {
-                row.year = vis.parseDate(row.year);
+                // Don't double parse
+                if (typeof row.year !== "object") {
+                    row.year = vis.parseDate(row.year);
+                }
                 return row;
             }
             return null;
@@ -147,9 +150,12 @@ class BumpChartVis {
 
         // Filter out all countries but the US
         let filteredData = this.co2Data.filter((row) => {
-            //if (row.country === "United States") {
             if (row.iso_code === countryCode) {
-                row.year = vis.parseDate(row.year);
+                // Don't double parse
+                if (typeof row.year !== "object") {
+                    row.year = vis.parseDate(row.year);
+                }
+
                 return row;
             }
             return null;
@@ -257,11 +263,32 @@ class BumpChartVis {
                 const parentGroup = d3.select(this.parentNode);
                 parentGroup.selectAll("text.line-label")
                     .style("fill", "#cccccc");
+            })
+            .on('click', function(e, d) {
+                const { field } = d;
+
+                // Change views
+                if (vis.currentView !== "USA" && field === "usa_co2") {
+                    vis.changeCurrentView("USA");
+                } else if (vis.currentView !== vis.selectedCountryCode && field === "selected_co2") {
+                    vis.changeCurrentView(vis.selectedCountryCode);
+                } else {
+                    console.log("something else happened");
+                }
             });
 
         // Update axes
         vis.svg.select(".y-axis.axis").call(vis.yAxis);
         vis.svg.select(".x-axis.axis").call(vis.xAxis);
 	}
+
+    changeCurrentView(newView) {
+        const vis = this;
+
+        vis.currentView = newView;
+
+        console.log("changing view to:", newView);
+        vis.wrangleData();
+    }
 
 }
