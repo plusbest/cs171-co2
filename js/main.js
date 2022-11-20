@@ -16,8 +16,8 @@ let selectedTimeRange = [];
 let selectedYear = 2019;
 
 // TODO: update all visualizations to use global vars
-let selectedCountryCode = "GBR";
-let selectedCountry = "Great Britain";
+let selectedCountryCode = "USA";
+let selectedCountry = "United States";
 
 // Keep track of mappings for easier updating of selectedCountryCode
 const isoCodeToCountryNameMap = { };

@@ -60,7 +60,7 @@ class BumpChartVis {
             .attr("y", 6)
             .attr("dy", "0.71em")
             .attr("fill", "#000")
-            .text("CO2 Emissions (in Tons)");
+            .text("CO2 Emissions (in Millions of Tons)");
 
         vis.svg.append("g")
             .attr("class", "x-axis axis")
@@ -97,7 +97,7 @@ class BumpChartVis {
     wrangleDataGlobal() {
         let vis = this;
 
-        // Filter out everything except global data
+        // Filter out everything except global, selected, and USA
         let filteredData = this.co2Data.filter((row) => {
             if (
                 row.country === "World" ||
@@ -113,12 +113,19 @@ class BumpChartVis {
             return null;
         });
 
-        // Reorganize data to more easily display multiple lines
-        vis.fields = [
-            { field: "world_co2", values: [] },
-            { field: "usa_co2", values: [] },
-            { field: "selected_co2", values: [] }
-        ];
+        // Reorganize data to more easily display multiple lines; take into account differences with USA present
+        if (selectedCountryCode === "USA") {
+            vis.fields = [
+                { field: "world_co2", values: [] },
+                { field: "usa_co2", values: [] },
+            ];
+        } else {
+            vis.fields = [
+                { field: "world_co2", values: [] },
+                { field: "usa_co2", values: [] },
+                { field: "selected_co2", values: [] }
+            ];
+        }
 
         filteredData.forEach(function(row) {
             const { country, iso_code, year, co2 } = row;
@@ -132,7 +139,7 @@ class BumpChartVis {
                 vis.fields[0].values.push(thisData);
             } else if (country === "United States") {
                 vis.fields[1].values.push(thisData);
-            } else if (iso_code === selectedCountryCode) {
+            } else if (iso_code === selectedCountryCode && selectedCountryCode !== "USA") {
                 vis.fields[2].values.push(thisData);
             } else {
                 throw new Error("Error in bumpChartVis while wrangling global data");
@@ -221,7 +228,7 @@ class BumpChartVis {
             .attr("class", "line-label")
             .datum(function(d) { return {field: d.field, value: d.values[d.values.length - 1]}; })
             .attr("transform", function(d) {
-                // console.log("d", d);
+                console.log("biancam d", d);
                 return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")";
             })
             .attr("x", 3)
