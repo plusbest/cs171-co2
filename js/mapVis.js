@@ -45,7 +45,8 @@ class MapVis {
                 //d3.geoAzimuthalEqualArea()
                 //d3.geoStereographic()
                 .translate([vis.width / 2, vis.height / 2])
-                .scale(165);
+                //.scale(165);
+                .scale(250);
 
         vis.path = d3.geoPath()
             .projection(vis.projection);
@@ -118,7 +119,7 @@ class MapVis {
         // Add legend
         vis.svg.append("g")
             .attr('class', 'legendSequential')
-            .attr('transform', `translate(${vis.width * 3.2 / 4}, ${vis.margin.top})`);
+            .attr('transform', `translate(${vis.width * 3.4 / 4}, ${vis.margin.top + vis.margin.bottom})`);
 
         vis.wrangleData()
 
