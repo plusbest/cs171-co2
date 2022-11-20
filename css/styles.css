@@ -162,3 +162,8 @@ html {
     font-size: small;
 
 }
+
+.focused {
+    stroke: blue;
+    stroke-width: 1;
+}

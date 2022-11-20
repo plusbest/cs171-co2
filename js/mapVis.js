@@ -14,13 +14,13 @@ class MapVis {
         this.displayData = [];
         this.sortedData = [];
 
-        this.duration = 1000; // transition duration
+        this.duration = 500; // transition duration
         this.delay = 100;
         this.selectedCategory = "percapita";
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
         this.selectedYear = 2019;
-
+        this.focused;
 
         this.initVis()
     }
@@ -39,17 +39,7 @@ class MapVis {
             .attr("height", vis.height)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
-        // add title
-        /*
-        vis.svg.append('g')
-            .attr('class', 'title')
-            .attr('id', 'map-title')
-            .append('text')
-            .text('Map')
-            .attr('transform', `translate(${vis.width / 2}, 20)`)
-            .attr('text-anchor', 'middle');
-        */
-        // TODO
+
         vis.projection =
             d3.geoOrthographic()
                 //d3.geoAzimuthalEqualArea()
@@ -83,11 +73,7 @@ class MapVis {
 
 
 
-        /*
-        vis.color = d3.scaleLinear()
-            .domain([0,25,50,75])
-            .range(vis.colors);
-        */
+
         vis.color = d3.scaleSequential()
             .interpolator(d3.interpolateOranges);
 
@@ -122,7 +108,13 @@ class MapVis {
                     d3.selectAll(".graticule").attr("d", vis.path)
                 })
         )
+        //console.log(vis.path.centroid(_.find(vis.world,{id: "682"})));
+        console.log(vis.world);
 
+        let centroids = vis.world.map(function (feature){
+            return vis.path.centroid(feature);
+        });
+        console.log(centroids);
         // Add legend
         vis.svg.append("g")
             .attr('class', 'legendSequential')

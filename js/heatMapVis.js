@@ -6,17 +6,19 @@
 class HeatMapVis {
 
     // constructor method to initialize Timeline object
-    constructor(parentElement,co2Data,excludedCountries) {
+    constructor(parentElement,co2Data,excludedCountries,isoCodes) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
         this.excludedCountries = excludedCountries;
         this.displayData = [];
         this.sortedData = [];
         this.selectedYear = 2019;
-        this.duration = 1000; // transition duration
+        this.duration = 500; // transition duration
         this.delay = 100;
         this.selectedCategory = "percapita";
         this.sortNum = 75;
+        this.isoCodes = isoCodes;
+
         // call initVis method
         this.initVis()
     }
@@ -78,7 +80,7 @@ class HeatMapVis {
 
         console.log(vis.root.leaves());
         // use this information to add rectangles:
-
+        /*
         vis.svg.selectAll("rect")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
             .enter()
@@ -96,7 +98,7 @@ class HeatMapVis {
             .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
             .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
             .text(function(d){ return d.data.iso_code});
-
+        */
         this.wrangleData();
     }
 
@@ -121,6 +123,8 @@ class HeatMapVis {
          */
         let  valueToStore = 0;
         let valueType = '';
+        vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['alpha-3'], x['country-code']]));
+
         console.log('selected year:' + vis.selectedYear);
         vis.consumption_co2_per_capita_total = 0;
         vis.consumption_co2_total = 0;
@@ -134,10 +138,14 @@ class HeatMapVis {
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
+                    vis.sortNum = 75;
+
 
                 } else {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2).toFixed(2);
                     valueType = "Consumption CO2";
+                    vis.sortNum = 30;
+
 
                 }
 
@@ -269,11 +277,11 @@ class HeatMapVis {
         //vis.rect.exit().remove();
 
         vis.rect.exit()
-            .style("opacity", 1)
+            //.style("opacity", 0.2)
             .transition().duration(vis.duration)
             .delay(vis.delay)
 
-            .style("opacity", 1e-6)
+            //.style("opacity", 1e-6)
             //.attr("x", -10)
             //.attr("y", -10)
 
@@ -321,6 +329,7 @@ class HeatMapVis {
                     .html(``);
             })
             .on('click', function(event, d){
+
                 console.log('clicked');
                 console.log(d);
                 //call sankey
@@ -330,7 +339,58 @@ class HeatMapVis {
                 //call bump chart
                 myBumpChart.country_iso_code = d.data.iso_code;
                 myBumpChart.wrangleData();
+
+
+                //to rotate globe to country being clicked
+                //Reference: https://plnkr.co/edit/MeAA55fbY5dMZETCXpFo?p=preview&preview
+                let rotate = myMapVis.projection.rotate();
+                let focusedCountry = 682;
+                        //d.data.iso_code,
+                let centroids = myMapVis.world.map(function (feature){
+                    return d3.geoCentroid(feature);
+                });
+                console.log(myMapVis.world);
+                console.log(centroids);
+                const index = myMapVis.world.findIndex(object => {
+                    return object.id === parseInt(vis.isoCodesDict[d.data.iso_code]);
+                        //vis.isoCodesDict[d.data.iso_code];
+                });
+                console.log(vis.isoCodesDict);
+                console.log(vis.isoCodesDict[d.data.iso_code]);
+                console.log(d.data.iso_code);
+                let temp_iso = d.data.iso_code;
+                console.log(parseInt(vis.isoCodesDict[d.data.iso_code]));
+                console.log(index);
+                let p = centroids[index];
+                //= myMapVis.path.centroid(0);
+                console.log(p);
+                myMapVis.svg.selectAll(".focused").classed("focused", myMapVis.focused = false);
+
+                //Globe rotating
+
+                (function transition() {
+                    d3.transition()
+                        .duration(2500)
+                        .tween("rotate", function() {
+                            var r = d3.interpolate(myMapVis.projection.rotate(), [-p[0], -p[1]]);
+                            console.log(r);
+                            return function(t) {
+                                console.log(r(t));
+                                myMapVis.projection.rotate(r(t));
+                                // Update the map
+                                myMapVis.path = d3.geoPath().projection(myMapVis.projection);
+                                d3.selectAll(".country").attr("d", myMapVis.path);
+                                d3.selectAll(".graticule").attr("d", myMapVis.path);
+
+                                myMapVis.svg.selectAll("path").attr("d", myMapVis.path)
+                                    .classed("focused", function(d, i) { return d.id == vis.isoCodesDict[temp_iso] ? myMapVis.focused = d : false; });
+
+
+                            };
+                        })
+                })();
             })
+
             .merge(vis.rect)
             .transition()
             .delay(vis.delay)
@@ -359,6 +419,15 @@ class HeatMapVis {
 
         //vis.text.exit().remove();
 
+        vis.text.exit()
+            //.style("opacity", 0.2)
+            .transition().duration(vis.duration)
+            .delay(vis.delay)
+            //.attr("x", -10)
+            //.attr("y", -10)
+
+            //.style("opacity", 1e-6)
+            .remove();
 
         vis.text
 
@@ -377,15 +446,7 @@ class HeatMapVis {
             .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
             .text(function(d){ return d.data.iso_code});
 
-        vis.text.exit()
-            .style("opacity", 1)
-            .transition().duration(vis.duration)
-            .delay(vis.delay)
-            //.attr("x", -10)
-            //.attr("y", -10)
 
-            .style("opacity", 1e-6)
-            .remove();
 
     }
 
