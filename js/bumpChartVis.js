@@ -313,7 +313,7 @@ class BumpChartVis {
             console.log("selectedCountry", selectedCountry, selectedCountryCode)
             const displayTitle = newView === selectedCountryCode ? selectedCountry:
                                         newView === "USA" ? "United States": "the world";
-            d3.select("#bumpchart-row .section-title").text(`Breakdown of emissions over time for ${displayTitle}`);
+            d3.select("#bumpchart-row .section-title").text(`Breakdown of consumption emissions over time for ${displayTitle}`);
 
             // Append the reset button
             d3.select("#bumpchart-row .section-title")
@@ -325,7 +325,7 @@ class BumpChartVis {
 
         } else {
             d3.select("#bumpchart-row .section-title")
-                .html("And their emissions compared to the world's total over time in the following ways:")
+                .html("And their consumption emissions compared to the world's total over time in the following ways:")
         }
 
         vis.wrangleData();
