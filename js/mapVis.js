@@ -329,6 +329,8 @@ class MapVis {
              <h4> ${vis.countryInfo[d.id].name}</h4>
              <h4> ${vis.countryInfo[d.id].value.toFixed(2)}</h4>   
              <h4> ${Math.round(parseFloat(vis.countryInfo[d.id].value_percent.toFixed(2)*100),2)}% of total emissions</h4>   
+             <h4> Click for drilldown</h4>
+
 
 
 

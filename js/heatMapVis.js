@@ -326,7 +326,9 @@ class HeatMapVis {
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h3> ${ d.data.name}</h3>
              <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.value}</h4>       
+             <h4> ${d.data.value}</h4>
+             <h4> Click for drilldown</h4>
+       
             
              
  
