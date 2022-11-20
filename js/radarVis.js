@@ -64,7 +64,7 @@ class RadarVis {
 
         // Filter out all countries but the US & selected country
         let filteredData = this.co2Data.filter((row) => {
-            console.log("row", row);
+            // console.log("row", row);
             const {
                 year,
                 country,
@@ -131,8 +131,8 @@ class RadarVis {
 
         vis.displayData = filteredData;
 
-        console.log("vis.filteredData", filteredData);
-        console.log("vis.displayData", vis.displayData);
+        // console.log("vis.filteredData", filteredData);
+        // console.log("vis.displayData", vis.displayData);
 
         vis.updateVis();
     }
