@@ -18,6 +18,8 @@ class HeatMapVis {
         this.selectedCategory = "percountry";
         this.sortNum = 75;
         this.isoCodes = isoCodes;
+        this.selected_country_iso_code = 'USA';
+        this.focused_heatmap;
 
         // call initVis method
         this.initVis()
@@ -224,6 +226,7 @@ class HeatMapVis {
 
         console.log(vis.sortedData);
     }
+
     // wrangleData method
     wrangleData() {
         let vis = this;
@@ -250,14 +253,29 @@ class HeatMapVis {
 
     }
 
+    highLightHeatMapCountry(country_iso_code)
+    {
+        let vis = this;
+        //remove all other highlights
+        vis.svg.selectAll(".focused_heatmap").classed("focused_heatmap", vis.focused_heatmap = false);
+
+
+
+
+        //highlight the selected country
+        d3.select("#" + country_iso_code)
+            .classed("focused_heatmap", true);
+
+
+    }
+
     // updateVis method
     updateVis() {
         let vis = this;
         // append the svg object to the body of the page
         // update the title
 
-        //d3.select(('#heatMapTitle').attr("text","Default Text");
-        //= "Heat Map for " + vis.selectedYear;
+
 
         vis.maxVal = vis.sortedData[0].value;
         vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
@@ -269,12 +287,10 @@ class HeatMapVis {
         ]);
 
 
-
         vis.rect = vis.svg
             .selectAll("rect")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
 
-        //vis.rect.exit().remove();
 
         vis.rect.exit()
             //.style("opacity", 0.2)
@@ -295,6 +311,7 @@ class HeatMapVis {
             .attr('width', function (d) { return d.x1 - d.x0; })
             .attr('height', function (d) { return d.y1 - d.y0; })
             .attr('opacity','80%')
+            .attr('id', function(d) {return d.data.iso_code})
             .on('mouseover', function(event, d){
                 //console.log(d);
                 d3.select(this)
@@ -347,55 +364,12 @@ class HeatMapVis {
                 //to rotate globe to country being clicked
                 myMapVis.selected_country_iso_code = d.data.iso_code;
                 myMapVis.rotateEarth(myMapVis.selected_country_iso_code,vis.isoCodesDict);
-                /*
-                //Reference: https://plnkr.co/edit/MeAA55fbY5dMZETCXpFo?p=preview&preview
-                let rotate = myMapVis.projection.rotate();
-                let focusedCountry = 682;
-                        //d.data.iso_code,
-                let centroids = myMapVis.world.map(function (feature){
-                    return d3.geoCentroid(feature);
-                });
-                console.log(myMapVis.world);
-                console.log(centroids);
-                const index = myMapVis.world.findIndex(object => {
-                    return object.id === parseInt(vis.isoCodesDict[d.data.iso_code]);
-                        //vis.isoCodesDict[d.data.iso_code];
-                });
-                console.log(vis.isoCodesDict);
-                console.log(vis.isoCodesDict[d.data.iso_code]);
-                console.log(d.data.iso_code);
-                let temp_iso = d.data.iso_code;
-                console.log(parseInt(vis.isoCodesDict[d.data.iso_code]));
-                console.log(index);
-                let p = centroids[index];
-                //= myMapVis.path.centroid(0);
-                console.log(p);
-                myMapVis.svg.selectAll(".focused").classed("focused", myMapVis.focused = false);
 
-                //Globe rotating
-
-                (function transition() {
-                    d3.transition()
-                        .duration(2500)
-                        .tween("rotate", function() {
-                            var r = d3.interpolate(myMapVis.projection.rotate(), [-p[0], -p[1]]);
-                            console.log(r);
-                            return function(t) {
-                                console.log(r(t));
-                                myMapVis.projection.rotate(r(t));
-                                // Update the map
-                                myMapVis.path = d3.geoPath().projection(myMapVis.projection);
-                                d3.selectAll(".country").attr("d", myMapVis.path);
-                                d3.selectAll(".graticule").attr("d", myMapVis.path);
-
-                                myMapVis.svg.selectAll("path").attr("d", myMapVis.path)
-                                    .classed("focused", function(d, i) { return d.id == vis.isoCodesDict[temp_iso] ? myMapVis.focused = d : false; });
+                //highlight the heat map tile
+                vis.selected_country_iso_code = d.data.iso_code;
+                vis.highLightHeatMapCountry(vis.selected_country_iso_code);
 
 
-                            };
-                        })
-                })();
-            */
             })
 
             .merge(vis.rect)
@@ -419,6 +393,8 @@ class HeatMapVis {
             });
 
         // and to add the text labels
+
+        vis.highLightHeatMapCountry(vis.selected_country_iso_code);
 
         vis.text =  vis.svg
             .selectAll("text")

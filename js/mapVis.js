@@ -359,6 +359,13 @@ class MapVis {
                 //call bump chart
                 myBumpChart.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
                 myBumpChart.wrangleData();
+
+                //rotate the earth to that country
+                vis.rotateEarth(vis.isoCodesDict[parseInt(d.id)], vis.isoCodesDict_iso_to_numeric_codes);
+
+                //highlight the corresponding heat map tile
+                myHeatMapVis.highLightHeatMapCountry(vis.isoCodesDict[parseInt(d.id)]);
+
             })
             .merge(vis.countries)
             .transition()

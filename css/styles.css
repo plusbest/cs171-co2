@@ -187,8 +187,14 @@ html {
 
 
 .focused {
-    stroke: blue;
-    stroke-width: 1;
+    stroke: darkblue;
+    stroke-width: 2;
+    opacity: 1;
+}
+
+.focused_heatmap {
+    stroke: darkblue;
+    stroke-width: 4;
 }
 
 #mainpoint-vis-row {
