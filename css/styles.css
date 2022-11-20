@@ -137,16 +137,19 @@ html {
 
 
 /*HEATMAP VIS STYLES*/
-.heatmap_tooltip {
+.heatmap_tooltip,
+.radar_tooltip {
 	position: absolute;
 	text-align: center;
 	font: 12px sans-serif;
 	/*  pointer-events: none;	This line needs to be removed */
 }
-.heatmap_tooltip h3,h4 {
+.heatmap_tooltip h3,h4,
+.radar_tooltip h3,h4 {
 	text-align: left;
 }
-.heatmap_tooltip h4 {
+.heatmap_tooltip h4,
+.radar_tooltip h4{
 	font: 14px sans-serif;
 }
 
@@ -191,9 +194,14 @@ html {
     stroke-width: 1;
 }
 
-#mainpoint-vis-row {
-    min-height: 100vh;
-}
+/*@media screen and (min-width: 600px) {*/
+/*    #mainpoint-vis-row {*/
+/*        min-height: 100vh;*/
+/*    }*/
+/*}*/
+/*#mainpoint-vis-row {*/
+/*    min-height: 50vh;*/
+/*}*/
 
 #us-rank-compared-to-selected {
     font-size: xxx-large;
@@ -201,4 +209,11 @@ html {
 
 #bottom-row {
     background-color: #2e2e2e;
+}
+
+
+#radarDiv {
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
