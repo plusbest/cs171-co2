@@ -92,26 +92,11 @@ class MapVis {
             .interpolator(d3.interpolateOranges);
 
         console.log(vis.color(99));
+
         vis.legend = vis.svg.append("g")
             .attr('class', 'legend')
             .attr('transform', `translate(${vis.width * 2.8 / 4}, ${vis.height - 50})`)
 
-
-
-        // Reference: https://d3-legend.susielu.com/
-        vis.legend = d3.legendColor()
-            .shape("rect")
-            .cells([0,25,50,75])
-            .shapeHeight(20)
-            .shapeWidth(40)
-            .shapePadding(0)
-            .labelOffset(2)
-            .labelFormat(d3.format('.0f'))
-            .orient("horizontal")
-            .labelAlign("start")
-            .scale(vis.color);
-
-        d3.select(".legend").call(vis.legend);
 
         let m0,
             o0;
@@ -137,6 +122,11 @@ class MapVis {
                     d3.selectAll(".graticule").attr("d", vis.path)
                 })
         )
+
+        // Add legend
+        vis.svg.append("g")
+            .attr('class', 'legendSequential')
+            .attr('transform', `translate(${vis.width * 3.2 / 4}, ${vis.margin.top})`);
 
         vis.wrangleData()
 
@@ -325,6 +315,34 @@ class MapVis {
             .style("fill", function(d, index) {
                 return vis.color(vis.countryInfo[d.id].value);
             });
+
+
+
+        // Reference: https://d3-legend.susielu.com/
+        /*
+        vis.legend = d3.legendColor()
+            .shape("rect")
+            //.cells([0,25,50,75])
+            .shapeHeight(20)
+            .shapeWidth(40)
+            .shapePadding(0)
+            .labelOffset(2)
+            .labelFormat(d3.format('.0f'))
+            .orient("horizontal")
+            .labelAlign("start")
+            .scale(vis.color);
+
+        d3.select(".legend").call(vis.legend);
+        */
+
+        vis.legendSequential = d3.legendColor()
+            .shapeWidth(30)
+            .cells(4)
+            .orient("vertical")
+            .scale(vis.color);
+
+        vis.svg.select(".legendSequential")
+            .call(vis.legendSequential);
 
 
 
