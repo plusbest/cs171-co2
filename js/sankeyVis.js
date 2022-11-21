@@ -20,8 +20,8 @@ class SankeyVis {
         this.country = country;
         this.country_iso_code = 'USA';
         this.year = year;
-        this.selectedCategory = 'percapita';
-        this.selectedYear = 1988
+        this.selectedCategory = 'percountry';
+        this.selectedYear = 2019
 
         this.initVis()
 		}

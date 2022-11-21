@@ -73,7 +73,7 @@ class HeatMapVis {
             .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
             (vis.sortedData);
         vis.root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
-        console.log(vis.root);
+        //console.log(vis.root);
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
@@ -81,7 +81,7 @@ class HeatMapVis {
             .padding(4)
             (vis.root)
 
-        console.log(vis.root.leaves());
+        //console.log(vis.root.leaves());
         // use this information to add rectangles:
         /*
         vis.svg.selectAll("rect")
@@ -108,7 +108,7 @@ class HeatMapVis {
     computeData() {
         let vis = this;
 
-        console.log(vis.co2Data[0]);
+        //console.log(vis.co2Data[0]);
 
 
         this.displayData = [];
@@ -128,7 +128,8 @@ class HeatMapVis {
         let valueType = '';
         vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['alpha-3'], x['country-code']]));
 
-        console.log('selected year:' + vis.selectedYear);
+
+        //console.log('selected year:' + vis.selectedYear);
         vis.consumption_co2_per_capita_total = 0;
         vis.consumption_co2_total = 0;
         for(let i = 0; i < vis.co2Data.length; i++) {
@@ -166,7 +167,7 @@ class HeatMapVis {
 
             }
         }
-        console.log(vis.displayData);
+        //console.log(vis.displayData);
         //vis.sortedData = vis.displayData;
 
         vis.displayData.sort(function(current, next){
@@ -176,7 +177,10 @@ class HeatMapVis {
 
         vis.sortedData = vis.displayData.slice(0,vis.sortNum);
 
+        vis.co2DataDict = Object.fromEntries(vis.sortedData.map(
+            x => [x.iso_code, [x.name]]
 
+        ));
 
         // Read data
         /*
@@ -191,7 +195,7 @@ class HeatMapVis {
         }
 
         vis.restOfData = vis.displayData.slice(vis.sortNum,vis.displayData.length);
-        console.log(vis.restOfData);
+        //console.log(vis.restOfData);
 
         let sum = 0;
 
@@ -199,7 +203,7 @@ class HeatMapVis {
             sum += parseFloat(element.value);
         });
         sum = sum.toFixed(2);
-        console.log(sum);
+        //console.log(sum);
         vis.sortedData.push(
             {
                 name: 'Rest of the World',
@@ -225,7 +229,11 @@ class HeatMapVis {
             }
         );
 
-        console.log(vis.sortedData);
+        //console.log(vis.sortedData);
+        // to init Sankey to show USA data as default
+        mySankeyVis.selectedYear = vis.selectedYear;
+        mySankeyVis.country_iso_code = vis.selected_country_iso_code;
+        mySankeyVis.wrangleData();
     }
 
     // wrangleData method
@@ -239,7 +247,7 @@ class HeatMapVis {
             .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
             (vis.sortedData);
         vis.root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
-        console.log(vis.root);
+        //console.log(vis.root);
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
@@ -247,7 +255,7 @@ class HeatMapVis {
             .padding(4)
             (vis.root)
 
-        console.log(vis.root.leaves());
+        //console.log(vis.root.leaves());
 
 
         vis.updateVis();
@@ -358,9 +366,19 @@ class HeatMapVis {
                 selectedCountry = d.data.name;
                 updateStatBlock();
 
+
+                
+
+                //highlight the heat map tile
+                vis.selected_country_iso_code = d.data.iso_code;
+                vis.highLightHeatMapCountry(vis.selected_country_iso_code);
+                
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
                 mySankeyVis.country_iso_code = d.data.iso_code;
+                console.log(vis.co2DataDict);
+                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[d.data.iso_code];
+
                 mySankeyVis.wrangleData();
 
                 //call bump chart
@@ -375,9 +393,7 @@ class HeatMapVis {
                 myMapVis.selected_country_iso_code = d.data.iso_code;
                 myMapVis.rotateEarth(myMapVis.selected_country_iso_code,vis.isoCodesDict);
 
-                //highlight the heat map tile
-                vis.selected_country_iso_code = d.data.iso_code;
-                vis.highLightHeatMapCountry(vis.selected_country_iso_code);
+
 
 
             })
