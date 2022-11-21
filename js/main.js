@@ -94,12 +94,16 @@ function categoryChange() {
     myHeatMapVis.wrangleData();
 }
 
-function yearSlider() {
 
-    selectedYear =  document.getElementById('yearSlider').value;
-    mySankeyVis.selectedYear = selectedYear;
+// Year Slider
+// TODO: Needs to populate range based on target country and available data?
+let slider = d3.select('#yearSlider')
+slider.on("input", handleInput)
+
+function handleInput() {
+    var eventData = this.value;
+    mySankeyVis.selectedYear = eventData;
     mySankeyVis.wrangleData();
 }
-
 
 
