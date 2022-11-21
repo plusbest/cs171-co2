@@ -20,6 +20,7 @@ class MapVis {
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
         this.selectedYear = 2019;
+        this.selected_country_iso_code = 'USA';
         this.focused;
 
         this.initVis()
@@ -129,6 +130,8 @@ class MapVis {
         let vis = this;
         // console.log(vis.isoCodes);
         vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [parseInt(x['country-code']), x['alpha-3']]));
+        vis.isoCodesDict_iso_to_numeric_codes = Object.fromEntries(vis.isoCodes.map(x => [x['alpha-3'], x['country-code']]));
+
         vis.co2DataFiltered = [];
         vis.consumption_co2_per_capita_total = 0;
         vis.consumption_co2_total = 0;
@@ -230,6 +233,59 @@ class MapVis {
         vis.updateVis()
     }
 
+    rotateEarth(country_iso_code,isoCodesDict_iso_to_numeric_codes) {
+        let vis = this;
+
+        //to rotate globe to country being clicked
+        //Reference: https://plnkr.co/edit/MeAA55fbY5dMZETCXpFo?p=preview&preview
+        let rotate = vis.projection.rotate();
+        let focusedCountry = 682;
+        //d.data.iso_code,
+        let centroids = vis.world.map(function (feature){
+            return d3.geoCentroid(feature);
+        });
+        console.log(vis.world);
+        console.log(centroids);
+        const index = vis.world.findIndex(object => {
+            return object.id === parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
+            //vis.isoCodesDict[d.data.iso_code];
+        });
+        console.log(isoCodesDict_iso_to_numeric_codes);
+        console.log(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
+        console.log(country_iso_code);
+        let temp_iso = country_iso_code;
+        console.log(parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]));
+        console.log(index);
+        let p = centroids[index];
+        //= myMapVis.path.centroid(0);
+        console.log(p);
+        vis.svg.selectAll(".focused").classed("focused", vis.focused = false);
+
+        //Globe rotating
+
+        (function transition() {
+            d3.transition()
+                .duration(2500)
+                .tween("rotate", function() {
+                    var r = d3.interpolate(vis.projection.rotate(), [-p[0], -p[1]]);
+                    console.log(r);
+                    return function(t) {
+                        console.log(r(t));
+                        vis.projection.rotate(r(t));
+                        // Update the map
+                        vis.path = d3.geoPath().projection(vis.projection);
+                        d3.selectAll(".country").attr("d", vis.path);
+                        d3.selectAll(".graticule").attr("d", vis.path);
+
+                        vis.svg.selectAll("path").attr("d", vis.path)
+                            .classed("focused", function(d, i) { return d.id == isoCodesDict_iso_to_numeric_codes[temp_iso] ? vis.focused = d : false; });
+
+
+                    };
+                })
+        })();
+    }
+
     updateVis() {
         let vis = this;
 
@@ -245,7 +301,8 @@ class MapVis {
 
         }
 
-
+        //Rotate to selected country code (default USA) on refresh
+        vis.rotateEarth(vis.selected_country_iso_code, vis.isoCodesDict_iso_to_numeric_codes);
         //vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
 
         // console.log(vis.maxVal);
@@ -272,6 +329,8 @@ class MapVis {
              <h4> ${vis.countryInfo[d.id].name}</h4>
              <h4> ${vis.countryInfo[d.id].value.toFixed(2)}</h4>   
              <h4> ${Math.round(parseFloat(vis.countryInfo[d.id].value_percent.toFixed(2)*100),2)}% of total emissions</h4>   
+             <h4> Click for drilldown</h4>
+
 
 
 
@@ -310,6 +369,13 @@ class MapVis {
                 //call bump chart
                 myBumpChart.country_iso_code = isocode;
                 myBumpChart.wrangleData();
+
+                //rotate the earth to that country
+                vis.rotateEarth(vis.isoCodesDict[parseInt(d.id)], vis.isoCodesDict_iso_to_numeric_codes);
+
+                //highlight the corresponding heat map tile
+                myHeatMapVis.highLightHeatMapCountry(vis.isoCodesDict[parseInt(d.id)]);
+
             })
             .merge(vis.countries)
             .transition()
