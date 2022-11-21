@@ -76,7 +76,7 @@ html {
 
 #hook-row {
     min-height: 60vh;
-    background-color: steelblue;
+    background-color: rgba(0,0,50,0.03);
 }
 
 #hook2-row {
@@ -179,7 +179,13 @@ html {
     font-family: Ayuthaya;
     text-align: center;
     margin-bottom: 20px;
+}
 
+.section-subtitle {
+    font-size: small;
+    font-family: Ayuthaya;
+    text-align: center;
+    font-style: italic;
 }
 
 /*MAIN POINT STYLES*/

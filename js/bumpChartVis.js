@@ -229,7 +229,8 @@ class BumpChartVis {
             .attr("class", "line")
             .attr("d", function(d) { return lineGenerator(d.values); })
             .style("fill", "none")
-            .style("stroke", function(d) { return vis.z(d.field); });
+            .style("stroke", function(d) { return vis.z(d.field); })
+            .style("stroke-width", 2);
 
         // Add some labels
         vis.co2Lines.append("text")
@@ -260,7 +261,7 @@ class BumpChartVis {
                     .duration("10")
                     .style("stroke", function(d) { return vis.z(d.field); })
                     .style("opacity","1")
-                    .style("stroke-width","3");
+                    .style("stroke-width","5");
 
                 // Highlight the corresponding text label
                 const parentGroup = d3.select(this.parentNode);
@@ -278,7 +279,7 @@ class BumpChartVis {
                     .duration("10")
                     .style("stroke", function(d) { return vis.z(d.field); })
                     .style("opacity","0")
-                    .style("stroke-width","10");
+                    .style("stroke-width","5");
 
                 // Un-highlight the label
                 const parentGroup = d3.select(this.parentNode);
