@@ -53,8 +53,8 @@ class MapVis {
                 .scale(210 * vis.zoom) // 249.5 is default. so multiply that by your zoom
                 //.scale(vis.width)
                 //.scale(237* vis.width/2);
-        console.log(vis.width);
-        console.log(vis.height);
+        //console.log(vis.width);
+        //console.log(vis.height);
         vis.path = d3.geoPath()
             .projection(vis.projection);
 
@@ -123,7 +123,7 @@ class MapVis {
         let centroids = vis.world.map(function (feature){
             return vis.path.centroid(feature);
         });
-        console.log(centroids);
+        //console.log(centroids);
         // Add legend
         vis.svg.append("g")
             .attr('class', 'legendSequential')
@@ -171,15 +171,15 @@ class MapVis {
 
         ));
 
-        console.log(vis.co2DataDict);
+        //console.log(vis.co2DataDict);
 
         // console.log(vis.isoCodesDict);
         // console.log(vis.co2DataDict);
         // create random data structure with information for each land
         vis.countryInfo = {};
         vis.geoData.objects.countries.geometries.forEach(d => {
-            console.log(d);
-            console.log(d.id);
+            //console.log(d);
+            //console.log(d.id);
             let isoCodeVal = vis.isoCodesDict[d.id];
             //console.log(isoCodeVal);
             let country_name = '';
@@ -252,21 +252,21 @@ class MapVis {
         let centroids = vis.world.map(function (feature){
             return d3.geoCentroid(feature);
         });
-        console.log(vis.world);
-        console.log(centroids);
+        //console.log(vis.world);
+        //console.log(centroids);
         const index = vis.world.findIndex(object => {
             return object.id === parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
             //vis.isoCodesDict[d.data.iso_code];
         });
-        console.log(isoCodesDict_iso_to_numeric_codes);
-        console.log(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
-        console.log(country_iso_code);
+        //console.log(isoCodesDict_iso_to_numeric_codes);
+        //console.log(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
+        //console.log(country_iso_code);
         let temp_iso = country_iso_code;
-        console.log(parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]));
-        console.log(index);
+        //console.log(parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]));
+        //console.log(index);
         let p = centroids[index];
         //= myMapVis.path.centroid(0);
-        console.log(p);
+        //console.log(p);
         vis.svg.selectAll(".focused").classed("focused", vis.focused = false);
 
         //Globe rotating
@@ -276,9 +276,9 @@ class MapVis {
                 .duration(2500)
                 .tween("rotate", function() {
                     var r = d3.interpolate(vis.projection.rotate(), [-p[0], -p[1]]);
-                    console.log(r);
+                    //console.log(r);
                     return function(t) {
-                        console.log(r(t));
+                        //console.log(r(t));
                         vis.projection.rotate(r(t));
                         // Update the map
                         vis.path = d3.geoPath().projection(vis.projection);
@@ -356,15 +356,16 @@ class MapVis {
                     .html(``);
             })
             .on('click', function(event, d){
-                console.log('clicked');
-                console.log(d);
+                //console.log('clicked');
+                //console.log(d);
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
-                console.log(d.id);
+                //console.log(d.id);
 
                 mySankeyVis.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
-                console.log(mySankeyVis.country_iso_code);
+                //console.log(mySankeyVis.country_iso_code);
                 mySankeyVis.wrangleData();
+                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[mySankeyVis.country_iso_code][0];
 
                 //call bump chart
                 myBumpChart.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
@@ -389,21 +390,7 @@ class MapVis {
 
 
         // Reference: https://d3-legend.susielu.com/
-        /*
-        vis.legend = d3.legendColor()
-            .shape("rect")
-            //.cells([0,25,50,75])
-            .shapeHeight(20)
-            .shapeWidth(40)
-            .shapePadding(0)
-            .labelOffset(2)
-            .labelFormat(d3.format('.0f'))
-            .orient("horizontal")
-            .labelAlign("start")
-            .scale(vis.color);
 
-        d3.select(".legend").call(vis.legend);
-        */
 
         vis.legendSequential = d3.legendColor()
             .shapeWidth(30)
