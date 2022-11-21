@@ -37,6 +37,7 @@ class HeatMapVis {
         vis.textPadding = 60;
 
 
+        vis.zoom = vis.height / 600;
 
 
         vis.svg = d3.select("#" + vis.parentElement)
@@ -140,13 +141,13 @@ class HeatMapVis {
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
-                    vis.sortNum = 75;
+                    vis.sortNum = 75 * vis.zoom;
 
 
                 } else {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2).toFixed(2);
                     valueType = "Consumption CO2";
-                    vis.sortNum = 30;
+                    vis.sortNum = 30 * vis.zoom;
 
 
                 }
