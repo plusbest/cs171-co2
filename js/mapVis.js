@@ -40,15 +40,21 @@ class MapVis {
             .attr("height", vis.height)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
+        vis.zoom = vis.height / 600;
 
         vis.projection =
-            d3.geoOrthographic()
-                //d3.geoAzimuthalEqualArea()
-                //d3.geoStereographic()
+            d3.
+                geoOrthographic()
+                //geoAzimuthalEqualArea()
+                //geo.satellite()
+                //geoStereographic()
                 .translate([vis.width / 2, vis.height / 2])
                 //.scale(165);
-                .scale(250);
-
+                .scale(249.5 * vis.zoom) // 249.5 is default. so multiply that by your zoom
+                //.scale(vis.width)
+                //.scale(237* vis.width/2);
+        console.log(vis.width);
+        console.log(vis.height);
         vis.path = d3.geoPath()
             .projection(vis.projection);
 
@@ -57,6 +63,7 @@ class MapVis {
         vis.svg.append("path")
             .datum({type: "Sphere"})
             .attr("class", "graticule")
+            //.attr('fill', '#d4f1f9')
             .attr('fill', '#ADDEFF')
             .attr("stroke","rgba(129,129,129,0.35)")
             .attr("d", vis.path);
@@ -80,11 +87,11 @@ class MapVis {
             .interpolator(d3.interpolateOranges);
 
         // console.log(vis.color(99));
-
+        /*
         vis.legend = vis.svg.append("g")
             .attr('class', 'legend')
-            .attr('transform', `translate(${vis.width * 2.8 / 4}, ${vis.height - 50})`)
-
+            .attr('transform', `translate(${vis.width / 10}, ${vis.height - 50})`)
+        */
 
         let m0,
             o0;
@@ -120,7 +127,8 @@ class MapVis {
         // Add legend
         vis.svg.append("g")
             .attr('class', 'legendSequential')
-            .attr('transform', `translate(${vis.width * 3.4 / 4}, ${vis.margin.top + vis.margin.bottom})`);
+            .attr('transform', `translate(${vis.width * 0.8}, ${vis.margin.top + vis.margin.bottom})`);
+            //.attr('transform', `translate(${vis.width * 3.4 / 4}, ${vis.margin.top + vis.margin.bottom})`);
 
         vis.wrangleData()
 
