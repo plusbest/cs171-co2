@@ -50,7 +50,7 @@ class MapVis {
                 //geoStereographic()
                 .translate([vis.width / 2, vis.height / 2])
                 //.scale(165);
-                .scale(249.5 * vis.zoom) // 249.5 is default. so multiply that by your zoom
+                .scale(210 * vis.zoom) // 249.5 is default. so multiply that by your zoom
                 //.scale(vis.width)
                 //.scale(237* vis.width/2);
         console.log(vis.width);
