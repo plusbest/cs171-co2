@@ -9,14 +9,10 @@ class BumpChartVis {
     constructor(parentElement, co2Data, energyData) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
-        this.energyData = energyData; // Probably unnecessary; TODO: Delete
         this.displayData = [];
     	this.parseDate = d3.timeParse("%Y");
-        this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
-                        "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
-        this.columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "methane",
-            "nitrous_oxide", "oil_co2"];
+        this.currentView = "ALL" // Can also be same as selected country OR "USA" OR "WORLD"
 
         this.initVis()
     }
@@ -61,7 +57,7 @@ class BumpChartVis {
             .attr("y", 6)
             .attr("dy", "0.71em")
             .attr("fill", "#000")
-            .text("CO2 Emissions (in Tons)");
+            .text("CO2 Emissions (in Millions of Tons)");
 
         vis.svg.append("g")
             .attr("class", "x-axis axis")
@@ -79,19 +75,110 @@ class BumpChartVis {
 	wrangleData() {
         let vis = this;
 
+        if (vis.currentView === "ALL") {
+            vis.wrangleDataGlobal();
+        } else if (vis.currentView === "USA") {
+            vis.wrangleDataCountry(vis.currentView);
+        } else if (vis.currentView === selectedCountryCode) {
+            vis.wrangleDataCountry(selectedCountryCode);
+        } else if (vis.currentView === "WORLD") {
+            vis.wrangleDataCountry("WLD");
+        } else {
+            // reset to global state and re-start
+            vis.changeCurrentView("ALL")
+            return;
+            // throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
+        }
+
+        // console.log("bumpChart displayData", vis.displayData);
+        // console.log("bumpChart fields", vis.fields);
+
+        vis.updateVis();
+	}
+
+    wrangleDataGlobal() {
+        let vis = this;
+
+        // Filter out everything except global, selected, and USA
+        let filteredData = this.co2Data.filter((row) => {
+            if (
+                row.country === "World" ||
+                row.country === "United States" ||
+                row.iso_code === selectedCountryCode
+            ) {
+                // Don't double parse
+                if (typeof row.year !== "object") {
+                    row.year = vis.parseDate(row.year);
+                }
+                return row;
+            }
+            return null;
+        });
+
+        // Reorganize data to more easily display multiple lines; take into account differences with USA present
+        if (selectedCountryCode === "USA") {
+            vis.fields = [
+                { field: "world_co2", values: [] },
+                { field: "usa_co2", values: [] },
+            ];
+        } else {
+            vis.fields = [
+                { field: "world_co2", values: [] },
+                { field: "usa_co2", values: [] },
+                { field: "selected_co2", values: [] }
+            ];
+        }
+
+        filteredData.forEach(function(row) {
+            const { country, iso_code, year, co2 } = row;
+
+            if (!year) { return; } // Do nothing
+
+            const thisData = { year, co2: +co2 };
+
+            // Add data to the
+            if (country === "World") {
+                vis.fields[0].values.push(thisData);
+            } else if (country === "United States") {
+                vis.fields[1].values.push(thisData);
+            } else if (iso_code === selectedCountryCode && selectedCountryCode !== "USA") {
+                vis.fields[2].values.push(thisData);
+            } else {
+                throw new Error("Error in bumpChartVis while wrangling global data");
+            }
+        });
+
+        vis.displayData = filteredData;
+        console.log("THIS IS THE GLOBAL DATA", vis.displayData)
+    }
+
+    wrangleDataCountry(countryCode) {
+        let vis = this;
+
+
         // Filter out all countries but the US
         let filteredData = this.co2Data.filter((row) => {
-            if (row.country === "United States") {
-                row.year = vis.parseDate(row.year);
+            const { iso_code = null, country, year } = row;
+            if (
+                (countryCode === "WLD" && this.currentView === "WORLD" && country === "World") ||
+                iso_code === countryCode
+            ) {
+                // Don't double parse
+                if (typeof year !== "object") {
+                    row.year = vis.parseDate(year);
+                }
+
                 return row;
             }
             return null;
         });
 
         vis.displayData = filteredData;
+        console.log("biancam THIS IS THE FILTERED DATA", filteredData);
 
         // Reorganize data to more easily display multiple lines
-        vis.fields = vis.columnsToShow.map(function(field) {
+        const columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "oil_co2"];
+        vis.fields = columnsToShow.map(function(field) {
 
             return {
                 field,
@@ -100,12 +187,7 @@ class BumpChartVis {
                 })
             };
         });
-
-        // console.log("displayData", vis.displayData);
-        // console.log("fields", vis.fields);
-
-        vis.updateVis();
-	}
+    }
 
 	updateVis() {
 		let vis = this;
@@ -133,22 +215,31 @@ class BumpChartVis {
             .x(function(d) { return vis.x(d.year); })
             .y(function(d) { return vis.y(d.co2); });
 
-        vis.co2Lines = vis.svg.selectAll(".co2")
+
+        // TODO: Need to figure out how to accomplish this via the enter-update-remove pattern
+        // Tried a lot of different means and this was the only one I could get to work in time for prototype deadline
+        vis.svg.selectAll("g.co2").remove();
+
+        vis.co2Lines = vis.svg.selectAll("g.co2")
             .data(vis.fields)
             .enter().append("g")
-            .attr("class", function(d) { return d.field; });
+            .attr("class", function(d) { return "co2 " + d.field; });
 
         vis.co2Lines.append("path")
             .attr("class", "line")
             .attr("d", function(d) { return lineGenerator(d.values); })
             .style("fill", "none")
-            .style("stroke", function(d) { return vis.z(d.field); });
+            .style("stroke", function(d) { return vis.z(d.field); })
+            .style("stroke-width", 2);
 
         // Add some labels
         vis.co2Lines.append("text")
             .attr("class", "line-label")
             .datum(function(d) { return {field: d.field, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")"; })
+            .attr("transform", function(d) {
+                console.log("biancam d", d);
+                return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")";
+            })
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
@@ -170,7 +261,7 @@ class BumpChartVis {
                     .duration("10")
                     .style("stroke", function(d) { return vis.z(d.field); })
                     .style("opacity","1")
-                    .style("stroke-width","3");
+                    .style("stroke-width","5");
 
                 // Highlight the corresponding text label
                 const parentGroup = d3.select(this.parentNode);
@@ -188,17 +279,62 @@ class BumpChartVis {
                     .duration("10")
                     .style("stroke", function(d) { return vis.z(d.field); })
                     .style("opacity","0")
-                    .style("stroke-width","10");
+                    .style("stroke-width","5");
 
                 // Un-highlight the label
                 const parentGroup = d3.select(this.parentNode);
                 parentGroup.selectAll("text.line-label")
                     .style("fill", "#cccccc");
+            })
+            .on('click', function(e, d) {
+                const { field } = d;
+
+                // Change views
+                if (vis.currentView !== "USA" && field === "usa_co2") {
+                    vis.changeCurrentView("USA");
+                } else if (vis.currentView !== selectedCountryCode && field === "selected_co2") {
+                    vis.changeCurrentView(selectedCountryCode);
+                } else if (vis.currentView !== "WORLD" & field === "world_co2") {
+                    vis.changeCurrentView("WORLD");
+                }
             });
 
         // Update axes
         vis.svg.select(".y-axis.axis").call(vis.yAxis);
         vis.svg.select(".x-axis.axis").call(vis.xAxis);
 	}
+
+    changeCurrentView(newView) {
+        const vis = this;
+
+        vis.currentView = newView;
+
+        // Update title
+        if (newView === "USA" || newView === selectedCountryCode || newView === "WORLD") {
+            console.log("selectedCountry", selectedCountry, selectedCountryCode)
+            const displayTitle = newView === selectedCountryCode ? selectedCountry:
+                                        newView === "USA" ? "United States": "the world";
+            d3.select("#bumpchart-row .section-title").text(`Breakdown of consumption emissions over time for ${displayTitle}`);
+
+            // Append the reset button
+            d3.select("#bumpchart-row .section-title")
+                .append("button")
+                .attr("id", "bumpchart-reset")
+                .attr("class", "btn btn-link btn-sm d-block m-auto")
+                .on("click", (e) => vis.resetButtonOnClick(e))
+                .text("Reset to global comparison")
+
+        } else {
+            d3.select("#bumpchart-row .section-title")
+                .html("And their consumption emissions compared to the world's total over time in the following ways:")
+        }
+
+        vis.wrangleData();
+    }
+
+    resetButtonOnClick(e) {
+        const vis = this;
+        vis.changeCurrentView('ALL');
+    }
 
 }

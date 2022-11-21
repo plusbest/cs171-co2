@@ -6,17 +6,21 @@
 class HeatMapVis {
 
     // constructor method to initialize Timeline object
-    constructor(parentElement,co2Data,excludedCountries) {
+    constructor(parentElement,co2Data,excludedCountries,isoCodes) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
         this.excludedCountries = excludedCountries;
         this.displayData = [];
         this.sortedData = [];
-
-        this.duration = 1000; // transition duration
+        this.selectedYear = 2019;
+        this.duration = 500; // transition duration
         this.delay = 100;
-        this.selectedCategory = "percapita";
+        this.selectedCategory = "percountry";
         this.sortNum = 75;
+        this.isoCodes = isoCodes;
+        this.selected_country_iso_code = 'USA';
+        this.focused_heatmap;
+
         // call initVis method
         this.initVis()
     }
@@ -24,7 +28,7 @@ class HeatMapVis {
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 20, right: 20, bottom: 20, left: 20};
+        vis.margin = {top: 50, right: 20, bottom: 20, left: 20};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
         vis.cellHeight = 15;
@@ -33,6 +37,7 @@ class HeatMapVis {
         vis.textPadding = 60;
 
 
+        vis.zoom = vis.height / 600;
 
 
         vis.svg = d3.select("#" + vis.parentElement)
@@ -68,53 +73,21 @@ class HeatMapVis {
             .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
             (vis.sortedData);
         vis.root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
-        console.log(vis.root);
+        //console.log(vis.root);
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
-            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.top + vis.margin.bottom)])
+            .size([vis.width - vis.margin.right, vis.height - 1 * (vis.margin.bottom)])
             .padding(4)
             (vis.root)
 
-        console.log(vis.root.leaves());
+        //console.log(vis.root.leaves());
         // use this information to add rectangles:
-
+        /*
         vis.svg.selectAll("rect")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
             .enter()
-            .append("rect")
-            .on('mouseover', function(event, d){
-                //console.log(d);
-                d3.select(this)
-                    .attr('stroke-width', '2px')
-                    .attr("stroke", 'red');
-
-                vis.tooltip
-                    .style("opacity", 1)
-                    .style("left", event.pageX + 20 + "px")
-                    .style("top", event.pageY + "px")
-                    .html(`
-         <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
-             <h3> ${ d.data.name}</h3>
-             <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.type}: ${d.data.value}</h4>       
-             
- 
-
-         </div>`);
-
-            })
-            .on('mouseout', function(event, d){
-                d3.select(this)
-                    .attr('stroke-width', '1px')
-                    .attr('stroke', 'black');
-
-                vis.tooltip
-                    .style("opacity", 0)
-                    .style("left", 0)
-                    .style("top", 0)
-                    .html(``);
-            });
+            .append("rect");
 
         vis.svg
             .selectAll("text")
@@ -128,14 +101,14 @@ class HeatMapVis {
             .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
             .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
             .text(function(d){ return d.data.iso_code});
-
+        */
         this.wrangleData();
     }
 
     computeData() {
         let vis = this;
 
-        console.log(vis.co2Data[0]);
+        //console.log(vis.co2Data[0]);
 
 
         this.displayData = [];
@@ -153,17 +126,30 @@ class HeatMapVis {
          */
         let  valueToStore = 0;
         let valueType = '';
+        vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['alpha-3'], x['country-code']]));
+
+
+        //console.log('selected year:' + vis.selectedYear);
+        vis.consumption_co2_per_capita_total = 0;
+        vis.consumption_co2_total = 0;
         for(let i = 0; i < vis.co2Data.length; i++) {
 
             //test
-            if (vis.co2Data[i].year == 2019 && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
+            if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
+                vis.consumption_co2_per_capita_total += parseFloat(vis.co2Data[i].consumption_co2_per_capita);
+                vis.consumption_co2_total += parseFloat(vis.co2Data[i].consumption_co2);
+
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
+                    vis.sortNum = 75 * vis.zoom;
+
 
                 } else {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2).toFixed(2);
                     valueType = "Consumption CO2";
+                    vis.sortNum = 30 * vis.zoom;
+
 
                 }
 
@@ -181,7 +167,7 @@ class HeatMapVis {
 
             }
         }
-        console.log(vis.displayData);
+        //console.log(vis.displayData);
         //vis.sortedData = vis.displayData;
 
         vis.displayData.sort(function(current, next){
@@ -191,7 +177,10 @@ class HeatMapVis {
 
         vis.sortedData = vis.displayData.slice(0,vis.sortNum);
 
+        vis.co2DataDict = Object.fromEntries(vis.sortedData.map(
+            x => [x.iso_code, [x.name]]
 
+        ));
 
         // Read data
         /*
@@ -206,7 +195,7 @@ class HeatMapVis {
         }
 
         vis.restOfData = vis.displayData.slice(vis.sortNum,vis.displayData.length);
-        console.log(vis.restOfData);
+        //console.log(vis.restOfData);
 
         let sum = 0;
 
@@ -214,7 +203,7 @@ class HeatMapVis {
             sum += parseFloat(element.value);
         });
         sum = sum.toFixed(2);
-        console.log(sum);
+        //console.log(sum);
         vis.sortedData.push(
             {
                 name: 'Rest of the World',
@@ -240,8 +229,13 @@ class HeatMapVis {
             }
         );
 
-        console.log(vis.sortedData);
+        //console.log(vis.sortedData);
+        // to init Sankey to show USA data as default
+        mySankeyVis.selectedYear = vis.selectedYear;
+        mySankeyVis.country_iso_code = vis.selected_country_iso_code;
+        mySankeyVis.wrangleData();
     }
+
     // wrangleData method
     wrangleData() {
         let vis = this;
@@ -253,18 +247,34 @@ class HeatMapVis {
             .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
             (vis.sortedData);
         vis.root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
-        console.log(vis.root);
+        //console.log(vis.root);
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
         d3.treemap()
-            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.top + vis.margin.bottom)])
+            .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.bottom)])
             .padding(4)
             (vis.root)
 
-        console.log(vis.root.leaves());
+        //console.log(vis.root.leaves());
 
 
         vis.updateVis();
+
+    }
+
+    highLightHeatMapCountry(country_iso_code)
+    {
+        let vis = this;
+        //remove all other highlights
+        vis.svg.selectAll(".focused_heatmap").classed("focused_heatmap", vis.focused_heatmap = false);
+
+
+
+
+        //highlight the selected country
+        d3.select("#" + country_iso_code)
+            .classed("focused_heatmap", true);
+
 
     }
 
@@ -272,6 +282,8 @@ class HeatMapVis {
     updateVis() {
         let vis = this;
         // append the svg object to the body of the page
+        // update the title
+
 
 
         vis.maxVal = vis.sortedData[0].value;
@@ -284,19 +296,17 @@ class HeatMapVis {
         ]);
 
 
-
         vis.rect = vis.svg
             .selectAll("rect")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
 
-        //vis.rect.exit().remove();
 
         vis.rect.exit()
-            .style("opacity", 1)
+            //.style("opacity", 0.2)
             .transition().duration(vis.duration)
             .delay(vis.delay)
 
-            .style("opacity", 1e-6)
+            //.style("opacity", 1e-6)
             //.attr("x", -10)
             //.attr("y", -10)
 
@@ -310,6 +320,7 @@ class HeatMapVis {
             .attr('width', function (d) { return d.x1 - d.x0; })
             .attr('height', function (d) { return d.y1 - d.y0; })
             .attr('opacity','80%')
+            .attr('id', function(d) {return d.data.iso_code})
             .on('mouseover', function(event, d){
                 //console.log(d);
                 d3.select(this)
@@ -324,7 +335,10 @@ class HeatMapVis {
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h3> ${ d.data.name}</h3>
              <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.type}: ${d.data.value}</h4>       
+             <h4> ${d.data.value}</h4>
+             <h4> Click for drilldown</h4>
+       
+            
              
  
 
@@ -342,6 +356,48 @@ class HeatMapVis {
                     .style("top", 0)
                     .html(``);
             })
+            .on('click', function(event, d){
+
+                console.log('clicked');
+                console.log(d);
+
+                //update global variables and update index doc
+                selectedCountryCode = d.data.iso_code;
+                selectedCountry = d.data.name;
+                updateStatBlock();
+
+
+                
+
+                //highlight the heat map tile
+                vis.selected_country_iso_code = d.data.iso_code;
+                vis.highLightHeatMapCountry(vis.selected_country_iso_code);
+                
+                //call sankey
+                mySankeyVis.selectedYear = vis.selectedYear;
+                mySankeyVis.country_iso_code = d.data.iso_code;
+                console.log(vis.co2DataDict);
+                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[d.data.iso_code];
+
+                mySankeyVis.wrangleData();
+
+                //call bump chart
+                console.log("data in heatmap, ", d.data);
+                myBumpChart.wrangleData();
+
+                //call radar vis
+                myRadarVis.selectedCountryCode = d.data.iso_code;
+                myRadarVis.wrangleData();
+
+                //to rotate globe to country being clicked
+                myMapVis.selected_country_iso_code = d.data.iso_code;
+                myMapVis.rotateEarth(myMapVis.selected_country_iso_code,vis.isoCodesDict);
+
+
+
+
+            })
+
             .merge(vis.rect)
             .transition()
             .delay(vis.delay)
@@ -364,12 +420,23 @@ class HeatMapVis {
 
         // and to add the text labels
 
+        vis.highLightHeatMapCountry(vis.selected_country_iso_code);
+
         vis.text =  vis.svg
             .selectAll("text")
             .data(vis.root.leaves(), function(d){ return d.iso_code; });
 
         //vis.text.exit().remove();
 
+        vis.text.exit()
+            //.style("opacity", 0.2)
+            .transition().duration(vis.duration)
+            .delay(vis.delay)
+            //.attr("x", -10)
+            //.attr("y", -10)
+
+            //.style("opacity", 1e-6)
+            .remove();
 
         vis.text
 
@@ -388,15 +455,7 @@ class HeatMapVis {
             .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
             .text(function(d){ return d.data.iso_code});
 
-        vis.text.exit()
-            .style("opacity", 1)
-            .transition().duration(vis.duration)
-            .delay(vis.delay)
-            //.attr("x", -10)
-            //.attr("y", -10)
 
-            .style("opacity", 1e-6)
-            .remove();
 
     }
 
