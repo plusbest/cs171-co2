@@ -127,10 +127,27 @@ function categoryChange() {
 let slider = d3.select('#yearSlider')
 slider.on("input", handleInput)
 
+let radio = d3.select('#btnGroup')
+radio.on("input", handleRadio)
+
+
 function handleInput() {
     var eventData = this.value;
     mySankeyVis.selectedYear = eventData;
     mySankeyVis.wrangleData();
+}
+
+function handleRadio() {
+
+  var checkBoxes = d3.selectAll(".co2-box");
+  var list = []
+  
+  checkBoxes.each(function() {
+    dict = {}
+    dict[this.value] = this.checked === true ? true : false;
+    list.push(dict);
+  })
+  console.log("JW --- checkBoxData", list);
 }
 
 function yearSliderChange(selectedYear) {
