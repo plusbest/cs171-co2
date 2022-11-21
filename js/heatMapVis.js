@@ -358,12 +358,21 @@ class HeatMapVis {
             })
             .on('click', function(event, d){
 
-                //console.log('clicked');
-                //console.log(d);
+                console.log('clicked');
+                console.log(d);
+
+                //update global variables and update index doc
+                selectedCountryCode = d.data.iso_code;
+                selectedCountry = d.data.name;
+                updateStatBlock();
+
+
+                
 
                 //highlight the heat map tile
                 vis.selected_country_iso_code = d.data.iso_code;
                 vis.highLightHeatMapCountry(vis.selected_country_iso_code);
+                
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
                 mySankeyVis.country_iso_code = d.data.iso_code;
@@ -371,8 +380,9 @@ class HeatMapVis {
                 document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[d.data.iso_code];
 
                 mySankeyVis.wrangleData();
+
                 //call bump chart
-                myBumpChart.country_iso_code = d.data.iso_code;
+                console.log("data in heatmap, ", d.data);
                 myBumpChart.wrangleData();
 
                 //call radar vis
