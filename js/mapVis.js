@@ -29,7 +29,7 @@ class MapVis {
     initVis() {
         let vis = this;
 
-
+        selectedCountryCode = 'USA';
         vis.margin = {top: 20, right: 20, bottom: 20, left: 20};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
@@ -241,7 +241,8 @@ class MapVis {
         vis.updateVis()
     }
 
-    rotateEarth(country_iso_code,isoCodesDict_iso_to_numeric_codes) {
+    rotateEarth(country_iso_code) {
+    //           ,isoCodesDict_iso_to_numeric_codes) {
         let vis = this;
 
         //to rotate globe to country being clicked
@@ -255,7 +256,7 @@ class MapVis {
         //console.log(vis.world);
         //console.log(centroids);
         const index = vis.world.findIndex(object => {
-            return object.id === parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
+            return object.id === parseInt(vis.isoCodesDict_iso_to_numeric_codes[country_iso_code]);
             //vis.isoCodesDict[d.data.iso_code];
         });
         //console.log(isoCodesDict_iso_to_numeric_codes);
@@ -286,7 +287,7 @@ class MapVis {
                         d3.selectAll(".graticule").attr("d", vis.path);
 
                         vis.svg.selectAll("path").attr("d", vis.path)
-                            .classed("focused", function(d, i) { return d.id == isoCodesDict_iso_to_numeric_codes[temp_iso] ? vis.focused = d : false; });
+                            .classed("focused", function(d, i) { return d.id == vis.isoCodesDict_iso_to_numeric_codes[temp_iso] ? vis.focused = d : false; });
 
 
                     };
@@ -310,7 +311,8 @@ class MapVis {
         }
 
         //Rotate to selected country code (default USA) on refresh
-        vis.rotateEarth(vis.selected_country_iso_code, vis.isoCodesDict_iso_to_numeric_codes);
+        vis.rotateEarth(vis.selected_country_iso_code);
+        //, vis.isoCodesDict_iso_to_numeric_codes);
         //vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
 
         // console.log(vis.maxVal);
@@ -366,7 +368,8 @@ class MapVis {
                 selectedCountry = isoCodeToCountryNameMap[isocode];
                 updateStatBlock();
 
-             
+                vis.selected_country_iso_code = selectedCountryCode;
+
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
                 //console.log(d.id);
@@ -383,7 +386,8 @@ class MapVis {
                 myBumpChart.wrangleData();
 
                 //rotate the earth to that country
-                vis.rotateEarth(vis.isoCodesDict[parseInt(d.id)], vis.isoCodesDict_iso_to_numeric_codes);
+                vis.rotateEarth(selectedCountryCode);
+                //, vis.isoCodesDict_iso_to_numeric_codes);
 
                 //highlight the corresponding heat map tile
                 myHeatMapVis.highLightHeatMapCountry(vis.isoCodesDict[parseInt(d.id)]);
@@ -398,6 +402,7 @@ class MapVis {
                 return vis.color(vis.countryInfo[d.id].value);
             });
 
+        vis.rotateEarth(selectedCountryCode);
 
 
         // Reference: https://d3-legend.susielu.com/

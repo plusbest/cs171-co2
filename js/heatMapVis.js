@@ -28,6 +28,8 @@ class HeatMapVis {
     initVis() {
         let vis = this;
 
+        selectedCountryCode = 'USA';
+
         vis.margin = {top: 50, right: 20, bottom: 20, left: 20};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
@@ -265,17 +267,18 @@ class HeatMapVis {
     highLightHeatMapCountry(country_iso_code)
     {
         let vis = this;
+        console.log(country_iso_code);
         //remove all other highlights
-        vis.svg.selectAll(".focused_heatmap").classed("focused_heatmap", vis.focused_heatmap = false);
 
+        vis.svg.selectAll(".focused_heatmap").classed("focused_heatmap", false);
 
 
 
         //highlight the selected country
-        d3.select("#" + country_iso_code)
-            .classed("focused_heatmap", true);
 
-
+        vis.svg.selectAll("rect")
+            .classed("focused_heatmap",  function(d, i) {
+                return d.data.iso_code == selectedCountryCode ? true : false;            })
     }
 
     // updateVis method
@@ -370,8 +373,8 @@ class HeatMapVis {
                 
 
                 //highlight the heat map tile
-                vis.selected_country_iso_code = d.data.iso_code;
-                vis.highLightHeatMapCountry(vis.selected_country_iso_code);
+                vis.selected_country_iso_code = selectedCountryCode;
+                vis.highLightHeatMapCountry(selectedCountryCode);
                 
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
@@ -420,7 +423,6 @@ class HeatMapVis {
 
         // and to add the text labels
 
-        vis.highLightHeatMapCountry(vis.selected_country_iso_code);
 
         vis.text =  vis.svg
             .selectAll("text")
@@ -454,6 +456,9 @@ class HeatMapVis {
             .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
             .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
             .text(function(d){ return d.data.iso_code});
+
+        vis.highLightHeatMapCountry(selectedCountryCode);
+
 
 
 
