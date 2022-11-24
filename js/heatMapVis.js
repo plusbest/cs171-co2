@@ -178,6 +178,7 @@ class HeatMapVis {
 
 
         vis.sortedData = vis.displayData.slice(0,vis.sortNum);
+        vis.notinSortedData = vis.displayData.slice(vis.sortNum, vis.displayData.length);
 
         vis.co2DataDict = Object.fromEntries(vis.sortedData.map(
             x => [x.iso_code, [x.name]]
@@ -365,8 +366,19 @@ class HeatMapVis {
                 console.log(d);
 
                 //update global variables and update index doc
-                selectedCountryCode = d.data.iso_code;
-                selectedCountry = d.data.name;
+                if (d.data.iso_code == "Rest of the World") {
+                    //pick a country at random !!
+                    console.log(vis.notinSortedData);
+                    let randomIndex = Math.floor(Math.random() * vis.notinSortedData.length);
+                    selectedCountryCode = vis.notinSortedData[randomIndex].iso_code;
+                    selectedCountry = vis.notinSortedData[randomIndex].name;
+                    console.log(selectedCountryCode);
+                    console.log(selectedCountry);
+
+                } else {
+                    selectedCountryCode = d.data.iso_code;
+                    selectedCountry = d.data.name;
+                }
                 updateStatBlock();
 
 
@@ -378,9 +390,9 @@ class HeatMapVis {
                 
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
-                mySankeyVis.country_iso_code = d.data.iso_code;
+                mySankeyVis.country_iso_code = selectedCountryCode;
                 console.log(vis.co2DataDict);
-                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[d.data.iso_code];
+                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + selectedCountry;
 
                 mySankeyVis.wrangleData();
 
@@ -389,11 +401,11 @@ class HeatMapVis {
                 myBumpChart.wrangleData();
 
                 //call radar vis
-                myRadarVis.selectedCountryCode = d.data.iso_code;
+                myRadarVis.selectedCountryCode = selectedCountryCode;
                 myRadarVis.wrangleData();
 
                 //to rotate globe to country being clicked
-                myMapVis.selected_country_iso_code = d.data.iso_code;
+                myMapVis.selected_country_iso_code = selectedCountryCode;
                 myMapVis.rotateEarth(myMapVis.selected_country_iso_code,vis.isoCodesDict);
 
 

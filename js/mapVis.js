@@ -385,6 +385,10 @@ class MapVis {
                 myBumpChart.country_iso_code = isocode;
                 myBumpChart.wrangleData();
 
+                //call radar vis
+                myRadarVis.selectedCountryCode = selectedCountryCode;
+                myRadarVis.wrangleData();
+
                 //rotate the earth to that country
                 vis.rotateEarth(selectedCountryCode);
                 //, vis.isoCodesDict_iso_to_numeric_codes);
