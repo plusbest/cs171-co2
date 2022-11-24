@@ -69,11 +69,6 @@ class SankeyVis {
 
         vis.displayData = []
 
-        console.log("JW --- co2data", vis.co2Data)
-        console.log("JW --- visparams", vis.country, vis.year)
-        console.log("JW --- selectedCategory", vis.selectedCategory)
-        console.log("JW --- selectedYear", vis.selectedYear)
-
         // iterate co2 data rows
         vis.co2Data.forEach(function(d) {
             //if (d.country == "United States" && d.year == vis.selectedYear) {
@@ -144,6 +139,7 @@ class SankeyVis {
         // TODO: Descending order sort
         // *******
         // *******
+
 
         // empty nodes and links
         vis.sankeydata.nodes = []
