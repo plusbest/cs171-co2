@@ -326,6 +326,8 @@ class MapVis {
         // console.log(vis.isoCodesDict[682]);
         vis.countries
             .on('mouseover', function(event, d){
+                console.log(d.id);
+                console.log(vis.countryInfo[d.id]);
                 d3.select(this)
                     .attr('stroke-width', '2px')
                     .attr('stroke', 'black')
@@ -366,6 +368,7 @@ class MapVis {
                 //update global variables and update index doc
                 selectedCountryCode = isocode;
                 selectedCountry = isoCodeToCountryNameMap[isocode];
+
                 updateStatBlock();
 
                 vis.selected_country_iso_code = selectedCountryCode;
@@ -379,7 +382,7 @@ class MapVis {
                 //mySankeyVis.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
                 //console.log(mySankeyVis.country_iso_code);
                 mySankeyVis.wrangleData();
-                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[mySankeyVis.country_iso_code][0];
+                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + selectedCountry;
 
                 //call bump chart
                 myBumpChart.country_iso_code = isocode;

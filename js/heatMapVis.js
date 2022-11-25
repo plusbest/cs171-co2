@@ -273,13 +273,27 @@ class HeatMapVis {
 
         vis.svg.selectAll(".focused_heatmap").classed("focused_heatmap", false);
 
+        console.log(country_iso_code);
 
+        let localSelectedCountryCode;
+        //to handle 'Rest of the World' in heatmap
 
         //highlight the selected country
+        // Reference: https://stackoverflow.com/questions/22844560/check-if-object-value-exists-within-a-javascript-array-of-objects-and-if-not-add
+        let found = vis.sortedData.some(el => el.iso_code === country_iso_code);
 
+        if (!found) {
+            localSelectedCountryCode = 'Rest of the World';
+        }
+        else
+        {
+            localSelectedCountryCode = selectedCountryCode;
+
+        }
+        console.log(localSelectedCountryCode);
         vis.svg.selectAll("rect")
             .classed("focused_heatmap",  function(d, i) {
-                return d.data.iso_code == selectedCountryCode ? true : false;            })
+                return d.data.iso_code == localSelectedCountryCode ? true : false;            })
     }
 
     // updateVis method
@@ -386,7 +400,10 @@ class HeatMapVis {
 
                 //highlight the heat map tile
                 vis.selected_country_iso_code = selectedCountryCode;
+
                 vis.highLightHeatMapCountry(selectedCountryCode);
+
+
                 
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
