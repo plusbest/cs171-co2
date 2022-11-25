@@ -117,8 +117,6 @@ function categoryChange() {
     myHeatMapVis.wrangleData();
 
 
-
-
     //update the earth map
     myMapVis.selectedCategory = selectedCategory;
     myMapVis.wrangleData();
@@ -130,7 +128,7 @@ function categoryChange() {
 
 // Year Slider
 // TODO: Needs to populate range based on target country and available data?
-/*
+
 let slider = d3.select('#yearSlider')
 slider.on("input", handleInput)
 
@@ -144,7 +142,7 @@ function handleInput() {
     mySankeyVis.selectedYear = eventData;
     mySankeyVis.wrangleData();
 }
-*/
+
 
 
 // Returns checkbox

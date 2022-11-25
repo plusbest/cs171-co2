@@ -131,7 +131,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <div class="row w-100" id="hook2-row">
         <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
@@ -151,9 +150,8 @@
             <div class="section-subtitle mb-5">Hover over country for rankings and click to select for drilldown</div>
 
             <div class="row" style="height: 5vh;">
-                <div class="col-lg-5 offset-1" id="CategoryDiv">
+                <div class="col-lg-5 offset-1">
                     <select id="categorySelector" class="custom-select  justify-content-end" style="width: 100%" onchange="categoryChange()">
-
                         <option value="bycountry" selected="">Consumption CO2 Emissions measured in million tonnes for the Country</option>
 
                         <option value="percapita">Consumption CO2 Emissions measured in tonnes per Person in the country</option>
@@ -163,7 +161,7 @@
 
                 <div class="col-lg-5 offset-1">
                     <form>
-                        <label id="yearSliderLabel" for="yearSlider">Select year (1990 to 2019): <b>2019</b> selected</label>
+                        <label id="yearSliderLabel" for="yearSlider">You selected 2019 (between 1990 and 2019):</label>
 
                         <input type="range" class="form-range   justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
                     </form>
@@ -301,12 +299,22 @@
 
                             </div>
                         </div>
-
+                    </div>
+<!--                         <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="gasCheck">
+                          <label class="form-check-label" for="defaultCheck1">
+                            <h4>Gas</h4>
+                          </label>
+                          <p>Solution suggestion goes here.</p>
+                          <p>Solution suggestion goes here.</p>
+                        </div> -->
 
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
     <div class="row w-100 text-light bg-dark m-0" style="min-height: 40vh;" id="footer-row">
         <!-- FOOTER SECTION -->
         <div class="col-12 p-5">
@@ -363,7 +371,7 @@
             <small>Made with 💛 and  ☕</small>
         </div>
     </div>
-    </div>
+</div>
 </div>
 
 
