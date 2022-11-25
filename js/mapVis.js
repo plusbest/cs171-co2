@@ -14,8 +14,8 @@ class MapVis {
         this.displayData = [];
         this.sortedData = [];
 
-        this.duration = 500; // transition duration
-        this.delay = 100;
+        this.duration = 4000; // transition duration
+        this.delay = 2000;
         this.selectedCategory = "percountry";
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
@@ -72,7 +72,8 @@ class MapVis {
             .data(vis.world)
             .enter().append("path")
             .attr('class', 'country')
-            .attr("d", vis.path);
+            .attr("d", vis.path)
+            .attr("fill", "green");
 
 
         // append tooltip

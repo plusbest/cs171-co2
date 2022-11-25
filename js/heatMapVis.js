@@ -13,10 +13,10 @@ class HeatMapVis {
         this.displayData = [];
         this.sortedData = [];
         this.selectedYear = 2019;
-        this.duration = 500; // transition duration
-        this.delay = 100;
+        this.duration = 4000; // transition duration
+        this.delay = 2000;
         this.selectedCategory = "percountry";
-        this.sortNum = 75;
+        this.sortNum = 50;
         this.isoCodes = isoCodes;
         this.selected_country_iso_code = 'USA';
         this.focused_heatmap;
@@ -37,7 +37,8 @@ class HeatMapVis {
         vis.cellPadding = 20;
         vis.cellWidth = 15;
         vis.textPadding = 60;
-
+        vis.x_padding = 2
+        vis.y_padding = 15;
 
         vis.zoom = vis.height / 600;
 
@@ -45,14 +46,15 @@ class HeatMapVis {
         vis.svg = d3.select("#" + vis.parentElement)
             .append("svg")
 
-            //.attr("width", vis.width + vis.margin.left + vis.margin.right)
-            //.attr("height", vis.height + vis.margin.top + vis.margin.bottom)
-            .attr("width", vis.width)
-            .attr("height", vis.height)
+            .attr("width", vis.width + vis.margin.left + vis.margin.right)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            //.attr("width", vis.width)
+            //.attr("height", vis.height);
+        /*
             .append("g")
             .attr("transform",
                 "translate(" + vis.margin.left + "," + vis.margin.top + ")");
-
+        */
 
         // tooltip
         vis.tooltip = d3.select("body").append('div')
@@ -83,27 +85,45 @@ class HeatMapVis {
             .padding(4)
             (vis.root)
 
+        vis.maxVal = vis.sortedData[0].value;
+        vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
+
+        vis.color.domain([
+            0,
+
+            vis.maxVal
+        ]);
+
         //console.log(vis.root.leaves());
         // use this information to add rectangles:
-        /*
-        vis.svg.selectAll("rect")
+        vis.cell = vis.svg.selectAll("g")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
-            .enter()
-            .append("rect");
+            .enter().append("g")
+            .attr("transform", function(d) { let x= d.x0 +vis.margin.left; let y= d.y0 + vis.margin.left; return "translate(" + x + "," + y + ")"; });
 
-        vis.svg
-            .selectAll("text")
-            .data(vis.root.leaves(), function(d){ return d.iso_code; })
+        vis.cell.append("rect")
+            .attr("id", function(d) {  return d.data.iso_code; })
+            .attr("width", function(d) { return d.x1 - d.x0; })
+            .attr("height", function(d) { return d.y1 - d.y0; })
+            .attr("fill", function(d) { if (d.id == "Rest of the World") {
+                return "lightgray";
+            } else {
+                return vis.color(d.value)
+            }});
 
-            .enter()
-            .append("text")
-            .attr("class","heatmap_rect_names")
+        vis.cell.append("text")
+            .attr("class", "heatmap_rect_names")
+            .attr("x", function(d) { return d.dx; })
+            .attr("y", function(d) { return d.dy; })
+            .attr("cursor","default")
+            .attr("dy", vis.y_padding + "px")
+            .attr("dx", vis.x_padding + "px")
+            .text(function(d){  return d.data.iso_code});
+
+        //.call(fit_text,1);
 
 
-            .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
-            .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
-            .text(function(d){ return d.data.iso_code});
-        */
+
         this.wrangleData();
     }
 
@@ -144,13 +164,11 @@ class HeatMapVis {
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
-                    vis.sortNum = 75 * vis.zoom;
 
 
                 } else {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2).toFixed(2);
                     valueType = "Consumption CO2";
-                    vis.sortNum = 30 * vis.zoom;
 
 
                 }
@@ -177,7 +195,7 @@ class HeatMapVis {
         });
 
 
-        vis.sortedData = vis.displayData.slice(0,vis.sortNum);
+        vis.sortedData = vis.displayData.slice(0,vis.sortNum* vis.zoom + 1);
         vis.notinSortedData = vis.displayData.slice(vis.sortNum, vis.displayData.length);
 
         vis.co2DataDict = Object.fromEntries(vis.sortedData.map(
@@ -210,7 +228,7 @@ class HeatMapVis {
         vis.sortedData.push(
             {
                 name: 'Rest of the World',
-                iso_code: 'Rest of the World',
+                iso_code: 'ROW',
                 parent: 'Origin',
                 value: sum,
                 type: valueType,
@@ -253,12 +271,12 @@ class HeatMapVis {
         //console.log(vis.root);
         // Then d3.treemap computes the position of each element of the hierarchy
         // The coordinates are added to the root object above
+
         d3.treemap()
             .size([vis.width - vis.margin.right, vis.height - 2 * (vis.margin.bottom)])
             .padding(4)
             (vis.root)
 
-        //console.log(vis.root.leaves());
 
 
         vis.updateVis();
@@ -281,14 +299,15 @@ class HeatMapVis {
         let found = vis.sortedData.some(el => el.iso_code === country_iso_code);
 
         if (!found) {
-            localSelectedCountryCode = 'Rest of the World';
+            localSelectedCountryCode = 'ROW';
         }
         else
         {
             localSelectedCountryCode = selectedCountryCode;
 
         }
-        vis.svg.selectAll("rect")
+        //vis.svg.selectAll("rect")
+        vis.cell.data(vis.root.leaves()).select("rect")
             .classed("focused_heatmap",  function(d, i) {
                 return d.data.iso_code == localSelectedCountryCode ? true : false;            })
     }
@@ -309,33 +328,20 @@ class HeatMapVis {
 
             vis.maxVal
         ]);
-
-
-        vis.rect = vis.svg
-            .selectAll("rect")
+        /*
+        vis.cell = vis.svg.selectAll("g")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
+            .enter().append("g")
+            .attr("transform", function(d) { let x= d.x0 +vis.margin.left; let y= d.y0 + vis.margin.left; return "translate(" + x + "," + y + ")"; });
+        */
 
+        // update treemap
+        vis.cell.data(vis.root.leaves())
+            .transition()
+            .duration(vis.duration)
+            .attr("transform", function(d) { let x= d.x0 +vis.margin.left; let y= d.y0 +vis.margin.left; return "translate(" + x + "," + y + ")"; });
 
-        vis.rect.exit()
-            //.style("opacity", 0.2)
-            .transition().duration(vis.duration)
-            .delay(vis.delay)
-
-            //.style("opacity", 1e-6)
-            //.attr("x", -10)
-            //.attr("y", -10)
-
-            .remove();
-
-        vis.rect
-            .enter()
-            .append("rect")
-            .attr('x', function (d) { return d.x0; })
-            .attr('y', function (d) { return d.y0; })
-            .attr('width', function (d) { return d.x1 - d.x0; })
-            .attr('height', function (d) { return d.y1 - d.y0; })
-            .attr('opacity','80%')
-            .attr('id', function(d) {return d.data.iso_code})
+        vis.cell.data(vis.root.leaves()).select("rect")
             .on('mouseover', function(event, d){
                 //console.log(d);
                 d3.select(this)
@@ -363,7 +369,7 @@ class HeatMapVis {
             .on('mouseout', function(event, d){
                 d3.select(this)
                     .attr('stroke-width', '1px')
-                    .attr('stroke', 'black');
+                    .attr('stroke', 'white');
 
                 vis.tooltip
                     .style("opacity", 0)
@@ -377,7 +383,7 @@ class HeatMapVis {
                 console.log(d);
 
                 //update global variables and update index doc
-                if (d.data.iso_code == "Rest of the World") {
+                if (d.data.iso_code == "ROW") {
                     //pick a country at random !!
                     console.log(vis.notinSortedData);
                     let randomIndex = Math.floor(Math.random() * vis.notinSortedData.length);
@@ -393,7 +399,7 @@ class HeatMapVis {
                 updateStatBlock();
 
 
-                
+
 
                 //highlight the heat map tile
                 vis.selected_country_iso_code = selectedCountryCode;
@@ -401,7 +407,7 @@ class HeatMapVis {
                 vis.highLightHeatMapCountry(selectedCountryCode);
 
 
-                
+
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
                 mySankeyVis.country_iso_code = selectedCountryCode;
@@ -426,62 +432,25 @@ class HeatMapVis {
 
 
             })
-
-            .merge(vis.rect)
             .transition()
-            .delay(vis.delay)
-
             .duration(vis.duration)
-            .attr('x', function (d) { return d.x0; })
-            .attr('y', function (d) { return d.y0; })
-            .attr('width', function (d) { return d.x1 - d.x0; })
-            .attr('height', function (d) { return d.y1 - d.y0; })
-            .attr('opacity','80%')
-            .style("stroke", "gray")
-            //.style("fill", "#69b3a2");
-            .style("fill", function (d) {
-                if (d.id == "Rest of the World") {
-                    return "lightgray";
-                } else {
-                    return vis.color(d.value)
-                }
-            });
+            .attr("width", function(d) { return d.x1 - d.x0; })
+            .attr("height", function(d) { return d.y1 - d.y0; })
+            .attr("stroke","white")
+            .attr("stroke-width","0.5")
+            .attr("fill", function(d) { if (d.id == "Rest of the World") {
+                return "lightgray";
+            } else {
+                return vis.color(d.value)
+            }});
 
-        // and to add the text labels
-
-
-        vis.text =  vis.svg
-            .selectAll("text")
-            .data(vis.root.leaves(), function(d){ return d.iso_code; });
-
-        //vis.text.exit().remove();
-
-        vis.text.exit()
-            //.style("opacity", 0.2)
-            .transition().duration(vis.duration)
-            .delay(vis.delay)
-            //.attr("x", -10)
-            //.attr("y", -10)
-
-            //.style("opacity", 1e-6)
-            .remove();
-
-        vis.text
-
-            .enter()
-            .append("text")
-            .attr("class","heatmap_rect_names")
-            .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
-            .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
-            .text(function(d){ return d.data.iso_code})
-            .merge(vis.text)
+        vis.cell.data(vis.root.leaves()).select(".heatmap_rect_names")
             .transition()
-            .delay(vis.delay)
-
-            .duration(vis.duration)
-            .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
-            .attr("y", function(d){ return d.y0+10})    // +10 to adjust position (lower)
+            .delay(vis.duration/2)
             .text(function(d){ return d.data.iso_code});
+            //.call(fit_text,1);
+
+
 
         vis.highLightHeatMapCountry(selectedCountryCode);
 
