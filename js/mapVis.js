@@ -14,8 +14,8 @@ class MapVis {
         this.displayData = [];
         this.sortedData = [];
 
-        this.duration = 500; // transition duration
-        this.delay = 100;
+        this.duration = 4000; // transition duration
+        this.delay = 2000;
         this.selectedCategory = "percountry";
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
@@ -29,7 +29,7 @@ class MapVis {
     initVis() {
         let vis = this;
 
-
+        selectedCountryCode = 'USA';
         vis.margin = {top: 20, right: 20, bottom: 20, left: 20};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
@@ -72,7 +72,8 @@ class MapVis {
             .data(vis.world)
             .enter().append("path")
             .attr('class', 'country')
-            .attr("d", vis.path);
+            .attr("d", vis.path)
+            .attr("fill", "green");
 
 
         // append tooltip
@@ -118,7 +119,6 @@ class MapVis {
                 })
         )
         //console.log(vis.path.centroid(_.find(vis.world,{id: "682"})));
-        console.log(vis.world);
 
         let centroids = vis.world.map(function (feature){
             return vis.path.centroid(feature);
@@ -170,7 +170,6 @@ class MapVis {
                 x => [x.iso_code, [x.name, x.consumption_co2_per_capita, x.consumption_co2]]
 
         ));
-
         //console.log(vis.co2DataDict);
 
         // console.log(vis.isoCodesDict);
@@ -180,13 +179,16 @@ class MapVis {
         vis.geoData.objects.countries.geometries.forEach(d => {
             //console.log(d);
             //console.log(d.id);
-            let isoCodeVal = vis.isoCodesDict[d.id];
+            let isoCodeVal = vis.isoCodesDict[parseInt(d.id)];
             //console.log(isoCodeVal);
             let country_name = '';
             let country_val = 0.00;
             let country_val_percent = 0.00;
+            country_name = isoCodeToCountryNameMap[isoCodeVal];
+
             if (isoCodeVal in vis.co2DataDict) {
-                 country_name = vis.co2DataDict[isoCodeVal][0];
+
+                     //vis.co2DataDict[isoCodeVal][0];
                  if (vis.selectedCategory == "percapita") {
                      // console.log(vis.co2DataDict[isoCodeVal][1]);
                      if(vis.co2DataDict[isoCodeVal][1] !=''){
@@ -216,15 +218,19 @@ class MapVis {
                  }
             }
             else {
-                 country_name = '';
-                country_val = 0.0;
-                country_val_percent = 0.0;
+                    //country_name = '';
+                    if (country_name == undefined) {
+                        country_name = '';
+                    }
+
+                    country_val = 0.0;
+                    country_val_percent = 0.0;
 
             }
             // console.log(country_val);
             // let randomCountryValue = Math.random() * 4
 
-            vis.countryInfo[d.id] = {
+            vis.countryInfo[parseInt(d.id)] = {
 
                 //name: d.properties.name,
                 name: country_name,
@@ -241,7 +247,8 @@ class MapVis {
         vis.updateVis()
     }
 
-    rotateEarth(country_iso_code,isoCodesDict_iso_to_numeric_codes) {
+    rotateEarth(country_iso_code) {
+    //           ,isoCodesDict_iso_to_numeric_codes) {
         let vis = this;
 
         //to rotate globe to country being clicked
@@ -255,7 +262,7 @@ class MapVis {
         //console.log(vis.world);
         //console.log(centroids);
         const index = vis.world.findIndex(object => {
-            return object.id === parseInt(isoCodesDict_iso_to_numeric_codes[country_iso_code]);
+            return object.id === parseInt(vis.isoCodesDict_iso_to_numeric_codes[country_iso_code]);
             //vis.isoCodesDict[d.data.iso_code];
         });
         //console.log(isoCodesDict_iso_to_numeric_codes);
@@ -286,7 +293,7 @@ class MapVis {
                         d3.selectAll(".graticule").attr("d", vis.path);
 
                         vis.svg.selectAll("path").attr("d", vis.path)
-                            .classed("focused", function(d, i) { return d.id == isoCodesDict_iso_to_numeric_codes[temp_iso] ? vis.focused = d : false; });
+                            .classed("focused", function(d, i) { return d.id == vis.isoCodesDict_iso_to_numeric_codes[temp_iso] ? vis.focused = d : false; });
 
 
                     };
@@ -310,7 +317,8 @@ class MapVis {
         }
 
         //Rotate to selected country code (default USA) on refresh
-        vis.rotateEarth(vis.selected_country_iso_code, vis.isoCodesDict_iso_to_numeric_codes);
+        vis.rotateEarth(vis.selected_country_iso_code);
+        //, vis.isoCodesDict_iso_to_numeric_codes);
         //vis.minVal = vis.sortedData[vis.sortedData.length-1].value;
 
         // console.log(vis.maxVal);
@@ -324,6 +332,7 @@ class MapVis {
         // console.log(vis.isoCodesDict[682]);
         vis.countries
             .on('mouseover', function(event, d){
+
                 d3.select(this)
                     .attr('stroke-width', '2px')
                     .attr('stroke', 'black')
@@ -364,9 +373,11 @@ class MapVis {
                 //update global variables and update index doc
                 selectedCountryCode = isocode;
                 selectedCountry = isoCodeToCountryNameMap[isocode];
+
                 updateStatBlock();
 
-             
+                vis.selected_country_iso_code = selectedCountryCode;
+
                 //call sankey
                 mySankeyVis.selectedYear = vis.selectedYear;
                 //console.log(d.id);
@@ -376,14 +387,19 @@ class MapVis {
                 //mySankeyVis.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
                 //console.log(mySankeyVis.country_iso_code);
                 mySankeyVis.wrangleData();
-                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + vis.co2DataDict[mySankeyVis.country_iso_code][0];
+                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + selectedCountry;
 
                 //call bump chart
                 myBumpChart.country_iso_code = isocode;
                 myBumpChart.wrangleData();
 
+                //call radar vis
+                myRadarVis.selectedCountryCode = selectedCountryCode;
+                myRadarVis.wrangleData();
+
                 //rotate the earth to that country
-                vis.rotateEarth(vis.isoCodesDict[parseInt(d.id)], vis.isoCodesDict_iso_to_numeric_codes);
+                vis.rotateEarth(selectedCountryCode);
+                //, vis.isoCodesDict_iso_to_numeric_codes);
 
                 //highlight the corresponding heat map tile
                 myHeatMapVis.highLightHeatMapCountry(vis.isoCodesDict[parseInt(d.id)]);
@@ -398,6 +414,7 @@ class MapVis {
                 return vis.color(vis.countryInfo[d.id].value);
             });
 
+        vis.rotateEarth(selectedCountryCode);
 
 
         // Reference: https://d3-legend.susielu.com/

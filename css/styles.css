@@ -198,12 +198,15 @@ html {
 .focused {
     stroke: darkblue;
     stroke-width: 2;
+    transition: stroke-width 4000ms;
+
     opacity: 1;
 }
-
 .focused_heatmap {
     stroke: darkblue;
     stroke-width: 4;
+    transition: stroke-width 4000ms;
+
 }
 
 /*@media screen and (min-width: 600px) {*/
@@ -229,6 +232,12 @@ html {
     align-content: center;
     justify-content: center;
 }
+
+#CategoryDiv {
+    font-size: small;
+
+}
+
 
 
 

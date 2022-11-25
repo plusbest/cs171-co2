@@ -116,14 +116,21 @@ function categoryChange() {
     myHeatMapVis.selectedCategory = selectedCategory;
     myHeatMapVis.wrangleData();
 
+
+
+
     //update the earth map
     myMapVis.selectedCategory = selectedCategory;
     myMapVis.wrangleData();
+
+    //myMapVis.rotateEarth()
+    //myMapVis.rotateEarth(selectedCountryCode);
 
 }
 
 // Year Slider
 // TODO: Needs to populate range based on target country and available data?
+/*
 let slider = d3.select('#yearSlider')
 slider.on("input", handleInput)
 
@@ -137,6 +144,8 @@ function handleInput() {
     mySankeyVis.selectedYear = eventData;
     mySankeyVis.wrangleData();
 }
+*/
+
 
 // Returns checkbox
 function handleRadio() {
@@ -156,10 +165,9 @@ function handleRadio() {
 }
 
 function yearSliderChange(selectedYear) {
-    //selectedYear =  document.getElementById('yearSlider').value;
+    selectedYear =  document.getElementById('yearSlider').value;
 
-    document.getElementById('yearSliderLabel').innerText = 'You selected: ' + selectedYear + ' (between 1990 and 2019)';
-    //yearSliderText.text("test");
+    document.getElementById('yearSliderLabel').innerHTML = 'Select year (1990 to 2019): ' + '<b>'+ selectedYear + '</b>' + '  selected';
 
     mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
@@ -168,9 +176,13 @@ function yearSliderChange(selectedYear) {
     console.log(selectedYear);
     myHeatMapVis.wrangleData();
 
+
+
     myMapVis.selectedYear = selectedYear;
     console.log(selectedYear);
     myMapVis.wrangleData();
+
+
 
 }
 
