@@ -268,12 +268,10 @@ class HeatMapVis {
     highLightHeatMapCountry(country_iso_code)
     {
         let vis = this;
-        console.log(country_iso_code);
         //remove all other highlights
 
         vis.svg.selectAll(".focused_heatmap").classed("focused_heatmap", false);
 
-        console.log(country_iso_code);
 
         let localSelectedCountryCode;
         //to handle 'Rest of the World' in heatmap
@@ -290,7 +288,6 @@ class HeatMapVis {
             localSelectedCountryCode = selectedCountryCode;
 
         }
-        console.log(localSelectedCountryCode);
         vis.svg.selectAll("rect")
             .classed("focused_heatmap",  function(d, i) {
                 return d.data.iso_code == localSelectedCountryCode ? true : false;            })

@@ -118,7 +118,6 @@ class MapVis {
                 })
         )
         //console.log(vis.path.centroid(_.find(vis.world,{id: "682"})));
-        console.log(vis.world);
 
         let centroids = vis.world.map(function (feature){
             return vis.path.centroid(feature);
@@ -170,7 +169,6 @@ class MapVis {
                 x => [x.iso_code, [x.name, x.consumption_co2_per_capita, x.consumption_co2]]
 
         ));
-
         //console.log(vis.co2DataDict);
 
         // console.log(vis.isoCodesDict);
@@ -180,13 +178,16 @@ class MapVis {
         vis.geoData.objects.countries.geometries.forEach(d => {
             //console.log(d);
             //console.log(d.id);
-            let isoCodeVal = vis.isoCodesDict[d.id];
+            let isoCodeVal = vis.isoCodesDict[parseInt(d.id)];
             //console.log(isoCodeVal);
             let country_name = '';
             let country_val = 0.00;
             let country_val_percent = 0.00;
+            country_name = isoCodeToCountryNameMap[isoCodeVal];
+
             if (isoCodeVal in vis.co2DataDict) {
-                 country_name = vis.co2DataDict[isoCodeVal][0];
+
+                     //vis.co2DataDict[isoCodeVal][0];
                  if (vis.selectedCategory == "percapita") {
                      // console.log(vis.co2DataDict[isoCodeVal][1]);
                      if(vis.co2DataDict[isoCodeVal][1] !=''){
@@ -216,15 +217,19 @@ class MapVis {
                  }
             }
             else {
-                 country_name = '';
-                country_val = 0.0;
-                country_val_percent = 0.0;
+                    //country_name = '';
+                    if (country_name == undefined) {
+                        country_name = '';
+                    }
+
+                    country_val = 0.0;
+                    country_val_percent = 0.0;
 
             }
             // console.log(country_val);
             // let randomCountryValue = Math.random() * 4
 
-            vis.countryInfo[d.id] = {
+            vis.countryInfo[parseInt(d.id)] = {
 
                 //name: d.properties.name,
                 name: country_name,
@@ -326,8 +331,7 @@ class MapVis {
         // console.log(vis.isoCodesDict[682]);
         vis.countries
             .on('mouseover', function(event, d){
-                console.log(d.id);
-                console.log(vis.countryInfo[d.id]);
+
                 d3.select(this)
                     .attr('stroke-width', '2px')
                     .attr('stroke', 'black')
