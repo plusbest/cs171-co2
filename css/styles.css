@@ -204,7 +204,7 @@ html {
 }
 .focused_heatmap {
     stroke: darkblue;
-    stroke-width: 6;
+    stroke-width: 4;
     transition: stroke-width 4000ms;
 
 }
