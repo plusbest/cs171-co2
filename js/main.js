@@ -160,9 +160,8 @@ function handleRadio() {
 }
 
 function yearSliderChange(selectedYear) {
-    selectedYear =  document.getElementById('yearSlider').value;
-
-    document.getElementById('yearSliderLabel').innerHTML = 'Select year (1990 to 2019): ' + '<b>'+ selectedYear + '</b>' + '  selected';
+    document.getElementById('yearSlider').value = selectedYear;
+    document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
 
     mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
@@ -197,5 +196,22 @@ function updateStatBlock(){
         d3.select("#mainpoint-suffix").html(`
              than <span id="selected-country-name">${selectedCountry}</span> in global consumption emissions.
         `);
+    }
+}
+
+// Reference: https://www.sitepoint.com/delay-sleep-pause-wait/
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+async function playAllYears() {
+    console.log("play clicked");
+    for(let i=1990; i<=2019; i++) {
+        yearSliderChange(i);
+        await sleep(4500);
+
+
+
     }
 }

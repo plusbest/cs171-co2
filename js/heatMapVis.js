@@ -95,6 +95,7 @@ class HeatMapVis {
         ]);
 
         //console.log(vis.root.leaves());
+        // Reference: https://bl.ocks.org/ivan-vallejo/1e92db10504b6115b37db398a93e2d9f
         // use this information to add rectangles:
         vis.cell = vis.svg.selectAll("g")
             .data(vis.root.leaves(), function(d){ return d.iso_code; })
@@ -336,6 +337,8 @@ class HeatMapVis {
         */
 
         // update treemap
+        // Reference: https://bl.ocks.org/ivan-vallejo/1e92db10504b6115b37db398a93e2d9f
+
         vis.cell.data(vis.root.leaves())
             .transition()
             .duration(vis.duration)

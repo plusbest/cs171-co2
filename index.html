@@ -162,11 +162,19 @@
                 </div>
 
                 <div class="col-lg-5 offset-1">
-                    <form>
-                        <label id="yearSliderLabel" for="yearSlider">Select year (1990 to 2019): <b>2019</b> selected</label>
 
+
+
+                    <form>
+                        <button type="button" class="btn btn-default btn-sm" onclick="playAllYears()">
+                            <span class="glyphicon glyphicon-play"></span> Play
+                        </button>
+
+                            <label id="yearSliderLabel" for="yearSlider" class="offset-1">Selected Year: <b>2019</b></label>
                         <input type="range" class="form-range   justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
                     </form>
+
+
                 </div>
             </div>
             <div class="row" style="height: 75vh;">
