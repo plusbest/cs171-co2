@@ -117,8 +117,6 @@ function categoryChange() {
     myHeatMapVis.wrangleData();
 
 
-
-
     //update the earth map
     myMapVis.selectedCategory = selectedCategory;
     myMapVis.wrangleData();
@@ -130,10 +128,11 @@ function categoryChange() {
 
 // Year Slider
 // TODO: Needs to populate range based on target country and available data?
-/*
+
 let slider = d3.select('#yearSlider')
 slider.on("input", handleInput)
 
+// Listen for change on checkbox group
 let radio = d3.select('#btnGroup')
 radio.on("input", handleRadio)
 
@@ -143,20 +142,24 @@ function handleInput() {
     mySankeyVis.selectedYear = eventData;
     mySankeyVis.wrangleData();
 }
-*/
 
 
+
+// Returns checkbox
 function handleRadio() {
 
-  var checkBoxes = d3.selectAll(".co2-box");
-  var list = []
-  
-  checkBoxes.each(function() {
+  var checkboxes = d3.selectAll(".co2-box");
+  var checkboxList = []
+
+  checkboxes.each(function() {
     dict = {}
     dict[this.value] = this.checked === true ? true : false;
-    list.push(dict);
+    checkboxList.push(dict);
   })
-  console.log("JW --- checkBoxData", list);
+
+  myGaugeVis.checkBoxes = checkboxList;
+
+  console.log("JW --- checkBoxData", checkboxList);
 }
 
 function yearSliderChange(selectedYear) {
