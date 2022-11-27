@@ -209,6 +209,21 @@ class BumpChartVis {
 
         vis.z.domain(vis.fields.map(function(field) { return field.field; }));
 
+        // Add background rect for click handler
+        vis.background = vis.svg.append("rect")
+            .attr("class", "background")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", vis.height)
+            .attr("width", vis.width)
+            .style("opacity", "0")
+            .on('click', function(e, d) {
+                // Change views if background is clicked when on a particular line's view
+                if (vis.currentView !== "ALL" ) {
+                    vis.changeCurrentView("ALL");
+                }
+            });
+
         // Draw the lines
         const lineGenerator = d3.line()
             .curve(d3.curveBasis)
