@@ -390,8 +390,7 @@ class MapVis {
                 document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + selectedCountry;
 
                 //call bump chart
-                myBumpChart.country_iso_code = isocode;
-                myBumpChart.wrangleData();
+                myBumpChart.changeCurrentView(myBumpChart.currentView);
 
                 //call radar vis
                 myRadarVis.selectedCountryCode = selectedCountryCode;

@@ -256,3 +256,6 @@ html {
     cursor: pointer;
 }
 
+.more-line-height {
+    line-height: 1.7em;
+}

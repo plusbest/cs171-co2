@@ -339,9 +339,13 @@ class BumpChartVis {
                 .on("click", (e) => vis.resetButtonOnClick(e))
                 .text("Reset to global comparison")
 
+        } else if (newView === "ALL" && selectedCountryCode === "USA") {
+            d3.select("#bumpchart-row .section-title")
+                .html("And <strong class='bg-warning px-3 py-1'>US</strong> consumption emissions compared to the world's total over time in the following ways:")
         } else {
             d3.select("#bumpchart-row .section-title")
-                .html("And their consumption emissions compared to the world's total over time in the following ways:")
+                .html(`And the <strong class='bg-warning px-3 py-1'>United States</strong> and <strong class="bg-success px-3 py-1">${selectedCountry}</strong>'s
+                 consumption emissions compared to the world's total over time in the following ways:`)
         }
 
         vis.wrangleData();

@@ -421,7 +421,7 @@ class HeatMapVis {
 
                 //call bump chart
                 console.log("data in heatmap, ", d.data);
-                myBumpChart.wrangleData();
+                myBumpChart.changeCurrentView(myBumpChart.currentView);
 
                 //call radar vis
                 myRadarVis.selectedCountryCode = selectedCountryCode;
