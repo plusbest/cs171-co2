@@ -252,7 +252,12 @@ class SankeyVis {
             .attr("y", function(d) { return (d.y1 + d.y0) / 2; })
             .attr("dy", "0.35em")
             .attr("text-anchor", "end")
-            .text(function(d) { return d.name; })
+            .text(function(d) {
+                if (d.value > 0) {
+                    return `${d.name} - ${Math.floor(d.value)}`; 
+                    }
+                }
+            )
             .filter(function(d) { return d.x0 < vis.width / 2; })
             .attr("x", function(d) { return d.x1 + 6; })
             .attr("text-anchor", "start");

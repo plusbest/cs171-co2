@@ -122,7 +122,7 @@ class GaugeVis {
         console.log("JWA -- updated usa percent", usa_percent)
 
         vis.data = [
-            {value: 50, label: "Safe Level", color: vis.colors[0], co2val: safe_total},
+            {value: 50, label: "Safe Level <", color: vis.colors[0], co2val: safe_total},
             {value: 0, label: "", color: vis.colors[1]},
             {value: usa_percent, label: "US average", color: vis.colors[2], co2val: usa_total},
             {value: 0, label: "", color: vis.colors[3]},
