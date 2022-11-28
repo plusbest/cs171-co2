@@ -259,3 +259,18 @@ html {
 .more-line-height {
     line-height: 1.7em;
 }
+
+.gauge-title {
+    font-size: large;
+    font-family: Ayuthaya;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.gauge-subtitle {
+    font-size: 14px;
+    font-family: Ayuthaya;
+    text-align: center;
+    margin-bottom: 20px;
+}
+

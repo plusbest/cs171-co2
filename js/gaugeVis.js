@@ -49,14 +49,6 @@ class GaugeVis {
         vis.arcSize = (6 * vis.width / 100);
         vis.innerRadius = vis.arcSize * 3;            
 
-        // vis.data = [
-        //     {value: 40, label: "Safe Level", color: vis.colors[0]},
-        //     {value: 0, label: "", color: vis.colors[1]},
-        //     {value: 66, label: "US average", color: vis.colors[2]},
-        //     {value: 0, label: "", color: vis.colors[3]},
-        //     {value: 95, label: "Global average", color: vis.colors[4]}
-        // ];
-
         vis.data;
 
         vis.svg = d3.select('#gaugeVis').append('svg')
@@ -68,7 +60,6 @@ class GaugeVis {
             return d.value;
         });
 
- 
         vis.wrangleData();
 
 	}
@@ -115,6 +106,8 @@ class GaugeVis {
         })
 
         let usa_total = 0;
+        let world_total = vis.displayData["world_co2_total"];
+        let safe_total = vis.displayData["world_co2_total"]/2;
 
         vis.checkBoxes.forEach(function(d) {
             for (let key in d) {
@@ -129,11 +122,11 @@ class GaugeVis {
         console.log("JWA -- updated usa percent", usa_percent)
 
         vis.data = [
-            {value: 50, label: "Safe Level", color: vis.colors[0]},
+            {value: 50, label: "Safe Level", color: vis.colors[0], co2val: safe_total},
             {value: 0, label: "", color: vis.colors[1]},
-            {value: usa_percent, label: "US average", color: vis.colors[2]},
+            {value: usa_percent, label: "US average", color: vis.colors[2], co2val: usa_total},
             {value: 0, label: "", color: vis.colors[3]},
-            {value: 95, label: "Global average", color: vis.colors[4]}
+            {value: 95, label: "Global average", color: vis.colors[4], co2val: world_total}
         ];
 
         // console.log("JWA -- vis.data", vis.data);
@@ -153,6 +146,7 @@ class GaugeVis {
         });
 
         vis.pieData = vis.data.map(function (obj, i) {
+            console.log("'obj", obj)
             return [
                 {value: obj.value * 0.75, arc: vis.arcs[i], object: obj},
                 {value: (100 - obj.value) * 0.75, arc: vis.arcsGrey[i], object: obj},
@@ -216,28 +210,34 @@ class GaugeVis {
 
         // remove previous text percentages
         vis.svg.selectAll("textPath.percentage").remove();
+        vis.svg.selectAll(".percentage").remove();
 
         vis.svg.selectAll('g').each(function (d, index) {
             var el = d3.select(this);
             var path = el.selectAll('path').each(function (r, i) {
                 if (i === 1) {
+                    console.log("R", r)
                     var centroid = r.data.arc.centroid({
                         startAngle: r.startAngle + 0.05,
                         endAngle: r.startAngle + 0.001 + 0.05
                     });
                     var lableObj = r.data.object;
-                    vis.pieGraph.append('text')
-                        .attr('font-size', 16)
-                        .attr('dominant-baseline', 'central')
-                        .append("textPath")
-                        .classed('percentage', true)
-                        .attr("textLength", function (d, i) {
-                            return 0;
-                        })
-                        .attr("xlink:href", "#Text" + r.data.object.label)
-                        .attr("startOffset", '5')
-                        .attr("dy", '-3em')
-                        .text(lableObj.value + '%'); // percentage add
+
+                    if (r.data.object.label) {
+                        vis.pieGraph.append('text')
+                            .attr('font-size', 15)
+                            .attr('dominant-baseline', 'central')
+                            .append("textPath")
+                            .classed('percentage', true)
+                            .attr("textLength", function (d, i) {
+                                return 0;
+                            })
+                            .attr("xlink:href", "#Text" + r.data.object.label)
+                            .attr("startOffset", '5')
+                            .attr("dy", '-3em')
+                            .text(`${(Math.floor(lableObj.co2val)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`); // percentage add
+                    }
+
                 }
                 if (i === 0) {
                     var centroidText = r.data.arc.centroid({
@@ -245,11 +245,23 @@ class GaugeVis {
                         endAngle: r.startAngle
                     });
                     var lableObj = r.data.object;
-                    vis.gText.append('text')         // label text add
-                        .attr('font-size', 14)
-                        .text(lableObj.label)
-                        .attr('transform', "translate(" + (centroidText[0] - ((1.5 * vis.width) / 100)) + "," + (centroidText[1] + ") rotate(" + (180) + ")"))
-                        .attr('dominant-baseline', 'central');
+
+                    if (lableObj.value > 0 && lableObj.label != "") {
+                        vis.gText.append('text')         // label text add
+                            .attr('font-size', 15)
+                            .classed('percentage', true)
+                            .text(`${lableObj.label} (${lableObj.value}%)`)
+                            .attr('transform', "translate(" + (centroidText[0] - ((1.5 * vis.width) / 100)) + "," + (centroidText[1] + ") rotate(" + (180) + ")"))
+                            .attr('dominant-baseline', 'central');
+                    }
+                    else if (lableObj.value <= 0 && lableObj.label != "") {
+                        vis.gText.append('text')         // label text add
+                            .attr('font-size', 15)
+                            .classed('percentage', true)
+                            .text(`${lableObj.label} (< 0%)`)
+                            .attr('transform', "translate(" + (centroidText[0] - ((1.5 * vis.width) / 100)) + "," + (centroidText[1] + ") rotate(" + (180) + ")"))
+                            .attr('dominant-baseline', 'central');
+                    }
                 }
             });
         });
