@@ -209,6 +209,21 @@ class BumpChartVis {
 
         vis.z.domain(vis.fields.map(function(field) { return field.field; }));
 
+        // Add background rect for click handler
+        vis.background = vis.svg.append("rect")
+            .attr("class", "background")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", vis.height)
+            .attr("width", vis.width)
+            .style("opacity", "0")
+            .on('click', function(e, d) {
+                // Change views if background is clicked when on a particular line's view
+                if (vis.currentView !== "ALL" ) {
+                    vis.changeCurrentView("ALL");
+                }
+            });
+
         // Draw the lines
         const lineGenerator = d3.line()
             .curve(d3.curveBasis)
@@ -324,9 +339,13 @@ class BumpChartVis {
                 .on("click", (e) => vis.resetButtonOnClick(e))
                 .text("Reset to global comparison")
 
+        } else if (newView === "ALL" && selectedCountryCode === "USA") {
+            d3.select("#bumpchart-row .section-title")
+                .html("And <strong class='bg-warning px-3 py-1'>US</strong> consumption emissions compared to the world's total over time in the following ways:")
         } else {
             d3.select("#bumpchart-row .section-title")
-                .html("And their consumption emissions compared to the world's total over time in the following ways:")
+                .html(`And the <strong class='bg-warning px-3 py-1'>United States</strong> and <strong class="bg-success px-3 py-1">${selectedCountry}</strong>'s
+                 consumption emissions compared to the world's total over time in the following ways:`)
         }
 
         vis.wrangleData();

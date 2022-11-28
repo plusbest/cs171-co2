@@ -147,24 +147,33 @@
         <!-- HEAT MAP SECTION -->
         <div class="col-lg-12  flex-column">
             <div class="section-title">Different countries around the globe contribute vastly different amounts of CO2 consumption emissions</div>
-            <div class="section-subtitle mb-5">Hover over country for rankings and click to select for drilldown</div>
+            <div class="section-subtitle mb-5">Hover over country for rankings, click country for drilldown, use play button to see changes over time</div>
 
             <div class="row" style="height: 5vh;">
                 <div class="col-lg-5 offset-1">
                     <select id="categorySelector" class="custom-select  justify-content-end" style="width: 100%" onchange="categoryChange()">
                         <option value="bycountry" selected="">Consumption CO2 Emissions measured in million tonnes for the Country</option>
 
-                        <option value="percapita">Consumption CO2 Emissions measured in tonnes per Person in the country</option>
+                        <option value="percapita">Consumption CO2 Emissions measured in tonnes per Person (and representing their country)</option>
                     </select>
 
                 </div>
 
                 <div class="col-lg-5 offset-1">
-                    <form>
-                        <label id="yearSliderLabel" for="yearSlider">You selected 2019 (between 1990 and 2019):</label>
 
+
+
+
+                    <form>
+                        <button type="button" id="play-button" class="btn btn-default btn-sm" onclick="playAllYears()">
+                            <span class="glyphicon glyphicon-play"></span> Play
+                        </button>
+
+                            <label id="yearSliderLabel" for="yearSlider" class="offset-1">Selected Year: <b>2019</b></label>
                         <input type="range" class="form-range   justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
                     </form>
+
+
                 </div>
             </div>
             <div class="row" style="height: 75vh;">
@@ -208,7 +217,8 @@
     </div>
     <div class="row w-100" id="mainpoint-row">
         <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
-                The United States currently (2020) ranks <span id="us-rank-compared-to-selected">#2 in the world</span>
+                <div>The <strong class="px-3 py-1 bg-white">United States</strong> currently (2020) ranks</div>
+                <span id="us-rank-compared-to-selected">#2 in the world</span>
                 <div id="mainpoint-suffix" class="d-inline">in global consumption emissions.</div>
         </div>
     </div>
@@ -229,7 +239,7 @@
         <div class="col-12 p-5">
             <div class="row" style="min-height: 50vh;">
                 <div class="col-10 offset-1">
-                    <h2 class="section-title">And their consumption emissions compared to the world's total over time in the following ways:</h2>
+                    <h2 class="section-title more-line-height">And <strong class="bg-warning px-3 py-1">US</strong> consumption emissions compared to the world's total over time in the following ways:</h2>
                     <h3 class="section-subtitle">Click a line to view a detailed breakdown over time</h3>
                     <div class="content-section" id="bumpChartDiv">
                     </div>
