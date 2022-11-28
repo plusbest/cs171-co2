@@ -73,7 +73,7 @@ class SankeyVis {
         vis.co2Data.forEach(function(d) {
             //if (d.country == "United States" && d.year == vis.selectedYear) {
             if (d.iso_code == vis.country_iso_code && d.year == vis.selectedYear) {
-                console.log(d.year)
+                // console.log(d.year)
                 let co2 = vis.selectedCategory === 'percapita' ? d.co2_per_capita : d.co2;
                 let coal_co2 = vis.selectedCategory === 'percapita' ? d.coal_co2_per_capita : d.coal_co2;
                 let cement_co2 =  vis.selectedCategory === 'percapita' ? d.cement_co2_per_capita : d.cement_co2;
@@ -135,11 +135,8 @@ class SankeyVis {
         console.log("JW -- displayData", vis.displayData)
 
 
-
-        // TODO: Descending order sort
-        // *******
-        // *******
-
+        // Sort display data descending
+        vis.displayData.sort((a,b) => d3.descending(+a.value, +b.value));
 
         // empty nodes and links
         vis.sankeydata.nodes = []
@@ -178,24 +175,6 @@ class SankeyVis {
         vis.sankeydata.nodes.forEach(function (d, i) {
             vis.sankeydata.nodes[i] = { "name": d };
         });
-
-
-        // co2
-
-        // consumption_co2
-        // consumption_co2_per_capita
-
-        // trade_co2
-
-        // coal_co2
-        // coal_co2_per_capita
-        // cement_co2
-        // cement_co2_per_capita
-        // flaring_co2
-        // flaring_co2_per_capita
-        // gas_co2
-        // gas_co2_per_capita
-
 
         vis.updateVis()
 

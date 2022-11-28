@@ -99,6 +99,7 @@ function initMainPage(dataArray) {
 
     myGaugeVis = new GaugeVis('gaugeVis', dataArray[9], dataArray[1]);
 
+    myGaugeVis.wrangleData(); // Initialize Gauage with full checkbox params
 }
 
 
@@ -158,6 +159,7 @@ function handleRadio() {
   })
 
   myGaugeVis.checkBoxes = checkboxList;
+  myGaugeVis.wrangleData();
 
   console.log("JW --- checkBoxData", checkboxList);
 }
@@ -174,11 +176,12 @@ function yearSliderChange(selectedYear) {
     console.log(selectedYear);
     myHeatMapVis.wrangleData();
 
-
-
     myMapVis.selectedYear = selectedYear;
     console.log(selectedYear);
     myMapVis.wrangleData();
+
+    myGaugeVis.selectedYear = selectedYear;
+    myGaugeVis.wrangleData();
 
 
 
