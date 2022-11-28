@@ -13,8 +13,8 @@ class HeatMapVis {
         this.displayData = [];
         this.sortedData = [];
         this.selectedYear = 2019;
-        this.duration = 4000; // transition duration
-        this.delay = 2000;
+        this.duration = 3000; // transition duration
+        this.delay = 500;
         this.selectedCategory = "percountry";
         this.sortNum = 50;
         this.isoCodes = isoCodes;
@@ -252,10 +252,7 @@ class HeatMapVis {
         );
 
         //console.log(vis.sortedData);
-        // to init Sankey to show USA data as default
-        mySankeyVis.selectedYear = vis.selectedYear;
-        mySankeyVis.country_iso_code = vis.selected_country_iso_code;
-        mySankeyVis.wrangleData();
+
     }
 
     // wrangleData method

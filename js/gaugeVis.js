@@ -5,10 +5,9 @@
 
 class GaugeVis {
 
-    constructor(parentElement, co2Data, energyData) {
+    constructor(parentElement, co2Data) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
-        this.energyData = energyData;
         this.displayData = [];
     	this.parseDate = d3.timeParse("%m/%d/%Y");
         this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 

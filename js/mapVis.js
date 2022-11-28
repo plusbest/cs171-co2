@@ -14,8 +14,8 @@ class MapVis {
         this.displayData = [];
         this.sortedData = [];
 
-        this.duration = 4000; // transition duration
-        this.delay = 2000;
+        this.duration = 3000; // transition duration
+        this.delay = 500;
         this.selectedCategory = "percountry";
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];

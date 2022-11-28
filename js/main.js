@@ -9,11 +9,15 @@ let
     myBumpChart,
     myMainPointVis,
     myMapVis,
-    myRadarVis;
+    myRadarVis,
+    isPlaying = false;
 
 // TODO: See if these can be used? Perhaps for shared brushing data between sankey and heatmap/globe?
 let selectedTimeRange = [];
 let selectedYear = 2019;
+
+let beginCO2ConsumptionYear = 1990;
+let endCO2ConsumptionYear = 2019;
 
 // TODO: update all visualizations to use global vars
 let selectedCountryCode = "USA";
@@ -45,21 +49,27 @@ const excludedCountries = [
 
 // load data using promises
 const promises = [
-    d3.csv("data/owid-co2-data.csv"),
-    d3.csv("data/owid-energy-data.csv"),
-    d3.csv("data/sankey.csv"),   // sankey test data
-    excludedCountries, // to exclude continents from heatmap Viz
-    d3.csv("data/owid-co2-data.csv"),
-    d3.csv("data/owid-co2-data.csv"),
+    d3.csv("data/owid-co2-data.csv"), // heatmap
+    d3.csv("data/owid-co2-data.csv"), // world map - mapVis
+
+    d3.csv("data/owid-co2-data.csv"), // sankey
+    d3.csv("data/owid-co2-data.csv"), // gauge vis
+
+    d3.csv("data/owid-co2-data.csv"), // bumpchart
+    d3.csv("data/owid-co2-data.csv"), // radarchart
+
     //separate promises to workaround the shallow copy bug
     // - change of co2 data in 1 viz impacts others with default shallow
+    //d3.csv("data/owid-energy-data.csv"),
+    //d3.csv("data/sankey.csv"),   // sankey test data
+    excludedCountries, // to exclude continents from heatmap Viz
+
     d3.json("data/world_2.json"),
     //https://gist.github.com/whatsthebeef/6361969#file-world-json
     //d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json"),
     d3.csv("data/all.csv"),
     // Reference: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes
-    d3.csv("data/owid-co2-data.csv"),
-    d3.csv("data/owid-co2-data.csv")
+
 ];
 
 Promise.all(promises)
@@ -75,7 +85,7 @@ function initMainPage(dataArray) {
 
     // log data
     console.log('co2 data:', dataArray[0]);
-    console.log('energy data:', dataArray[1]);
+    //console.log('energy data:', dataArray[1]);
     console.log('hi team :)');
 
     // Build a map of iso codes to countries
@@ -85,21 +95,30 @@ function initMainPage(dataArray) {
         }
     });
 
-    // init map
 
-    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[5], dataArray[1]);
 
-    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4], dataArray[1]);
+    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[6], dataArray[8]);
 
-    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[3], dataArray[7]);
+    myMapVis = new MapVis('mapDiv', dataArray[1], dataArray[6], dataArray[7], dataArray[8]);
 
-    myMapVis = new MapVis('mapDiv', dataArray[8], dataArray[3], dataArray[6], dataArray[7]);
 
-    myRadarVis = new RadarVis('radarDiv', dataArray[0]);
 
-    myGaugeVis = new GaugeVis('gaugeVis', dataArray[9], dataArray[1]);
+    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[2],'USA',2019);
+    // to init Sankey to show USA data as default
+    mySankeyVis.selectedYear = 2019;
+    mySankeyVis.country_iso_code = 'USA';
+    mySankeyVis.wrangleData();
 
+    myGaugeVis = new GaugeVis('gaugeVis', dataArray[3]);
     myGaugeVis.wrangleData(); // Initialize Gauage with full checkbox params
+
+
+
+    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4]);
+
+    myRadarVis = new RadarVis('radarDiv', dataArray[5]);
+
+
 }
 
 
@@ -210,14 +229,20 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
+// Reference: https://stackoverflow.com/questions/38525633/disable-a-button-using-d3-jquery-until-the-action-is-complete
 async function playAllYears() {
+    // If this is playing, do nothing.
+    if (isPlaying) return;
     console.log("play clicked");
-    for(let i=1990; i<=2019; i++) {
+    isPlaying = true;
+
+    for(let i=beginCO2ConsumptionYear; i<=endCO2ConsumptionYear; i++) {
         yearSliderChange(i);
-        await sleep(4500);
+        await sleep(4000);
 
 
 
     }
+    isPlaying = false;
+
 }

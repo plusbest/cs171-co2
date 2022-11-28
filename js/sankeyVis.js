@@ -5,10 +5,9 @@
 
 class SankeyVis {
 
-    constructor(parentElement, co2Data, energyData, country, year) {
+    constructor(parentElement, co2Data, country, year) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
-        this.energyData = energyData;
         this.displayData = [];
     	this.parseDate = d3.timeParse("%m/%d/%Y");
         this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
@@ -21,7 +20,7 @@ class SankeyVis {
         this.country_iso_code = 'USA';
         this.year = year;
         this.selectedCategory = 'percountry';
-        this.selectedYear = 2019
+        this.selectedYear = 2019;
 
         this.initVis()
 		}
