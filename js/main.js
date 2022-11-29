@@ -7,7 +7,6 @@ let
     myHeatMapVis,
     mySankeyVis,
     myBumpChart,
-    myMainPointVis,
     myMapVis,
     myRadarVis,
     isPlaying = false;

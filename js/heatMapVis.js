@@ -16,6 +16,8 @@ class HeatMapVis {
         this.duration = 3000; // transition duration
         this.delay = 500;
         this.selectedCategory = "percountry";
+        this.units = "million tonnes"
+
         this.sortNum = 50;
         this.isoCodes = isoCodes;
         this.selected_country_iso_code = 'USA';
@@ -149,6 +151,7 @@ class HeatMapVis {
          */
         let  valueToStore = 0;
         let valueType = '';
+        let valueUnits = '';
         vis.isoCodesDict = Object.fromEntries(vis.isoCodes.map(x => [x['alpha-3'], x['country-code']]));
 
 
@@ -165,11 +168,13 @@ class HeatMapVis {
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
                     valueType = "Consumption CO2 per capita";
+                    valueUnits = "tonnes";
 
 
                 } else {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2).toFixed(2);
                     valueType = "Consumption CO2";
+                    valueUnits = "million tonnes";
 
 
                 }
@@ -181,6 +186,7 @@ class HeatMapVis {
                         iso_code: vis.co2Data[i].iso_code,
                         parent: 'Origin',
                         value: valueToStore,
+                        units: valueUnits,
                         type: valueType,
                         rank: i
                     }
@@ -232,6 +238,8 @@ class HeatMapVis {
                 iso_code: 'ROW',
                 parent: 'Origin',
                 value: sum,
+                units: valueUnits,
+
                 type: valueType,
                 rank: 'NA'
 
@@ -245,6 +253,8 @@ class HeatMapVis {
                 iso_code: '',
                 parent: '',
                 value: '',
+                units: ' ',
+
                 type: '',
                 rank: ''
 
@@ -356,8 +366,8 @@ class HeatMapVis {
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h3> ${ d.data.name}</h3>
              <h4> Rank: ${d.data.rank}</h4>       
-             <h4> ${d.data.value}</h4>
-             <h4> Click for drilldown</h4>
+             <h4> ${d.data.value} ${d.data.units}</h4>
+             <h4> Click to see drilldown details on next pages </h4>
        
             
              

@@ -17,6 +17,7 @@ class MapVis {
         this.duration = 3000; // transition duration
         this.delay = 500;
         this.selectedCategory = "percountry";
+        this.units = "million tonnes"
         this.sortNum = 75;
         this.colors = ['#fddbc7', '#f4a582', '#d6604d', '#b2182b'];
         this.selectedYear = 2019;
@@ -78,8 +79,8 @@ class MapVis {
 
         // append tooltip
         vis.tooltip = d3.select("body").append('div')
-            .attr('class', "tooltip")
-            .attr('id', 'pieTooltip');
+            .attr('class', "mapVis_tooltip")
+            .attr('id', 'mapVisTooltip');
 
 
 
@@ -190,6 +191,7 @@ class MapVis {
 
                      //vis.co2DataDict[isoCodeVal][0];
                  if (vis.selectedCategory == "percapita") {
+                     vis.units = "tonnes";
                      // console.log(vis.co2DataDict[isoCodeVal][1]);
                      if(vis.co2DataDict[isoCodeVal][1] !=''){
                          country_val = parseFloat(vis.co2DataDict[isoCodeVal][1]);
@@ -204,6 +206,8 @@ class MapVis {
                  }
                  else
                  {
+                     vis.units = "million tonnes";
+
                      if(vis.co2DataDict[isoCodeVal][1] !='') {
 
                          country_val = parseFloat(vis.co2DataDict[isoCodeVal][2]);
@@ -344,9 +348,9 @@ class MapVis {
                     .html(`
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h4> ${vis.countryInfo[d.id].name}</h4>
-             <h4> ${vis.countryInfo[d.id].value.toFixed(2)}</h4>   
+             <h4> ${vis.countryInfo[d.id].value.toFixed(2) } ${vis.units}</h4>   
              <h4> ${Math.round(parseFloat(vis.countryInfo[d.id].value_percent.toFixed(2)*100),2)}% of total emissions</h4>   
-             <h4> Click for drilldown</h4>
+             <h4>  Click to see drilldown details on next pages </h4>
 
 
 
