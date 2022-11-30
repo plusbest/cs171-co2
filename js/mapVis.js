@@ -347,7 +347,8 @@ class MapVis {
                     .style("top", event.pageY + "px")
                     .html(`
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
-             <h4> ${vis.countryInfo[d.id].name}</h4>
+
+             <h3> ${vis.countryInfo[d.id].name}</h3>
              <h4> ${vis.countryInfo[d.id].value.toFixed(2) } ${vis.units}</h4>   
              <h4> ${Math.round(parseFloat(vis.countryInfo[d.id].value_percent.toFixed(2)*100),2)}% of total emissions</h4>   
              <h4>  Click to see drilldown details on next pages </h4>
@@ -360,7 +361,6 @@ class MapVis {
             .on('mouseout', function(event, d){
                 d3.select(this)
                     .attr('stroke-width', '0px');
-                //.attr("fill", d => d.data.color)
 
                 vis.tooltip
                     .style("opacity", 0)
@@ -369,9 +369,8 @@ class MapVis {
                     .html(``);
             })
             .on('click', function(event, d){
-                console.log('clicked');
-                console.log(d);
 
+                // Get the iso code that was clicked
                 const isocode = vis.isoCodesDict[parseInt(d.id)];
                 
                 //update global variables and update index doc
@@ -391,7 +390,7 @@ class MapVis {
                 //mySankeyVis.country_iso_code = vis.isoCodesDict[parseInt(d.id)];
                 //console.log(mySankeyVis.country_iso_code);
                 mySankeyVis.wrangleData();
-                document.getElementById('sanKeyTitle').innerText = 'These are the emission sources for ' + selectedCountry;
+                document.getElementById('sanKeyTitle').innerText = 'Here is the breakdown of CO2 emission sources for ' + selectedCountry;
 
                 //call bump chart
                 myBumpChart.changeCurrentView(myBumpChart.currentView);
