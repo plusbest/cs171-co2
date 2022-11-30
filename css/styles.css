@@ -280,9 +280,11 @@ html {
 }
 
 .gauge-subtitle {
-    font-size: 14px;
-    font-family: Ayuthaya;
-    text-align: center;
+	padding-left: 20px;
+    font-size: 12px;
+    font-family: Roboto;
+    text-align: left;
+    font-style: italic;
     margin-bottom: 20px;
 }
 
