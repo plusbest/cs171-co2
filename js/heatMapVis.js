@@ -16,11 +16,11 @@ class HeatMapVis {
         this.duration = 3000; // transition duration
         this.delay = 500; //transition delay
         this.selectedCategory = "percountry"; //default consumption category to display data
-        this.units = "million tonnes" //units of per country category
+        this.units = "million tonnes"; //units of per country category
 
         this.sortNum = 50; // number of countries to show sorted in descending, rest will be clubbed together
         this.isoCodes = isoCodes; //list of country iso codes
-        this.selected_country_iso_code = 'USA';
+        this.selected_country_iso_code = 'USA'; //default USA selected
         this.focused_heatmap;
 
         // call initVis method
@@ -153,8 +153,7 @@ class HeatMapVis {
         for(let i = 0; i < vis.co2Data.length; i++) {
             // Only pick non-null values for the selected year and not an excluded country
             if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
-                vis.consumption_co2_per_capita_total += parseFloat(vis.co2Data[i].consumption_co2_per_capita);
-                vis.consumption_co2_total += parseFloat(vis.co2Data[i].consumption_co2);
+
 
                 if(vis.selectedCategory == "percapita") {
                     valueToStore = parseFloat(vis.co2Data[i].consumption_co2_per_capita).toFixed(2);
@@ -347,8 +346,9 @@ class HeatMapVis {
                     .html(`
          <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
              <h3> ${ d.data.name}</h3>
-             <h4> Rank: ${d.data.rank}</h4>       
              <h4> ${d.data.type}: ${d.data.value} ${d.data.units}</h4>
+             <h4> Rank: ${d.data.rank}</h4>       
+
              <h4> Click to see drilldown details on next pages </h4>
          </div>`);
 
