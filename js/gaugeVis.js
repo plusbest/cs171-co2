@@ -42,8 +42,8 @@ class GaugeVis {
 		vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
-        vis.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
-                            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
+        vis.colors = ["#9ebad9", "#66C2A5", "#E6F598", 
+                            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142", "#ffc107"];
         vis.color = d3.scaleOrdinal(vis.colors);
 
         vis.arcSize = (6 * vis.width / 100);
@@ -99,8 +99,6 @@ class GaugeVis {
             // Set co2 total for world
             if (d.country == "World" && d.year == vis.selectedYear) {
                 let co2_world = vis.selectedCategory === 'percapita' ? d.co2_per_capita : d.co2;
-                console.log("JWA -- Gauge Year", vis.selectedYear);
-                console.log("JWA -- CO2WORLD", d.co2);
                 vis.displayData["world_co2_total"] = parseFloat(co2_world);
             }
         })
@@ -119,14 +117,14 @@ class GaugeVis {
 
         // TODO: Normalize co2 values into percentage
         let usa_percent = Math.floor((usa_total / vis.displayData["world_co2_total"]) * 100);
-        console.log("JWA -- updated usa percent", usa_percent)
+        // console.log("JWA -- updated usa percent", usa_percent)
 
         vis.data = [
-            {value: 50, label: "Safe Level <", color: vis.colors[0], co2val: safe_total},
+            {value: 50, label: "Safe Level <", color: vis.colors[1], co2val: safe_total},
             {value: 0, label: "", color: vis.colors[1]},
-            {value: usa_percent, label: "US average", color: vis.colors[2], co2val: usa_total},
+            {value: usa_percent, label: "US average", color: vis.colors[9], co2val: usa_total},
             {value: 0, label: "", color: vis.colors[3]},
-            {value: 95, label: "Global average", color: vis.colors[4], co2val: world_total}
+            {value: 95, label: "Global average", color: vis.colors[0], co2val: world_total}
         ];
 
         // console.log("JWA -- vis.data", vis.data);
@@ -146,7 +144,7 @@ class GaugeVis {
         });
 
         vis.pieData = vis.data.map(function (obj, i) {
-            console.log("'obj", obj)
+            // console.log("'obj", obj)
             return [
                 {value: obj.value * 0.75, arc: vis.arcs[i], object: obj},
                 {value: (100 - obj.value) * 0.75, arc: vis.arcsGrey[i], object: obj},
@@ -164,7 +162,7 @@ class GaugeVis {
         vis.pieGraph = vis.svg.selectAll('g')
             .data(vis.pieData)
 
-        console.log("JWA -- pieData", vis.pieData)
+        // console.log("JWA -- pieData", vis.pieData)
 
         // update pie graph elements
         vis.pieGraph
@@ -216,7 +214,7 @@ class GaugeVis {
             var el = d3.select(this);
             var path = el.selectAll('path').each(function (r, i) {
                 if (i === 1) {
-                    console.log("R", r)
+                    // console.log("R", r)
                     var centroid = r.data.arc.centroid({
                         startAngle: r.startAngle + 0.05,
                         endAngle: r.startAngle + 0.001 + 0.05

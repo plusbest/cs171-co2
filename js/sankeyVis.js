@@ -83,56 +83,68 @@ class SankeyVis {
                 // calc per capital factor to get trade per capita value
                 let trade_co2 = vis.selectedCategory === 'percapita' ? (d.co2_per_capita/d.co2) * d.trade_co2 : d.trade_co2;
 
-                var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2)
+                console.log("JWA -- Trade CO2", trade_co2);
 
-                console.log("JW -- targetDataRow", d)
+                var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2)
+                var consumption_co2 = ((+co2) + (+trade_co2));
+                var production_co2 = ((+consumption_co2) - (+trade_co2));
+
+                console.log("JW -- targetDataRow", typeof(+co2))
                 // first stage pushes
                 vis.displayData.push({
                     source: "Consumption",
                     target: "Production",
-                    value: co2
+                    value: co2,
+                    valueSource: consumption_co2
                     })
                 vis.displayData.push({
                     source: "Consumption",
                     target: "Trade",
-                    value: (Math.abs(trade_co2)).toString()
+                    value: (Math.abs(trade_co2)).toString(),
+                    valueSource: consumption_co2
                 })
                 // second stage pushes
                 vis.displayData.push({
                     source: "Production",
                     target: "Coal",
-                    value: coal_co2
+                    value: coal_co2,
+                    valueSource: production_co2
                 })
                 vis.displayData.push({
                     source: "Production",
                     target: "Cement",
-                    value: cement_co2
+                    value: cement_co2,
+                    valueSource: production_co2
                 })
                 vis.displayData.push({
                     source: "Production",
                     target: "Flaring",
-                    value: flaring_co2
+                    value: flaring_co2,
+                    valueSource: production_co2
                 })
                 vis.displayData.push({
                     source: "Production",
                     target: "Gas",
-                    value: gas_co2
+                    value: gas_co2,
+                    valueSource: production_co2
                 })
                 vis.displayData.push({
                     source: "Production",
                     target: "Other",
-                    value: remainder
+                    value: remainder,
+                    valueSource: production_co2
                 })
                 // Null connection to keep Trade in second column with production
                 vis.displayData.push({
                     source: "Trade",
                     target: "\u2000",  // invisible ascii code
-                    value: 0
+                    value: 0,
+                    valueSource: trade_co2
                 })    
             }
         })
 
-        console.log("JW -- displayData", vis.displayData)
+        // console.log("JW -- displayData", vis.displayData)
 
 
         // Sort display data descending
@@ -148,10 +160,11 @@ class SankeyVis {
             vis.sankeydata.nodes.push({ "name": d.target });
             vis.sankeydata.links.push({ "source": d.source,
                                        "target": d.target,
-                                       "value": +d.value });
+                                       "value": +d.value,
+                                        "valueSource": +d.valueSource});
         });
 
-        console.log("JW --- sankeydata", vis.sankeydata)
+        console.log("JW --- sankeydata links", vis.sankeydata.links)
         
         // return only the distinct / unique nodes
         vis.sankeydata.nodes = Array.from(
@@ -189,6 +202,8 @@ class SankeyVis {
         // add in the links
         vis.link = vis.svg.selectAll(".link")
             .data(vis.graph.links)
+
+        console.log("JWA -- vis.graph.links", vis.graph.links)
 
         vis.link
             .enter().append("path")
@@ -244,6 +259,7 @@ class SankeyVis {
         vis.labels = vis.node.selectAll("text")
             .data(vis.graph.nodes)
 
+        console.log("JWA -- graphNODES", vis.graph.nodes)
 
         vis.labels
             .enter().append("text")
@@ -253,11 +269,15 @@ class SankeyVis {
             .attr("dy", "0.35em")
             .attr("text-anchor", "end")
             .text(function(d) {
-                if (d.value > 0) {
-                    return `${d.name} - ${Math.floor(d.value)}`; 
-                    }
+                if ((d.value > 0) && (d.targetLinks[0])) {
+                    var valSource = +d.targetLinks[0].valueSource;
+                    var valEle = +d.value;
+                    return `${d.name} (${Math.floor((valEle/valSource)*100)})%`; 
                 }
-            )
+                else {
+                    return `${d.name}`
+                }
+            })
             .filter(function(d) { return d.x0 < vis.width / 2; })
             .attr("x", function(d) { return d.x1 + 6; })
             .attr("text-anchor", "start");
