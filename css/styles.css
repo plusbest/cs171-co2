@@ -144,6 +144,7 @@ html {
 
 /*HEATMAP VIS STYLES*/
 .heatmap_tooltip,
+.mapVis_tooltip,
 .radar_tooltip {
 	position: absolute;
 	text-align: center;
@@ -151,10 +152,12 @@ html {
 	/*  pointer-events: none;	This line needs to be removed */
 }
 .heatmap_tooltip h3,h4,
+.mapVis_tooltip h3,h4,
 .radar_tooltip h3,h4 {
 	text-align: left;
 }
 .heatmap_tooltip h4,
+.mapVis_tooltip h4,
 .radar_tooltip h4{
 	font: 14px sans-serif;
 }
@@ -194,12 +197,6 @@ html {
     font-style: italic;
 }
 
-/*MAIN POINT STYLES*/
-#mainpoint-row {
-    min-height: 40vh;
-    font-family: Ayuthaya;
-}
-
 
 .focused {
     stroke: darkblue;
@@ -214,6 +211,15 @@ html {
     transition: stroke-width 4000ms;
 
 }
+
+
+/*MAIN POINT STYLES*/
+#mainpoint-row {
+    min-height: 40vh;
+    font-family: Ayuthaya;
+}
+
+
 
 /*@media screen and (min-width: 600px) {*/
 /*    #mainpoint-vis-row {*/

@@ -6,7 +6,7 @@
 class BumpChartVis {
     // TODO: Add bumps (?) and hover tooltips
 
-    constructor(parentElement, co2Data, energyData) {
+    constructor(parentElement, co2Data) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
         this.displayData = [];
