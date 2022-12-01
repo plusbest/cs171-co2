@@ -121,8 +121,14 @@ html {
   stroke-opacity: .2;
 }
 
+.link-negative {
+  fill: none;
+  stroke: "red";
+  stroke-opacity: .2;
+}
+
 .link:hover {
-  stroke-opacity: .5;
+  stroke-opacity: .35;
 }
 
 
@@ -280,9 +286,11 @@ html {
 }
 
 .gauge-subtitle {
-    font-size: 14px;
-    font-family: Ayuthaya;
-    text-align: center;
+	padding-left: 20px;
+    font-size: 12px;
+    font-family: Roboto;
+    text-align: left;
+    font-style: italic;
     margin-bottom: 20px;
 }
 
