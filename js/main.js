@@ -11,14 +11,12 @@ let
     myRadarVis,
     isPlaying = false;
 
-// TODO: See if these can be used? Perhaps for shared brushing data between sankey and heatmap/globe?
 let selectedTimeRange = [];
 let selectedYear = 2019;
 
 let beginCO2ConsumptionYear = 1990;
 let endCO2ConsumptionYear = 2019;
 
-// TODO: update all visualizations to use global vars
 let selectedCountryCode = "USA";
 let selectedCountry = "United States";
 
@@ -57,15 +55,14 @@ const promises = [
     d3.csv("data/owid-co2-data.csv"), // bumpchart
     d3.csv("data/owid-co2-data.csv"), // radarchart
 
-    //separate promises to workaround the shallow copy bug
-    // - change of co2 data in 1 viz impacts others with default shallow
-    //d3.csv("data/owid-energy-data.csv"),
-    //d3.csv("data/sankey.csv"),   // sankey test data
+    // separate promises to workaround the shallow copy bug
+    // change of co2 data in 1 viz impacts others with default shallow
+
     excludedCountries, // to exclude continents from heatmap Viz
 
     d3.json("data/world_2.json"),
     //https://gist.github.com/whatsthebeef/6361969#file-world-json
-    //d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json"),
+
     d3.csv("data/all.csv"),
     // Reference: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes
 
@@ -84,7 +81,6 @@ function initMainPage(dataArray) {
 
     // log data
     console.log('co2 data:', dataArray[0]);
-    //console.log('energy data:', dataArray[1]);
     console.log('hi team :)');
 
     // Build a map of iso codes to countries
@@ -100,16 +96,19 @@ function initMainPage(dataArray) {
 
     myMapVis = new MapVis('mapDiv', dataArray[1], dataArray[6], dataArray[7], dataArray[8]);
 
+    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[2],selectedCountryCode,selectedYear);
 
 
-    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[2],'USA',2019);
     // to init Sankey to show USA data as default
-    mySankeyVis.selectedYear = 2019;
-    mySankeyVis.country_iso_code = 'USA';
+
+    mySankeyVis.selectedYear = selectedYear;
+    mySankeyVis.country_iso_code = selectedCountryCode;
     mySankeyVis.wrangleData();
 
+
+
     myGaugeVis = new GaugeVis('gaugeVis', dataArray[3]);
-    myGaugeVis.wrangleData(); // Initialize Gauage with full checkbox params
+    myGaugeVis.wrangleData(); // Initialize Gauge with full checkbox params
 
 
 
@@ -140,27 +139,15 @@ function categoryChange() {
     myMapVis.selectedCategory = selectedCategory;
     myMapVis.wrangleData();
 
-    //myMapVis.rotateEarth()
-    //myMapVis.rotateEarth(selectedCountryCode);
+
 
 }
 
-// Year Slider
-// TODO: Needs to populate range based on target country and available data?
 
-let slider = d3.select('#yearSlider')
-slider.on("input", handleInput)
 
 // Listen for change on checkbox group
 let radio = d3.select('#btnGroup')
 radio.on("input", handleRadio)
-
-
-function handleInput() {
-    var eventData = this.value;
-    mySankeyVis.selectedYear = eventData;
-    mySankeyVis.wrangleData();
-}
 
 
 
@@ -182,6 +169,7 @@ function handleRadio() {
   console.log("JW --- checkBoxData", checkboxList);
 }
 
+// Handle change on year slider
 function yearSliderChange(selectedYear) {
     document.getElementById('yearSlider').value = selectedYear;
     document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
@@ -228,6 +216,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Handle the play button click
 // Reference: https://stackoverflow.com/questions/38525633/disable-a-button-using-d3-jquery-until-the-action-is-complete
 async function playAllYears() {
     // If this is playing, do nothing.

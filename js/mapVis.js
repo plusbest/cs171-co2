@@ -223,6 +223,8 @@ class MapVis {
         vis.updateVis()
     }
 
+
+
     rotateEarth(country_iso_code) {
         let vis = this;
 
@@ -295,6 +297,7 @@ class MapVis {
         //update the countries
         vis.countries
             .on('mouseover', function(event, d){
+
                 // handle hover
                 d3.select(this)
                     .attr('stroke-width', '2px')
