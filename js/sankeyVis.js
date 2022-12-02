@@ -50,8 +50,8 @@ class SankeyVis {
         // Set the sankey diagram properties
         vis.sankey = d3.sankey()
             .nodeWidth(36)
-            .nodePadding(20)
-            .size([vis.width, vis.height*0.75]);
+            .nodePadding(15)
+            .size([vis.width, vis.height*0.70]);
 
         // Set path group
         vis.path = vis.sankey.links();
