@@ -30,7 +30,8 @@ class SankeyVis {
 		let vis = this;
 
         // set margins
-		vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
+		//vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
+        vis.margin = {top: 10, right: 10, bottom: 10, left: 10};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
         vis.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
@@ -78,13 +79,14 @@ class SankeyVis {
                 let cement_co2 =  vis.selectedCategory === 'percapita' ? d.cement_co2_per_capita : d.cement_co2;
                 let flaring_co2 =  vis.selectedCategory === 'percapita' ? d.flaring_co2_per_capita : d.flaring_co2;
                 let gas_co2 =  vis.selectedCategory === 'percapita' ? d.gas_co2_per_capita : d.gas_co2;
+                let oil_co2 =  vis.selectedCategory === 'percapita' ? d.oil_co2_per_capita : d.oil_co2;
 
                 // calc per capital factor to get trade per capita value
                 let trade_co2 = vis.selectedCategory === 'percapita' ? (d.co2_per_capita/d.co2) * d.trade_co2 : d.trade_co2;
 
                 console.log("JWA -- Trade CO2", trade_co2);
 
-                var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2)
+                var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2 - oil_co2)
                 var consumption_co2 = ((+co2) + (+trade_co2));
                 var production_co2 = ((+consumption_co2) - (+trade_co2));
 
@@ -125,6 +127,12 @@ class SankeyVis {
                     source: "Production",
                     target: "Gas",
                     value: gas_co2,
+                    valueSource: production_co2
+                })
+                vis.displayData.push({
+                    source: "Production",
+                    target: "Oil",
+                    value: oil_co2,
                     valueSource: production_co2
                 })
                 vis.displayData.push({
@@ -271,10 +279,10 @@ class SankeyVis {
                 if ((d.value > 0) && (d.targetLinks[0])) {
                     var valSource = +d.targetLinks[0].valueSource;
                     var valEle = +d.value;
-                    return `${d.name} (${Math.floor((valEle/valSource)*100)})%`; 
+                    return `${d.name} (${Math.floor((valEle/valSource)*100)})% : ${Math.floor(d.value)}`; 
                 }
-                else {
-                    return `${d.name}`
+                else if (d.value > 0) {
+                    return `${d.name} : ${Math.floor(d.value)}`
                 }
             })
             .filter(function(d) { return d.x0 < vis.width / 2; })
