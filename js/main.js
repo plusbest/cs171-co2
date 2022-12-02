@@ -143,6 +143,17 @@ function categoryChange() {
 
 }
 
+// Updates the sankey on slider move.
+let slider = d3.select('#yearSlider')
+slider.on("input", handleInput)
+
+
+function handleInput() {
+    var eventData = this.value;
+    mySankeyVis.selectedYear = eventData;
+    mySankeyVis.wrangleData();
+}
+
 
 
 // Listen for change on checkbox group
