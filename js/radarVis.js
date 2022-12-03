@@ -11,7 +11,6 @@ class RadarVis {
         this.displayData = [];
 
         this.colors = ["darkorange", "gray", "navy"];
-        this.selectedCountryCode = selectedCountryCode; // Global variable that stores default
 
         this.initVis()
     }
@@ -93,7 +92,7 @@ class RadarVis {
             } = row;
             if (
                 (iso_code === "USA" || country === "World" || // Comparing against the US and Global distributions
-                iso_code === vis.selectedCountryCode) // Update to use selected country variable in future
+                iso_code === selectedCountryCode) // Update to use selected country variable in future
                 && year == selectedYear
             ) {
                 // Ensure strings are converted to numbers

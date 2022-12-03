@@ -101,8 +101,7 @@ function initMainPage(dataArray) {
 
     // to init Sankey to show USA data as default
 
-    mySankeyVis.selectedYear = selectedYear;
-    mySankeyVis.country_iso_code = selectedCountryCode;
+
     mySankeyVis.wrangleData();
 
 
@@ -151,7 +150,6 @@ slider.on("input", handleInput)
 function handleInput() {
     if (!isPlaying) {
         var eventData = this.value;
-        mySankeyVis.selectedYear = eventData;
         selectedYear = eventData;
 
         document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
@@ -189,19 +187,11 @@ function handleRadio() {
 }
 
 function UpdateVizOnYearChange(selectedYear) {
-    mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
 
-    myHeatMapVis.selectedYear = selectedYear;
-    console.log(selectedYear);
     myHeatMapVis.wrangleData();
 
-    myMapVis.selectedYear = selectedYear;
-    console.log(selectedYear);
     myMapVis.wrangleData();
-
-    myGaugeVis.selectedYear = selectedYear;
-    myGaugeVis.wrangleData();
 
     myRadarVis.wrangleData();
 }

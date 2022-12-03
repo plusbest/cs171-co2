@@ -17,10 +17,8 @@ class SankeyVis {
         this.sankeydata = {"nodes" : [], "links" : []};
 
         this.country = country;
-        this.country_iso_code = 'USA';
         this.year = year;
         this.selectedCategory = 'percountry';
-        this.selectedYear = 2019;
 
         this.initVis()
 		}
@@ -71,8 +69,8 @@ class SankeyVis {
 
         // iterate co2 data rows
         vis.co2Data.forEach(function(d) {
-            //if (d.country == "United States" && d.year == vis.selectedYear) {
-            if (d.iso_code == vis.country_iso_code && d.year == vis.selectedYear) {
+
+            if (d.iso_code == selectedCountryCode && d.year == selectedYear) {
                 // console.log(d.year)
                 let co2 = vis.selectedCategory === 'percapita' ? d.co2_per_capita : d.co2;
                 let coal_co2 = vis.selectedCategory === 'percapita' ? d.coal_co2_per_capita : d.coal_co2;

@@ -20,7 +20,7 @@ class GaugeVis {
         // this.year = year;
         this.selectedCategory = 'percountry';
         this.country_iso_code = 'USA';
-        this.selectedYear = 2000;
+        this.selectedYear = 2019;
         // Default for gauge
         this.checkBoxes = [
             {"Oil": true},
@@ -70,7 +70,6 @@ class GaugeVis {
 
         // iterate co2 data rows
         vis.co2Data.forEach(function(d) {
-            //if (d.country == "United States" && d.year == vis.selectedYear) {
             if (d.iso_code == vis.country_iso_code && d.year == vis.selectedYear) {
 
                 // Set co2 data for selected year, country, and category
