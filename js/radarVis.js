@@ -94,7 +94,7 @@ class RadarVis {
             if (
                 (iso_code === "USA" || country === "World" || // Comparing against the US and Global distributions
                 iso_code === vis.selectedCountryCode) // Update to use selected country variable in future
-                && year === "2020"
+                && year == selectedYear
             ) {
                 // Ensure strings are converted to numbers
                 row.coal_co2 = +coal_co2;
@@ -151,7 +151,15 @@ class RadarVis {
 
     updateVis() {
         let vis = this;
+        if(selectedCountry =="United States") {
+            //In 2019, their production emissions were divided like this:
+            document.getElementById('radarTitle').innerHTML =
+                "<div>Production CO2 emissions breakdown for " +" <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " and the World in " + selectedYear + "</div>";
+        } else {
+            document.getElementById('radarTitle').innerHTML =
+                "<div>Production CO2 emissions breakdown for " +" <strong class=\"px-3 py-1 bg-white\">" + "United States" + "</strong>" + ", World and " + "<span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear    + "</div>";
 
+        }
         vis.drawAxes();
 
         // Remove any pre-existing blobs -- see comment below

@@ -202,6 +202,8 @@ function UpdateVizOnYearChange(selectedYear) {
 
     myGaugeVis.selectedYear = selectedYear;
     myGaugeVis.wrangleData();
+
+    myRadarVis.wrangleData();
 }
 
 // Handle change on year slider
