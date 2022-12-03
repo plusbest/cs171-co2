@@ -341,10 +341,10 @@ class BumpChartVis {
 
         } else if (newView === "ALL" && selectedCountryCode === "USA") {
             d3.select("#bumpchart-row .section-title")
-                .html("And <strong class='bg-warning px-3 py-1'>US</strong> consumption emissions compared to the world's total over time in the following ways:")
+                .html("And <strong class=\"px-3 py-1 bg-white\">United States</strong> consumption emissions compared to the world's total over time in the following ways:")
         } else {
             d3.select("#bumpchart-row .section-title")
-                .html(`And the <strong class='bg-warning px-3 py-1'>United States</strong> and <strong class="bg-success px-3 py-1">${selectedCountry}</strong>'s
+                .html(`And the <strong class=\"px-3 py-1 bg-white\">United States</strong> and <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">${selectedCountry}</span>'s
                  consumption emissions compared to the world's total over time in the following ways:`)
         }
 
