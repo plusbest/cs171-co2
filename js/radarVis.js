@@ -198,7 +198,7 @@ class RadarVis {
                                     <strong>Oil:</strong> ${ Math.round(d.percent_oil_co2 * 100) / 100 }%
                                  </h4>   
                                  <h4>
-                                    <img src="/static/icons/gas.png" height="24" width="24" alt="coal">
+                                    <img src="/static/icons/propane.png" height="24" width="24" alt="coal">
                                     <strong>Gas:</strong> ${ Math.round(d.percent_gas_co2 * 100) / 100 }%
                                  </h4> 
                                  <h4>
@@ -275,7 +275,7 @@ class RadarVis {
             case "percent_coal_co2":
                 return "static/icons/coal.png";
             case "percent_gas_co2":
-                return "static/icons/gas.png";
+                return "static/icons/propane.png";
             case "percent_flaring_co2":
                 return "static/icons/flaring.png";
             case "percent_cement_co2":
