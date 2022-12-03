@@ -401,7 +401,17 @@ class HeatMapVis {
                 mySankeyVis.selectedYear = vis.selectedYear;
                 mySankeyVis.country_iso_code = selectedCountryCode;
                 console.log(vis.co2DataDict);
-                document.getElementById('sanKeyTitle').innerText = 'Here is the breakdown of CO2 emission sources for ' + selectedCountry;
+                if(selectedCountry =="United States") {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
+                } else {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
+                }
+                /*
+                "Here is the breakdown of CO2 emission sources for " +
+                    '<strong>' + selectedCountry + "</strong>" + " in " + selectedYear;
+                */
 
                 mySankeyVis.wrangleData();
 

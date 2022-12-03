@@ -350,8 +350,13 @@ class MapVis {
                 console.log(mySankeyVis.country_iso_code);
 
                 mySankeyVis.wrangleData();
-                document.getElementById('sanKeyTitle').innerText = 'Here is the breakdown of CO2 emission sources for ' + selectedCountry;
-
+                if(selectedCountry =="United States") {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
+                } else {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
+                }
                 //call bump chart
                 myBumpChart.changeCurrentView(myBumpChart.currentView);
 
