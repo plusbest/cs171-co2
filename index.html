@@ -149,7 +149,7 @@
             <div class="section-title">Different countries around the globe contribute vastly different amounts of CO2 consumption emissions</div>
             <div class="section-subtitle mb-5">Hover over country for rankings, click country for drilldown, use play button to see changes over time</div>
 
-            <div class="row" style="height: 5vh;">
+            <div class="row" style="min-height: 5vh;">
                 <div class="col-lg-5 offset-1">
                     <select id="categorySelector" class="custom-select  justify-content-end" style="width: 100%" onchange="categoryChange()">
                         <option value="bycountry" selected="">Consumption CO2 Emissions measured in million tonnes for the Country</option>
@@ -176,7 +176,7 @@
 
                 </div>
             </div>
-            <div class="row" style="height: 60vh;">
+            <div class="row" style="min-height: 60vh;">
 
 
 
@@ -206,7 +206,7 @@
     <div class="row w-100 pt-5" id="sankey-row">
         <!-- SANKEY SECTION -->
         <div class="col-lg-12  flex-column">
-            <div class="row" style="height: 50vh;">
+            <div class="row" style="min-height: 50vh;">
                 <div class="col-lg-10 offset-1">
                     <div class="gauge-title" id="sanKeyTitle">Here is the breakdown of CO2 emission sources for United States</div>
                     <br/>
@@ -248,14 +248,14 @@
             </div>
         </div>
     </div>
-    <div class="row w-100" style="height: 75vh;">
+    <div class="row w-100" style="min-height: 75vh;">
         <!-- SOLUTION/RESOLUTION SECTION -->
         <div class="col-12 p-5">
             <h2 class="section-title more-line-height">How different <strong class="bg-warning px-3 py-1">US</strong> emission types influence <strong class="bg-success px-2 py-1">safe levels.</strong></h2>
                                 <h3 class="section-subtitle">Check or uncheck CO2 types to see how they affect US emission totals.</h3>
                                 <br/>
             <div class="content-section" id="solutionDiv">
-                <div class="row">
+                <div class="row" style="min-height: 50vh;">
                     <div class="col-md-6">
                         <!-- <div class="gauge-title">Comparing Safe CO2 Levels</div> -->
                         <div id="gaugeVis"></div>

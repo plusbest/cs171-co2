@@ -49,7 +49,7 @@ class GaugeVis {
         vis.innerRadius = vis.arcSize * 3;            
 
         vis.data;
-
+        
         vis.svg = d3.select('#gaugeVis').append('svg')
             .attr('width', vis.width)
             .attr('height', vis.width);
