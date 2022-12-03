@@ -151,7 +151,24 @@ slider.on("input", handleInput)
 function handleInput() {
     var eventData = this.value;
     mySankeyVis.selectedYear = eventData;
+    selectedYear = eventData;
+
+    document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
+
+    //Update the Viz
+    mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
+
+    myHeatMapVis.selectedYear = selectedYear;
+    console.log(selectedYear);
+    myHeatMapVis.wrangleData();
+
+    myMapVis.selectedYear = selectedYear;
+    console.log(selectedYear);
+    myMapVis.wrangleData();
+
+    myGaugeVis.selectedYear = selectedYear;
+    myGaugeVis.wrangleData();
 }
 
 
@@ -184,6 +201,7 @@ function handleRadio() {
 function yearSliderChange(selectedYear) {
     document.getElementById('yearSlider').value = selectedYear;
     document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
+    //Update the Viz
 
     mySankeyVis.selectedYear = selectedYear;
     mySankeyVis.wrangleData();
