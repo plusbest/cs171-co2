@@ -193,13 +193,15 @@ function yearSliderChange(selectedYearValue) {
 
 }
 
-
+/**
+ * Updates the "main point" stat block with the correct data for the currently selected country
+ */
 function updateStatBlock(){
     d3.select("#selected-country-name").text(selectedCountry);
     if (selectedCountry === "China" && selectedCountryCode === "CHN") {
         d3.select("#us-rank-compared-to-selected").text("LOWER");
         d3.select("#mainpoint-suffix").html(`
-             than <span id="selected-country-name" class=\"selected_country_class\">${selectedCountry}</span> in global consumption emissions.
+             than <span id="selected-country-name" class="selected_country_class px-3">${selectedCountry}</span> in global consumption emissions.
         `);
     } else if (selectedCountry === "United States" && selectedCountryCode === "USA") {
         d3.select("#us-rank-compared-to-selected").text("#2 in the world");
@@ -207,7 +209,7 @@ function updateStatBlock(){
     } else {
         d3.select("#us-rank-compared-to-selected").text("HIGHER");
         d3.select("#mainpoint-suffix").html(`
-             than <span id="selected-country-name" class=\"selected_country_class\">${selectedCountry}</span> in global consumption emissions.
+             than <span id="selected-country-name" class="selected_country_class px-3">${selectedCountry}</span> in global consumption emissions.
         `);
     }
 }
@@ -236,6 +238,10 @@ function populateCountrySelectionOptions() {
     countryDropdown.value = selectedCountryCode;
 }
 
+/**
+ * Updates the dropdown's current value to be newCountryCode
+ * @param newCountryCode ISO Code (string)
+ */
 function updateCountryDropdownValue(newCountryCode) {
     const countryDropdown = document.getElementById('country-dropdown');
 
@@ -243,6 +249,11 @@ function updateCountryDropdownValue(newCountryCode) {
     countryDropdown.value = newCountryCode;
 }
 
+/**
+ * Handler for on select from "country-dropdown" <select>
+ * @param evt Event passed in from click (obj)
+ * @param val The ISO Code for the country selected from the dropdown (string)
+ */
 function onSelectNewCountryFromDropdown(evt, val) {
     // Update global variables
     selectedCountryCode = val;

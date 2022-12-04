@@ -351,18 +351,14 @@ class LineChartVis {
                 .text("Reset to global comparison")
 
         } else if (newView === "ALL" && selectedCountryCode === "USA") {
-            d3.select("#linechart-row .section-title")
-                .html('And <strong class=\"usa_class\">United States</strong> production emissions compared to the <strong class=\"world_class\">World</strong> total over time in the following ways:')
-
             // Update with slightly different contextual text
-
-        } else {
             d3.select("#linechart-row .section-title")
-                .html(`And the <strong class=\"usa_class\">United States</strong> and <span id=\"selected-country-name\" class=\"selected_country_class\">${selectedCountry}</span>'s
-                 production emissions compared to the <strong class=\"world_class\">World</strong> total over time in the following ways:`)
-
+                .html(`And <strong class="usa_class px-3">United States</strong> production emissions compared to the <strong class="world_class">World</strong> total over time in the following ways:`)
+        } else {
             // Update with slightly different contextual text that includes both countries selected
-
+            d3.select("#linechart-row .section-title")
+                .html(`And the <strong class="usa_class px-3">United States</strong> and <span id="selected-country-name" class="selected_country_class px-3">${selectedCountry}</span>'s
+                 production emissions compared to the <strong class="world_class px-3">World</strong> total over time in the following ways:`)
         }
 
         vis.wrangleData();

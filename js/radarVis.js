@@ -432,12 +432,12 @@ class RadarVis {
         if (selectedCountry == "United States") {
             document.getElementById('radarTitle').innerHTML =
                 `<div>Production CO2 emissions breakdown for 
-                    <strong class=\"usa_class\">${selectedCountry}</strong> and the <strong class=\"world_class\">World</strong> in ${selectedYear}</div>`;
+                    <strong class="usa_class px-3">${selectedCountry}</strong> and the <strong class="world_class px-3">World</strong> in ${selectedYear}</div>`;
         } else {
             document.getElementById('radarTitle').innerHTML =
                 `<div>Production CO2 emissions breakdown for 
-                    <strong class=\"usa_class\">United States</strong>, <strong class=\"world_class\">World</strong> and 
-                    <span id="selected-country-name" class=\"selected_country_class\"> ${selectedCountry}</span>
+                    <strong class="usa_class px-3">United States</strong>, <strong class="world_class px-3">World</strong> and 
+                    <span id="selected-country-name" class="selected_country_class px-3"> ${selectedCountry}</span>
                      in ${selectedYear}</div>`;
         }
     }
