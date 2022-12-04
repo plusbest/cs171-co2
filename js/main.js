@@ -217,9 +217,11 @@ function updateStatBlock(){
  */
 function populateCountrySelectionOptions() {
     const countryDropdown = document.getElementById('country-dropdown');
+
+    // Grabbing all of the iso codes
     const isoCodes = Object.keys(isoCodeToCountryNameMap);
 
-    // Populate the array
+    // Populate the dropdown
     isoCodes.forEach((key) => {
         const countryName = isoCodeToCountryNameMap[key];
 
@@ -234,9 +236,15 @@ function populateCountrySelectionOptions() {
     countryDropdown.value = selectedCountryCode;
 }
 
-function onSelectNewCountryFromDropdown(evt, val) {
-    console.log("evt", evt, val);
+function updateCountryDropdownValue(newCountryCode) {
+    const countryDropdown = document.getElementById('country-dropdown');
 
+    // Change default to current selected country
+    countryDropdown.value = newCountryCode;
+}
+
+function onSelectNewCountryFromDropdown(evt, val) {
+    // Update global variables
     selectedCountryCode = val;
     selectedCountry = isoCodeToCountryNameMap[val];
 

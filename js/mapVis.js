@@ -338,7 +338,11 @@ class MapVis {
                 selectedCountryCode = isocode;
                 selectedCountry = isoCodeToCountryNameMap[isocode];
 
+                // Update "Main Point" stat block with correct country
                 updateStatBlock();
+
+                // Update the value in the country selection dropdown
+                updateCountryDropdownValue(selectedCountryCode);
 
 
                 //call sankey

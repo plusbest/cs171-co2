@@ -385,6 +385,8 @@ class HeatMapVis {
                 //Show the stat
                 updateStatBlock();
 
+                // Update the Value in the dropdown
+                updateCountryDropdownValue(selectedCountryCode);
 
 
 
