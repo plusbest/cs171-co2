@@ -12,7 +12,6 @@ class HeatMapVis {
         this.excludedCountries = excludedCountries; //these continents will be excluded
         this.displayData = [];
         this.sortedData = [];
-        this.selectedYear = 2019; //default year to display data
         this.duration = 3000; // transition duration
         this.delay = 500; //transition delay
         this.selectedCategory = "percountry"; //default consumption category to display data
@@ -20,7 +19,6 @@ class HeatMapVis {
 
         this.sortNum = 50; // number of countries to show sorted in descending, rest will be clubbed together
         this.isoCodes = isoCodes; //list of country iso codes
-        this.selected_country_iso_code = 'USA'; //default USA selected
         this.focused_heatmap;
 
         // call initVis method
@@ -152,7 +150,7 @@ class HeatMapVis {
 
         for(let i = 0; i < vis.co2Data.length; i++) {
             // Only pick non-null values for the selected year and not an excluded country
-            if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
+            if (vis.co2Data[i].year == selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
 
 
                 if(vis.selectedCategory == "percapita") {
@@ -398,10 +396,16 @@ class HeatMapVis {
 
 
                 //call sankey
-                mySankeyVis.selectedYear = vis.selectedYear;
-                mySankeyVis.country_iso_code = selectedCountryCode;
+
                 console.log(vis.co2DataDict);
-                document.getElementById('sanKeyTitle').innerText = 'Here is the breakdown of CO2 emission sources for ' + selectedCountry;
+                if(selectedCountry =="United States") {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
+                } else {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
+                }
+
 
                 mySankeyVis.wrangleData();
 

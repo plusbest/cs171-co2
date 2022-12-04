@@ -101,8 +101,7 @@ function initMainPage(dataArray) {
 
     // to init Sankey to show USA data as default
 
-    mySankeyVis.selectedYear = selectedYear;
-    mySankeyVis.country_iso_code = selectedCountryCode;
+
     mySankeyVis.wrangleData();
 
 
@@ -149,9 +148,16 @@ slider.on("input", handleInput)
 
 
 function handleInput() {
-    var eventData = this.value;
-    mySankeyVis.selectedYear = eventData;
-    mySankeyVis.wrangleData();
+    if (!isPlaying) {
+        var eventData = this.value;
+        selectedYear = eventData;
+
+        document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
+
+        //Update the Viz
+        UpdateVizOnYearChange(selectedYear);
+
+    }
 }
 
 
@@ -180,25 +186,27 @@ function handleRadio() {
   console.log("JW --- checkBoxData", checkboxList);
 }
 
-// Handle change on year slider
-function yearSliderChange(selectedYear) {
-    document.getElementById('yearSlider').value = selectedYear;
-    document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
-
-    mySankeyVis.selectedYear = selectedYear;
+function UpdateVizOnYearChange(selectedYear) {
     mySankeyVis.wrangleData();
 
-    myHeatMapVis.selectedYear = selectedYear;
-    console.log(selectedYear);
     myHeatMapVis.wrangleData();
 
-    myMapVis.selectedYear = selectedYear;
-    console.log(selectedYear);
     myMapVis.wrangleData();
 
-    myGaugeVis.selectedYear = selectedYear;
-    myGaugeVis.wrangleData();
+    myRadarVis.wrangleData();
+}
 
+// Handle change on year slider
+function yearSliderChange(selectedYearValue) {
+    if (! isPlaying) {
+
+        selectedYear = selectedYearValue;
+        document.getElementById('yearSlider').value = selectedYear;
+        document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
+        //Update the Viz
+        UpdateVizOnYearChange(selectedYear);
+
+    }
 
 
 }
@@ -236,7 +244,12 @@ async function playAllYears() {
     isPlaying = true;
 
     for(let i=beginCO2ConsumptionYear; i<=endCO2ConsumptionYear; i++) {
-        yearSliderChange(i);
+        selectedYear = i;
+        document.getElementById('yearSlider').value = selectedYear;
+
+        document.getElementById('yearSliderLabel').innerHTML = 'Selected Year: <b>'+ selectedYear + '</b>';
+
+        UpdateVizOnYearChange(i);
         await sleep(4000);
 
 

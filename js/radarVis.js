@@ -11,7 +11,6 @@ class RadarVis {
         this.displayData = [];
 
         this.colors = ["darkorange", "gray", "navy"];
-        this.selectedCountryCode = selectedCountryCode; // Global variable that stores default
 
         this.initVis()
     }
@@ -90,8 +89,8 @@ class RadarVis {
             } = row;
             if (
                 (iso_code === "USA" || country === "World" || // Comparing against the US and Global distributions
-                iso_code === vis.selectedCountryCode) // Update to use selected country variable in future
-                && year === "2020"
+                iso_code === selectedCountryCode) // Update to use selected country variable in future
+                && year == selectedYear
             ) {
                 // Ensure strings are converted to numbers
                 row.coal_co2 = +coal_co2;
@@ -142,6 +141,9 @@ class RadarVis {
         // Update the axes and radar blobs
         vis.drawAxes();
         vis.drawBlobs();
+
+        // Update radar title
+        vis.updateRadarTitle();
     }
 
     angleToCoordinate(angle, value){
@@ -400,5 +402,19 @@ class RadarVis {
 
         // Remove when no longer necessary
         blobs.exit().remove();
+    }
+
+    updateRadarTitle() {
+        if (selectedCountry == "United States") {
+            document.getElementById('radarTitle').innerHTML =
+                `<div>Production CO2 emissions breakdown for 
+                    <strong class="px-3 py-1 bg-white">${selectedCountry}</strong> and the World in ${selectedYear}</div>`;
+        } else {
+            document.getElementById('radarTitle').innerHTML =
+                `<div>Production CO2 emissions breakdown for 
+                    <strong class="px-3 py-1 bg-white">United States</strong>, World and 
+                    <span id="selected-country-name" class="px-3 py-1 bg-warning fs-5"> ${selectedCountry}</span>
+                     in ${selectedYear}</div>`;
+        }
     }
 }

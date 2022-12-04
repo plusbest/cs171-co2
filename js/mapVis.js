@@ -17,8 +17,6 @@ class MapVis {
         this.delay = 500; // transition delay
         this.selectedCategory = "percountry"; //default consumption category to display data
         this.units = "million tonnes"; //units of per country category
-        this.selectedYear = 2019; //default year to display data
-        this.selected_country_iso_code = 'USA'; //default USA selected
         this.focused;
 
         this.initVis()
@@ -135,7 +133,7 @@ class MapVis {
         vis.consumption_co2_total = 0;
         for (let i=0; i < vis.co2Data.length; i++) {
             // Only pick non-null values for the selected year and not an excluded country
-            if (vis.co2Data[i].year == vis.selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
+            if (vis.co2Data[i].year == selectedYear && vis.co2Data[i].consumption_co2_per_capita != ''  && ! vis.excludedCountries.includes(vis.co2Data[i].country)) {
                 vis.consumption_co2_per_capita_total += parseFloat(vis.co2Data[i].consumption_co2_per_capita);
                 vis.consumption_co2_total += parseFloat(vis.co2Data[i].consumption_co2);
 
@@ -285,10 +283,11 @@ class MapVis {
         }
 
         //Rotate to selected country code (default USA) on refresh
-        vis.rotateEarth(vis.selected_country_iso_code);
+        vis.rotateEarth(selectedCountryCode);
 
 
         vis.color.domain([
+
             0,
 
             vis.maxVal
@@ -341,17 +340,19 @@ class MapVis {
 
                 updateStatBlock();
 
-                vis.selected_country_iso_code = selectedCountryCode;
 
                 //call sankey
-                mySankeyVis.selectedYear = vis.selectedYear;
 
-                mySankeyVis.country_iso_code = isocode;
                 console.log(mySankeyVis.country_iso_code);
 
                 mySankeyVis.wrangleData();
-                document.getElementById('sanKeyTitle').innerText = 'Here is the breakdown of CO2 emission sources for ' + selectedCountry;
-
+                if(selectedCountry =="United States") {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
+                } else {
+                    document.getElementById('sanKeyTitle').innerHTML =
+                        "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
+                }
                 //call bump chart
                 myBumpChart.changeCurrentView(myBumpChart.currentView);
 

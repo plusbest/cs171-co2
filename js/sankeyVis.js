@@ -17,10 +17,8 @@ class SankeyVis {
         this.sankeydata = {"nodes" : [], "links" : []};
 
         this.country = country;
-        this.country_iso_code = 'USA';
         this.year = year;
         this.selectedCategory = 'percountry';
-        this.selectedYear = 2019;
 
         this.initVis()
 		}
@@ -71,8 +69,8 @@ class SankeyVis {
 
         // iterate co2 data rows
         vis.co2Data.forEach(function(d) {
-            //if (d.country == "United States" && d.year == vis.selectedYear) {
-            if (d.iso_code == vis.country_iso_code && d.year == vis.selectedYear) {
+
+            if (d.iso_code == selectedCountryCode && d.year == selectedYear) {
                 // console.log(d.year)
                 let co2 = vis.selectedCategory === 'percapita' ? d.co2_per_capita : d.co2;
                 let coal_co2 = vis.selectedCategory === 'percapita' ? d.coal_co2_per_capita : d.coal_co2;
@@ -262,6 +260,13 @@ class SankeyVis {
                 return d.name + "\n" + vis.format(d.value); })
         // NODES PROPERLY UPDATE
 
+        if(selectedCountry =="United States") {
+            document.getElementById('sanKeyTitle').innerHTML =
+                "<div>Here is the breakdown of CO2 emission sources for <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
+        } else {
+            document.getElementById('sanKeyTitle').innerHTML =
+                "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
+        }
 
         vis.labels = vis.node.selectAll("text")
             .data(vis.graph.nodes)
