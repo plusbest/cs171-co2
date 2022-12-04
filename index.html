@@ -37,7 +37,7 @@
                 <div class="col-10 offset-1">
                     <div class="content-section py-5 gap-2" id="hookSection">
                         <h2 class="text-largest section-title text-center mb-5">
-                            Climate Change Results in <strong class="">Global Consequences</strong>
+                            Climate Change Results in <strong>Global Consequences</strong>
                         </h2>
                         <div class="row">
                             <div class="col-md-6">
@@ -134,7 +134,7 @@
                                         <strong>Extraction and Combustion of Fossil Fuels</strong>
                                         <ul>
                                             <li>When fossil fuels are burned, they release large amounts of carbon dioxide into the air.</li>
-                                            <li>Greenhouse gases like CO2 trap heat in our atmosphere, causing global warming.</li>
+                                            <li>Greenhouse gases like CO2 trap heat in our atmosphere.</li>
                                             <li>The burning of coal, natural gas, and oil for electricity and heat is the largest single source of global greenhouse gas emissions.</li>
                                         </ul>
                                     </div>
@@ -156,41 +156,49 @@
             </div>
         </div>
     </div>
-    <div class="row w-100" id="hook2-row">
-            <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
-                <div>
-                    In 2019, CO2 was responsible for about
-                </div>
-                <div class="big-stat">2/3</div>
-                <div>
-                    of the
-                    <a class="text-danger" target="_blank" href="https://www.climate.gov/news-features/understanding-climate/climate-change-atmospheric-carbon-dioxide">
-                    total heating influence</a> of all human-produced greenhouse gases.
+    <div class="row w-100 m-0 p-5" id="hook2-row">
+        <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
+            <div>
+                In 2019, CO2 was responsible for about
+            </div>
+            <div class="big-stat">2/3</div>
+            <div>
+                of the
+                <a class="text-danger" target="_blank" href="https://www.climate.gov/news-features/understanding-climate/climate-change-atmospheric-carbon-dioxide">total heating influence</a> of all human-produced greenhouse gases.
+            </div>
+        </div>
+    </div>
+    <div class="row w-100 m-0 bg-white d-flex justify-content-center ayuthaya" id="hook3-row">
+        <div class="col-auto d-flex justify-content-center align-content-center text-center flex-column min-vh-100">
+            <div class="big-stat text-secondary">But human-produced greenhouse gases
+                <br/> are <strong class="text-dark">not produced equally</strong> by all humans.</div>
+        </div>
+    </div>
+    <div class="row w-100 m-0 p-4 sticky-top bg-dark text-light shadow-sm" id="selection-row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-10 offset-1">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="country-dropdown">Pick a country to compare to the USA:</label>
+                            <br/>
+                            <select id="country-dropdown" onchange="onSelectNewCountryFromDropdown(event, value)">
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <form>
+                                <label for="play-button">View changes over time: </label>
+                                <button type="button" class="btn btn-default btn-sm btn-warning" id="play-button" onclick="playAllYears()">
+                                    <span class="glyphicon glyphicon-play"></span> Play
+                                </button>
+
+                                <label id="yearSliderLabel" for="yearSlider" class="offset-1">Selected Year: <b>2019</b></label>
+                                <input type="range" class="form-range justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-    </div>
-    <div class="row w-100 m-0 bg-white d-flex justify-content-center">
-        <div class="col-auto w-50 d-flex justify-content-center align-content-center text-center flex-column min-vh-100">
-            <div class="big-stat text-secondary">But human-produced greenhouse gases are
-                <strong class="text-dark">not produced equally</strong> by all humans.</div>
-        </div>
-    </div>
-    <div class="row w-100 m-0 p-4 sticky-top bg-dark text-light" id="selection-row">
-        <div class="col-6">
-            <label for="country-dropdown">Pick a country to compare to the USA:</label>
-            <select id="country-dropdown" onchange="onSelectNewCountryFromDropdown(event, value)">
-            </select>
-        </div>
-        <div class="col-6">
-            <form>
-                <label for="play-button">View changes over time: </label>
-                <button type="button" class="btn btn-default btn-sm btn-warning" id="play-button" onclick="playAllYears()">
-                    <span class="glyphicon glyphicon-play"></span> Play
-                </button>
-
-                <label id="yearSliderLabel" for="yearSlider" class="offset-1">Selected Year: <b>2019</b></label>
-                <input type="range" class="form-range justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
-            </form>
         </div>
     </div>
     <div class="row w-100 pt-5" id="heatmap-row">
@@ -410,21 +418,20 @@
                             <div class="section-title">Data Sources</div>
                             We primarily used data from
                             <a class="text-warning" href="https://github.com/owid/co2-data" target="_blank">
-                                One World in Data</a>, but supplemented it with data from the
-                            following sources: {{list any additional sources}}.
-                            <!-- TODO: List additional sources in Data Sources and Credits -->
+                                One World in Data</a>, but supplemented it with data from other government and scientific
+                            agencies and sources (see above for more detail).
                         </div>
                         <div class="col-md-4">
                             <div class="section-title">Credits</div>
                             Images are from Matt Palmer, Philip Flores, and Sophia Simoes on
                             <a href="https://www.unsplash.com" class="text-warning" target="_blank">Unsplash</a>. Visualizations
-                            were created with the help of D3 docs,
+                            were inspired by D3 docs,
                             <a href="https://www.oreilly.com/library/view/interactive-data-visualization/9781449340223/"
                                target="_blank" class="text-warning text-decoration-underline">Interactive Visualization for the Web</a> by Scott Murray,
                             <a class="text-warning"
                                href="https://yangdanny97.github.io/blog/2019/03/01/D3-Spider-Chart" target="_blank">
                                 a tutorial by Danny Yang</a>, and more.
-                            Infrastructure icons made by
+                            Radar chart icons are by
                             <a href="https://www.flaticon.com/authors/fjstudio" target="_blank" class="text-warning">fjstudio</a>,
                             <a href="https://www.flaticon.com/authors/nawicon" target="_blank" class="text-warning">nawicon</a>,
                             <a href="https://www.flaticon.com/authors/umeicon" target="_blank" class="text-warning">Umeicon</a>, and
