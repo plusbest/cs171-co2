@@ -53,7 +53,7 @@ Clicking on a country in the heatmap or globe (map) viz can show drill down deta
 #### Two ways to view the website:
 1. After extracting the folder structure in a IDE like WebStorm, view index.html in browser
 2. View using 
-[Public Website Link]()
+[Public Website Link](https://plusbest.github.io/cs171-co2/)
 
 Also, view our [video story board]()
 
