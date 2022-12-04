@@ -10,7 +10,8 @@ class RadarVis {
         this.co2Data = co2Data;
         this.displayData = [];
 
-        this.colors = ["darkorange", "gray", "navy"];
+
+        this.colors = {"Selected_country": "#B2DF8A", "USA": "#A6CEE3", "": "#1F78B4"}; //"" for World
 
         this.initVis()
     }
@@ -365,8 +366,8 @@ class RadarVis {
             .merge(blobs)
             .attr("d", (d, i) => d3.line()(coords[i]))
             .attr("stroke-width", 3)
-            .attr("stroke", (d, i) => vis.colors[i])
-            .attr("fill", (d, i) => vis.colors[i])
+            .attr("stroke",  function(d, i) {console.log(d.iso_code ); if (d.iso_code == 'USA' || d.iso_code == '') {return vis.colors[d.iso_code] } else {return vis.colors["Selected_country"]}})
+            .attr("fill", function(d, i) {console.log(d.iso_code ); if (d.iso_code == 'USA' || d.iso_code == '') {return vis.colors[d.iso_code] } else {return vis.colors["Selected_country"]}})
             .attr("stroke-opacity", 1)
             .attr("opacity", 0.5)
             .on('mouseover', function(event, d){
