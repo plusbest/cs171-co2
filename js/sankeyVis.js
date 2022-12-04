@@ -10,8 +10,17 @@ class SankeyVis {
         this.co2Data = co2Data;
         this.displayData = [];
     	this.parseDate = d3.timeParse("%m/%d/%Y");
-        this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
-                        "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
+        this.colors = ["#FDAE61",   // consumption
+                        "#3288BD",  // production
+                        "#1B9E77",  // t1
+                        "#D95F02",  // t2
+                        "#7570B3",  // t3
+                        "#66C2A5",  // trade
+                        "#ABDDA4",
+                        "#E6F598", 
+                        "#FFFFBF",
+                        "#FEE08B",
+                        "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
         //set up graph in same style as original example but empty
         this.sankeydata = {"nodes" : [], "links" : []};
@@ -32,8 +41,8 @@ class SankeyVis {
         vis.margin = {top: 10, right: 10, bottom: 10, left: 10};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
-        vis.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
-                            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
+        // vis.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
+        //                     "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
         vis.color = d3.scaleOrdinal(vis.colors);
 
         // format variables
@@ -251,7 +260,7 @@ class SankeyVis {
             .attr("y", function(d) { return d.y0; })
             .attr("height", function(d) { return d.y1 - d.y0; })
             .attr("width", vis.sankey.nodeWidth())
-            .style("fill", function(d) { 
+            .style("fill", function(d) {
                 return d.color = vis.color(d.name.replace(/ .*/, "")); })
             .style("stroke", function(d) { 
                 return d3.rgb(d.color).darker(2); })
