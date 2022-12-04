@@ -95,12 +95,15 @@ html {
 }
 
 #heatmap-row,
-#bumpchart-row,
+#linechart-row,
 #mainpoint-row {
     background-color: rgba(0,0,0,0.05);
     margin: 0;
 }
 
+.ayuthaya {
+    font-family: Ayuthaya;
+}
 
 
 /*SANKEY VIS STYLES*/
@@ -132,7 +135,7 @@ html {
 }
 
 
-/*BUMP CHART VIS STYLES*/
+/*LINE CHART VIS STYLES*/
 
 .hover-line {
     fill: none;
@@ -219,16 +222,6 @@ html {
 }
 
 
-
-/*@media screen and (min-width: 600px) {*/
-/*    #mainpoint-vis-row {*/
-/*        min-height: 100vh;*/
-/*    }*/
-/*}*/
-/*#mainpoint-vis-row {*/
-/*    min-height: 50vh;*/
-/*}*/
-
 #us-rank-compared-to-selected {
     font-size: xxx-large;
     padding: 10px 5px;
@@ -293,3 +286,33 @@ html {
     margin-bottom: 20px;
 }
 
+.usa_class {
+    px: 3;
+    py: 1;
+    background-color: #A6CEE3;
+    color: white;
+}
+
+.selected_country_class {
+    px:3;
+    py:1;
+    background-color: #B2DF8A;
+    color: white;
+
+
+}
+
+.world_class {
+    px:3;
+    py:1;
+    background-color: #1F78B4;
+    color: white;
+
+}
+
+.safe_class {
+    px:2;
+    py:1;
+    background-color: #32bd65;
+    color: white;
+}
