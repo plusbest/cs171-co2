@@ -269,7 +269,7 @@ class LineChartVis {
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
-            .style("fill", "#cccccc")
+            .style("fill", "#000000")
             .text(function(d) { return d.field.split("_").join(" "); });
 
 
@@ -295,7 +295,7 @@ class LineChartVis {
                 // Highlight the corresponding text label
                 const parentGroup = d3.select(this.parentNode);
                 parentGroup.selectAll("text.line-label")
-                    .style("fill", function(d) { return vis.z(d.field); });
+                    .style("fill", function(d) { return "#000000" });
             })
             .on('mouseout', function() {
                 // De-emphasize the selected line
@@ -311,7 +311,7 @@ class LineChartVis {
                 // Un-highlight the label
                 const parentGroup = d3.select(this.parentNode);
                 parentGroup.selectAll("text.line-label")
-                    .style("fill", "#cccccc");
+                    .style("fill", "#000000");
             })
             .on('click', function(e, d) {
                 const { field } = d;
