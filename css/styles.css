@@ -293,3 +293,33 @@ html {
     margin-bottom: 20px;
 }
 
+.usa_class {
+    px: 3;
+    py: 1;
+    background-color: #A6CEE3;
+    color: white;
+}
+
+.selected_country_class {
+    px:3;
+    py:1;
+    background-color: #B2DF8A;
+    color: white;
+
+
+}
+
+.world_class {
+    px:3;
+    py:1;
+    background-color: #1F78B4;
+    color: white;
+
+}
+
+.safe_class {
+    px:2;
+    py:1;
+    background-color: green;
+    color: white;
+}

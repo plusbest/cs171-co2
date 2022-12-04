@@ -217,7 +217,7 @@ function updateStatBlock(){
     if (selectedCountry === "China" && selectedCountryCode === "CHN") {
         d3.select("#us-rank-compared-to-selected").text("LOWER");
         d3.select("#mainpoint-suffix").html(`
-             than <span id="selected-country-name" class="px-3 py-1 bg-warning fs-5">${selectedCountry}</span> in global consumption emissions.
+             than <span id="selected-country-name" class=\"selected_country_class\">${selectedCountry}</span> in global consumption emissions.
         `);
     } else if (selectedCountry === "United States" && selectedCountryCode === "USA") {
         d3.select("#us-rank-compared-to-selected").text("#2 in the world");
@@ -225,7 +225,7 @@ function updateStatBlock(){
     } else {
         d3.select("#us-rank-compared-to-selected").text("HIGHER");
         d3.select("#mainpoint-suffix").html(`
-             than <span id="selected-country-name" class="px-3 py-1 bg-warning fs-5">${selectedCountry}</span> in global consumption emissions.
+             than <span id="selected-country-name" class=\"selected_country_class\">${selectedCountry}</span> in global consumption emissions.
         `);
     }
 }

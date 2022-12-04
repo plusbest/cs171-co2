@@ -262,10 +262,10 @@ class SankeyVis {
 
         if(selectedCountry =="United States") {
             document.getElementById('sanKeyTitle').innerHTML =
-                "<div>Here is the breakdown of CO2 emission sources for <strong class=\"px-3 py-1 bg-white\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
+                "<div>Here is the breakdown of CO2 emission sources for <strong class=\"usa_class\">" + selectedCountry + "</strong>" + " in " + selectedYear + "</div>";
         } else {
             document.getElementById('sanKeyTitle').innerHTML =
-                "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
+                "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"selected_country_class\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
         }
 
         vis.labels = vis.node.selectAll("text")
