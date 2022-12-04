@@ -10,8 +10,8 @@ class GaugeVis {
         this.co2Data = co2Data;
         this.displayData = [];
     	this.parseDate = d3.timeParse("%m/%d/%Y");
-        this.colors = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
-                        "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
+        this.colors = ["#1F78B4", "#32bd65", "#66C2A5", "#ABDDA4", "#E6F598",
+                        "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#A6CEE3", "#9E0142"];
 
         //set up graph in same style as original example but empty
         this.sankeydata = {"nodes" : [], "links" : []};
@@ -42,8 +42,8 @@ class GaugeVis {
 		vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
-        vis.colors = ["#9ebad9", "#66C2A5", "#E6F598", 
-                            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142", "#ffc107"];
+        this.colors = ["#1F78B4", "#32bd65", "#66C2A5", "#ABDDA4", "#E6F598",
+            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#A6CEE3", "#9E0142"];
         vis.color = d3.scaleOrdinal(vis.colors);
 
         vis.arcSize = (6 * vis.width / 100);
