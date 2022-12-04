@@ -444,7 +444,8 @@ class HeatMapVis {
         vis.cell.data(vis.root.leaves()).select(".heatmap_rect_names")
             .transition()
             .delay(vis.delay)
-            .text(function(d){ return d.data.iso_code});
+            .text(function(d){ return d.data.iso_code})
+            .attr("stroke",function(d) { if (d.data.rank < 2) {return "white";} else {return "blue";}  });
 
 
         //highlight the selected country
