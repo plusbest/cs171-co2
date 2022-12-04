@@ -27,7 +27,8 @@ class GaugeVis {
             {"Gas": true},
             {"Coal": true},
             {"Flaring": true},
-            {"Cement": true}]
+            {"Cement": true},
+            {"Other": true}]
 
         this.initVis()
 
@@ -79,11 +80,13 @@ class GaugeVis {
                 let cement_co2 =  vis.selectedCategory === 'percapita' ? d.cement_co2_per_capita : d.cement_co2;
                 let flaring_co2 =  vis.selectedCategory === 'percapita' ? d.flaring_co2_per_capita : d.flaring_co2;
                 let gas_co2 =  vis.selectedCategory === 'percapita' ? d.gas_co2_per_capita : d.gas_co2;
+                let other_co2 =  vis.selectedCategory === 'percapita' ? d.other_co2_per_capita : d.other_industry_co2;
+
 
                 // calc per capital factor to get trade per capita value
                 let trade_co2 = vis.selectedCategory === 'percapita' ? (d.co2_per_capita/d.co2) * d.trade_co2 : d.trade_co2;
                 // calculate other co2
-                let other_co2 = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2)
+                //let other_co2 = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2)
 
                 vis.displayData = 
                         {"usa_co2_total": co2,
@@ -91,7 +94,8 @@ class GaugeVis {
                         "Coal": coal_co2,
                         "Cement": cement_co2,
                         "Flaring": flaring_co2,
-                        "Gas": gas_co2}
+                        "Gas": gas_co2,
+                        "Other" : other_co2}
                     
             }
             // Set co2 total for world
@@ -103,7 +107,7 @@ class GaugeVis {
 
         let usa_total = 0;
         let world_total = vis.displayData["world_co2_total"];
-        let safe_total = vis.displayData["world_co2_total"]/2;
+        let safe_total = vis.displayData["world_co2_total"] * .0426;
 
         vis.checkBoxes.forEach(function(d) {
             for (let key in d) {
@@ -118,11 +122,11 @@ class GaugeVis {
         // console.log("JWA -- updated usa percent", usa_percent)
 
         vis.data = [
-            {value: 50, label: "Safe Level <", color: vis.colors[1], co2val: safe_total},
+            {value: 4, label: "Safe Level <", color: vis.colors[1], co2val: safe_total},
             {value: 0, label: "", color: vis.colors[1]},
             {value: usa_percent, label: "US average", color: vis.colors[9], co2val: usa_total},
             {value: 0, label: "", color: vis.colors[3]},
-            {value: 95, label: "Global average", color: vis.colors[0], co2val: world_total}
+            {value: 94, label: "Global average", color: vis.colors[0], co2val: world_total}
         ];
 
         // console.log("JWA -- vis.data", vis.data);
@@ -246,7 +250,7 @@ class GaugeVis {
                         vis.gText.append('text')         // label text add
                             .attr('font-size', 15)
                             .classed('percentage', true)
-                            .text(`${lableObj.label} (${lableObj.value}%)`)
+                            .text(function(d, i) { if (lableObj.label == "Global average") {return `${lableObj.label} (100%)` } else {return  `${lableObj.label} (${lableObj.value}%)` }})
                             .attr('transform', "translate(" + (centroidText[0] - ((1.5 * vis.width) / 100)) + "," + (centroidText[1] + ") rotate(" + (180) + ")"))
                             .attr('dominant-baseline', 'central');
                     }
