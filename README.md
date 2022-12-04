@@ -22,7 +22,7 @@ CO2 emissions have been tied to global warming by leading scientific studies. Th
 
 ### Data
 * [CO2 Emission Data](https://github.com/owid/co2-data)
-* [ISO Codes](https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes)
+* [ISO Codes](https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv)
 * [World map json data](https://gist.github.com/whatsthebeef/6361969#file-world-json)
 
 ### Website overview
