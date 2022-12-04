@@ -37,8 +37,9 @@ class LineChartVis {
 
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
-
-        vis.z = d3.scaleOrdinal(d3.schemeCategory10); // color scale;
+        vis.colors = ["#1F78B4", "#A6CEE3", "#B2DF8A", "#ABDDA4", "#E6F598",
+            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#A6CEE3", "#9E0142"];
+        vis.z = d3.scaleOrdinal(vis.colors); // color scale;
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y);
@@ -235,7 +236,7 @@ class LineChartVis {
             .append("path")
             .attr("class", "line")
             .style("fill", "none")
-            .style("stroke", function(d) { return vis.z(d.field); })
+            .style("stroke", function(d) {console.log(d.field); return vis.z(d.field); })
             .style("stroke-width", 2)
             .attr("d", function(d) { return lineGenerator(d.values); })
             .enter()
