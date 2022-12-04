@@ -405,7 +405,7 @@ class RadarVis {
                                <strong>Flaring:</strong> ${ Math.round(d.percent_flaring_co2 * 100) / 100 }%
                             </h4>
                             <h4>
-                               <img src="../static/icons/other-energy.png" height="24" width="24" alt="coal">
+                               <img src="static/icons/other-energy.png" height="24" width="24" alt="coal">
                                <strong>Other:</strong> ${ Math.round(d.percent_other_co2 * 100) / 100 }%
                             </h4>
                         </div>`
