@@ -385,23 +385,23 @@ class RadarVis {
                         <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
                             <h3>${ d.country }</h3>
                             <h4>
-                               <img src="../static/icons/coal.png" height="24" width="24" alt="coal">
+                               <img src="static/icons/coal.png" height="24" width="24" alt="coal">
                                <strong>Coal:</strong> ${ Math.round(d.percent_coal_co2 * 100) / 100 }%
                             </h4>
                             <h4>
-                               <img src="../static/icons/oil.png" height="24" width="24" alt="coal">
+                               <img src="static/icons/oil.png" height="24" width="24" alt="coal">
                                <strong>Oil:</strong> ${ Math.round(d.percent_oil_co2 * 100) / 100 }%
                             </h4>
                             <h4>
-                               <img src="../static/icons/propane.png" height="24" width="24" alt="coal">
+                               <img src="static/icons/propane.png" height="24" width="24" alt="coal">
                                <strong>Gas:</strong> ${ Math.round(d.percent_gas_co2 * 100) / 100 }%
                             </h4>
                             <h4>
-                               <img src="../static/icons/cement.png" height="24" width="24" alt="coal">
+                               <img src="static/icons/cement.png" height="24" width="24" alt="coal">
                                <strong>Cement:</strong> ${ Math.round(d.percent_cement_co2 * 100) / 100 }%
                             </h4>
                             <h4>
-                               <img src="../static/icons/flaring.png" height="24" width="24" alt="coal">
+                               <img src="static/icons/flaring.png" height="24" width="24" alt="coal">
                                <strong>Flaring:</strong> ${ Math.round(d.percent_flaring_co2 * 100) / 100 }%
                             </h4>
                             <h4>
