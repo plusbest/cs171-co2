@@ -30,7 +30,7 @@ html {
 }
 
 #bg-image {
-    background: url("/static/sophia-simoes-glacier.jpg");
+    background: url("../static/sophia-simoes-glacier.jpg");
     background-position: center;
     background-size: cover;
     filter: blur(3px);
