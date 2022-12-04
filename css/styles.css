@@ -95,7 +95,7 @@ html {
 }
 
 #heatmap-row,
-#bumpchart-row,
+#linechart-row,
 #mainpoint-row {
     background-color: rgba(0,0,0,0.05);
     margin: 0;
@@ -135,7 +135,7 @@ html {
 }
 
 
-/*BUMP CHART VIS STYLES*/
+/*LINE CHART VIS STYLES*/
 
 .hover-line {
     fill: none;

@@ -1,9 +1,9 @@
 /* * * * * * * * * * * * * *
-*        BumpChartVis      *
+*        LineChartVis      *
 * * * * * * * * * * * * * */
 
 
-class BumpChartVis {
+class LineChartVis {
     constructor(parentElement, co2Data) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
@@ -100,7 +100,6 @@ class BumpChartVis {
             // reset to global state and re-start
             vis.changeCurrentView("ALL")
             return;
-            // throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
         }
 
         vis.updateVis();
@@ -154,7 +153,7 @@ class BumpChartVis {
             } else if (iso_code === selectedCountryCode && selectedCountryCode !== "USA") {
                 vis.fields[2].values.push(thisData);
             } else {
-                throw new Error("Error in bumpChartVis while wrangling global data");
+                throw new Error("Error in lineChartVis while wrangling global data");
             }
         });
 
@@ -340,24 +339,24 @@ class BumpChartVis {
         if (newView === "USA" || newView === selectedCountryCode || newView === "WORLD") {
             const displayTitle = newView === selectedCountryCode ? selectedCountry:
                                         newView === "USA" ? "United States": "the world";
-            d3.select("#bumpchart-row .section-title").text(`Breakdown of production emissions over time for ${displayTitle}`);
+            d3.select("#linechart-row .section-title").text(`Breakdown of production emissions over time for ${displayTitle}`);
 
             // Append the reset button
-            d3.select("#bumpchart-row .section-title")
+            d3.select("#linechart-row .section-title")
                 .append("button")
-                .attr("id", "bumpchart-reset")
+                .attr("id", "linechart-reset")
                 .attr("class", "btn btn-link btn-sm d-block m-auto")
                 .on("click", (e) => vis.resetButtonOnClick(e))
                 .text("Reset to global comparison")
 
         } else if (newView === "ALL" && selectedCountryCode === "USA") {
             // Update with slightly different contextual text
-            d3.select("#bumpchart-row .section-title")
+            d3.select("#linechart-row .section-title")
                 .html(`And <strong class="px-3 py-1 bg-white">United States</strong> production emissions compared to the 
                     World's total over time in the following ways:`)
         } else {
             // Update with slightly different contextual text that includes both countries selected
-            d3.select("#bumpchart-row .section-title")
+            d3.select("#linechart-row .section-title")
                 .html(`And the <strong class="px-3 py-1 bg-white">United States</strong> and 
                     <span id="selected-country-name"class="px-3 py-1 bg-warning fs-5">${selectedCountry}</span>'s
                     production emissions compared to the World's total over time in the following ways:`)

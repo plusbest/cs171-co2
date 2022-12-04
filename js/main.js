@@ -6,7 +6,7 @@
 let
     myHeatMapVis,
     mySankeyVis,
-    myBumpChart,
+    myLineChart,
     myMapVis,
     myRadarVis,
     isPlaying = false;
@@ -51,7 +51,7 @@ const promises = [
     d3.csv("data/owid-co2-data.csv"), // sankey
     d3.csv("data/owid-co2-data.csv"), // gauge vis
 
-    d3.csv("data/owid-co2-data.csv"), // bumpchart
+    d3.csv("data/owid-co2-data.csv"), // linechart
     d3.csv("data/owid-co2-data.csv"), // radarchart
 
     // separate promises to work around the shallow copy bug where
@@ -101,7 +101,7 @@ function initMainPage(dataArray) {
     myGaugeVis = new GaugeVis('gaugeVis', dataArray[3]);
     myGaugeVis.wrangleData(); // Initialize Gauge with full checkbox params
 
-    myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4]);
+    myLineChart = new LineChartVis('lineChartDiv', dataArray[4]);
     myRadarVis = new RadarVis('radarDiv', dataArray[5]);
 }
 
@@ -250,7 +250,7 @@ function onSelectNewCountryFromDropdown(evt, val) {
 
     // Wrangle Data to update all of the relevant visualizations
     mySankeyVis.wrangleData();
-    myBumpChart.changeCurrentView(myBumpChart.currentView);
+    myLineChart.changeCurrentView(myLineChart.currentView);
     myRadarVis.selectedCountryCode = selectedCountryCode;
     myRadarVis.wrangleData();
     myMapVis.wrangleData();

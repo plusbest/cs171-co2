@@ -357,8 +357,8 @@ class MapVis {
                     document.getElementById('sanKeyTitle').innerHTML =
                         "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
                 }
-                //call bump chart
-                myBumpChart.changeCurrentView(myBumpChart.currentView);
+                //call line chart
+                myLineChart.changeCurrentView(myLineChart.currentView);
 
                 //call radar vis
                 myRadarVis.selectedCountryCode = selectedCountryCode;
