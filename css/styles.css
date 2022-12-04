@@ -95,12 +95,15 @@ html {
 }
 
 #heatmap-row,
-#bumpchart-row,
+#linechart-row,
 #mainpoint-row {
     background-color: rgba(0,0,0,0.05);
     margin: 0;
 }
 
+.ayuthaya {
+    font-family: Ayuthaya;
+}
 
 
 /*SANKEY VIS STYLES*/
@@ -132,7 +135,7 @@ html {
 }
 
 
-/*BUMP CHART VIS STYLES*/
+/*LINE CHART VIS STYLES*/
 
 .hover-line {
     fill: none;
@@ -218,16 +221,6 @@ html {
     font-family: Ayuthaya;
 }
 
-
-
-/*@media screen and (min-width: 600px) {*/
-/*    #mainpoint-vis-row {*/
-/*        min-height: 100vh;*/
-/*    }*/
-/*}*/
-/*#mainpoint-vis-row {*/
-/*    min-height: 50vh;*/
-/*}*/
 
 #us-rank-compared-to-selected {
     font-size: xxx-large;

@@ -1,11 +1,9 @@
 /* * * * * * * * * * * * * *
-*        BumpChartVis      *
+*        LineChartVis      *
 * * * * * * * * * * * * * */
 
 
-class BumpChartVis {
-    // TODO: Add bumps (?) and hover tooltips
-
+class LineChartVis {
     constructor(parentElement, co2Data) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
@@ -40,7 +38,7 @@ class BumpChartVis {
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
 
-        vis.z = d3.scaleOrdinal(d3.schemeCategory10); // color scale; TODO: might update to use this.colors
+        vis.z = d3.scaleOrdinal(d3.schemeCategory10); // color scale;
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y);
@@ -67,7 +65,22 @@ class BumpChartVis {
             .attr("x", vis.width / 2)
             .attr("dy", "0.71em")
             .attr("fill", "#000")
-            .text("Year");;
+            .text("Year");
+
+        // Add background rect for click handler
+        vis.background = vis.svg.append("rect")
+            .attr("class", "background")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", vis.height)
+            .attr("width", vis.width)
+            .style("opacity", "0")
+            .on('click', function(e, d) {
+                // Change views if background is clicked when on a particular line's view
+                if (vis.currentView !== "ALL" ) {
+                    vis.changeCurrentView("ALL");
+                }
+            });
 
     	vis.wrangleData();
 	}
@@ -87,11 +100,7 @@ class BumpChartVis {
             // reset to global state and re-start
             vis.changeCurrentView("ALL")
             return;
-            // throw new Error("Error in bumpChartVis wrangleData: this.currentView is invalid");
         }
-
-        // console.log("bumpChart displayData", vis.displayData);
-        // console.log("bumpChart fields", vis.fields);
 
         vis.updateVis();
 	}
@@ -144,18 +153,16 @@ class BumpChartVis {
             } else if (iso_code === selectedCountryCode && selectedCountryCode !== "USA") {
                 vis.fields[2].values.push(thisData);
             } else {
-                throw new Error("Error in bumpChartVis while wrangling global data");
+                throw new Error("Error in lineChartVis while wrangling global data");
             }
         });
 
         vis.displayData = filteredData;
-        console.log("THIS IS THE GLOBAL DATA", vis.displayData)
     }
 
     wrangleDataCountry(countryCode) {
         let vis = this;
-
-
+        
         // Filter out all countries but the US
         let filteredData = this.co2Data.filter((row) => {
             const { iso_code = null, country, year } = row;
@@ -174,7 +181,6 @@ class BumpChartVis {
         });
 
         vis.displayData = filteredData;
-        console.log("biancam THIS IS THE FILTERED DATA", filteredData);
 
         // Reorganize data to more easily display multiple lines
         const columnsToShow = ["cement_co2", "coal_co2", "flaring_co2", "gas_co2", "oil_co2"];
@@ -193,14 +199,7 @@ class BumpChartVis {
 		let vis = this;
 
         // Update domains for axes
-        // console.log("domainx", d3.extent(vis.displayData, function(d) { console.log("d.year", d.year); return d.year; }));
         vis.x.domain(d3.extent(vis.displayData, function(d) { return d.year; }));
-
-        // console.log("domainy", "["
-        //     + d3.min(vis.fields, function(field) { return d3.min(field.values, function(d) { return d.co2; }); })
-        //     + ", "
-        //     + d3.max(vis.fields, function(field) { return d3.max(field.values, function(d) { return d.co2; }); })
-        //     +"]");
 
         vis.y.domain([
             d3.min(vis.fields, function(field) { return d3.min(field.values, function(d) { return d.co2; }); }),
@@ -209,63 +208,77 @@ class BumpChartVis {
 
         vis.z.domain(vis.fields.map(function(field) { return field.field; }));
 
-        // Add background rect for click handler
-        vis.background = vis.svg.append("rect")
-            .attr("class", "background")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("height", vis.height)
-            .attr("width", vis.width)
-            .style("opacity", "0")
-            .on('click', function(e, d) {
-                // Change views if background is clicked when on a particular line's view
-                if (vis.currentView !== "ALL" ) {
-                    vis.changeCurrentView("ALL");
-                }
-            });
 
-        // Draw the lines
+        // Create a line generator for tracking the year against the chosen co2 value
         const lineGenerator = d3.line()
             .curve(d3.curveBasis)
             .x(function(d) { return vis.x(d.year); })
             .y(function(d) { return vis.y(d.co2); });
 
 
-        // TODO: Need to figure out how to accomplish this via the enter-update-remove pattern
-        // Tried a lot of different means and this was the only one I could get to work in time for prototype deadline
-        vis.svg.selectAll("g.co2").remove();
+        // Create groups to attach each set of lines and labels to
+        vis.co2LinesGroups = vis.svg.selectAll("g.co2")
+            // Generating a (hopefully) unique enough key here because otherwise data doesn't clear appropriately
+            .data(vis.fields, (d, i) => d.field + d.values.length + i );
 
-        vis.co2Lines = vis.svg.selectAll("g.co2")
-            .data(vis.fields)
-            .enter().append("g")
+        vis.enterGroups = vis.co2LinesGroups
+            .enter()
+            .append("g")
             .attr("class", function(d) { return "co2 " + d.field; });
 
-        vis.co2Lines.append("path")
+
+        // Draw the lines and update them
+        vis.co2Lines = vis.co2LinesGroups.select("path.line")
+            .data(vis.fields);
+
+        vis.enterGroups
+            .append("path")
             .attr("class", "line")
-            .attr("d", function(d) { return lineGenerator(d.values); })
             .style("fill", "none")
             .style("stroke", function(d) { return vis.z(d.field); })
-            .style("stroke-width", 2);
+            .style("stroke-width", 2)
+            .attr("d", function(d) { return lineGenerator(d.values); })
+            .enter()
+            .merge(vis.co2Lines);
 
-        // Add some labels
-        vis.co2Lines.append("text")
+
+        // Draw the hoverable lines and update them
+        vis.co2HoverLines = vis.co2LinesGroups.select("path.hover-line")
+            .data(vis.fields);
+
+        vis.enterGroups
+            .append("path")
+            .attr("class", "hover-line")
+            .style("fill", "none")
+            .style("stroke", function(d) { return vis.z(d.field); })
+            .style("stroke-width", 2)
+            .attr("d", function(d) { return lineGenerator(d.values); })
+            .enter()
+            .merge(vis.co2HoverLines);
+
+        // Add some labels (these will become highlighted when you hover the line)
+        vis.lineLabels = vis.co2LinesGroups.select("text.line-label")
+            .data(vis.fields);
+
+        vis.enterGroups
+            .append("text")
             .attr("class", "line-label")
             .datum(function(d) { return {field: d.field, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) {
-                console.log("biancam d", d);
-                return "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")";
-            })
+            .attr("transform", (d) => "translate(" + vis.x(d.value.year) + "," + vis.y(d.value.co2) + ")")
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
             .style("fill", "#cccccc")
-            .text(function(d) { return d.field; });
+            .text(function(d) { return d.field.split("_").join(" "); });
 
-        // Create some thicker lines on hover
-        vis.hoverLines = vis.co2Lines.append("path")
-            .attr("class", "hover-line")
-            .attr("d", function(d) { return lineGenerator(d.values); });
 
+        // Handle cleanup
+        vis.co2LinesGroups.exit().remove();
+        vis.co2Lines.exit().remove();
+        vis.co2HoverLines.exit().remove();
+
+
+        // Add event handlers
         vis.svg.selectAll(".hover-line")
             .on('mouseover', function() {
                 // Emphasize the selected line
@@ -282,8 +295,6 @@ class BumpChartVis {
                 const parentGroup = d3.select(this.parentNode);
                 parentGroup.selectAll("text.line-label")
                     .style("fill", function(d) { return vis.z(d.field); });
-
-                // TODO: need to also maybe re-draw this element, so that it's always on top
             })
             .on('mouseout', function() {
                 // De-emphasize the selected line
@@ -326,26 +337,31 @@ class BumpChartVis {
 
         // Update title
         if (newView === "USA" || newView === selectedCountryCode || newView === "WORLD") {
-            console.log("selectedCountry", selectedCountry, selectedCountryCode)
             const displayTitle = newView === selectedCountryCode ? selectedCountry:
                                         newView === "USA" ? "United States": "the world";
-            d3.select("#bumpchart-row .section-title").text(`Breakdown of production emissions over time for ${displayTitle}`);
+            d3.select("#linechart-row .section-title").text(`Breakdown of production emissions over time for ${displayTitle}`);
 
             // Append the reset button
-            d3.select("#bumpchart-row .section-title")
+            d3.select("#linechart-row .section-title")
                 .append("button")
-                .attr("id", "bumpchart-reset")
+                .attr("id", "linechart-reset")
                 .attr("class", "btn btn-link btn-sm d-block m-auto")
                 .on("click", (e) => vis.resetButtonOnClick(e))
                 .text("Reset to global comparison")
 
         } else if (newView === "ALL" && selectedCountryCode === "USA") {
-            d3.select("#bumpchart-row .section-title")
+            d3.select("#linechart-row .section-title")
                 .html("And <strong class=\"usa_class\">United States</strong> production emissions compared to the World's total over time in the following ways:")
+
+            // Update with slightly different contextual text
+
         } else {
-            d3.select("#bumpchart-row .section-title")
+            d3.select("#linechart-row .section-title")
                 .html(`And the <strong class=\"usa_class\">United States</strong> and <span id=\"selected-country-name\" class=\"selected_country_class\">${selectedCountry}</span>'s
                  production emissions compared to the World's total over time in the following ways:`)
+
+            // Update with slightly different contextual text that includes both countries selected
+
         }
 
         vis.wrangleData();

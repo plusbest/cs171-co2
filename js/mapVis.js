@@ -338,7 +338,11 @@ class MapVis {
                 selectedCountryCode = isocode;
                 selectedCountry = isoCodeToCountryNameMap[isocode];
 
+                // Update "Main Point" stat block with correct country
                 updateStatBlock();
+
+                // Update the value in the country selection dropdown
+                updateCountryDropdownValue(selectedCountryCode);
 
 
                 //call sankey
@@ -354,8 +358,8 @@ class MapVis {
                         "<div>Here is the breakdown of CO2 emission sources for <span id=\"selected-country-name\" class=\"selected_country_class\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
                 }
 
-                //call bump chart
-                myBumpChart.changeCurrentView(myBumpChart.currentView);
+                //call line chart
+                myLineChart.changeCurrentView(myLineChart.currentView);
 
                 //call radar vis
                 myRadarVis.selectedCountryCode = selectedCountryCode;

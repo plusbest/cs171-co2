@@ -385,6 +385,8 @@ class HeatMapVis {
                 //Show the stat
                 updateStatBlock();
 
+                // Update the Value in the dropdown
+                updateCountryDropdownValue(selectedCountryCode);
 
 
 
@@ -409,9 +411,9 @@ class HeatMapVis {
 
                 mySankeyVis.wrangleData();
 
-                //call bump chart
+                //call line chart
                 console.log("data in heatmap, ", d.data);
-                myBumpChart.changeCurrentView(myBumpChart.currentView);
+                myLineChart.changeCurrentView(myLineChart.currentView);
 
                 //call radar vis
                 myRadarVis.selectedCountryCode = selectedCountryCode;

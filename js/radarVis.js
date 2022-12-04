@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*        RadarVis                                                                                         *
+*  RadarVis                                                                                               *
 *  Code adapted from tutorial here: https://yangdanny97.github.io/blog/2019/03/01/D3-Spider-Chart         *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -48,12 +48,15 @@ class RadarVis {
             .append("g")
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
+        // Add a scale
         vis.radialScale = d3.scaleLinear()
             .domain([0,100])
             .range([0, vis.maxRadiusWithMargin]);
 
+        // Space ticks out (so they add up to 100%)
         vis.ticks = [20,40,60,80,100];
 
+        // Initialize tooltip
         vis.tooltip = d3.select("body").append('div')
             .attr('class', "radar_tooltip")
             .attr('id', 'radarTooltip');
@@ -64,8 +67,7 @@ class RadarVis {
     wrangleData() {
         let vis = this;
 
-        // Temporary dummy data
-        let data = [];
+        // Features to include in graph
         vis.features = [
             "percent_coal_co2",
             "percent_oil_co2",
@@ -74,8 +76,6 @@ class RadarVis {
             "percent_cement_co2",
             "percent_other_co2"
         ];
-
-        // console.log("radarVis", vis.selectedCountryCode);
 
         // Filter out all countries but the US & selected country
         let filteredData = this.co2Data.filter((row) => {
@@ -105,7 +105,8 @@ class RadarVis {
                 return row;
             }
             return null;
-        }).map((row) => { // Create new objects with just the data we need
+        }).map((row) => {
+            // Create new objects with just the data we need
             const {
                 country,
                 coal_co2,
@@ -117,6 +118,7 @@ class RadarVis {
                 co2
             } = row;
 
+            // Doing some calculating of percentage values
             const totalFromSelectedFieldsCO2 = (coal_co2 + oil_co2 + gas_co2 + cement_co2 + flaring_co2);
             const leftoverCO2 = co2 - totalFromSelectedFieldsCO2;
 
@@ -133,16 +135,6 @@ class RadarVis {
             return newRow;
         });
 
-
-        // generate the data
-        for (let i = 0; i < 3; i++){
-            let point = {}
-
-            // Each feature will be a random number from 1-9
-            vis.features.forEach(f => point[f] = 1 + Math.random() * 8);
-            data.push(point);
-        }
-
         vis.displayData = filteredData;
 
         vis.updateVis();
@@ -156,108 +148,21 @@ class RadarVis {
                 "<div>Production CO2 emissions breakdown for " +" <strong class=\"usa_class\">" + selectedCountry + "</strong>" + " and the" +" <strong class=\"world_class\">" +  "World" +  "</strong>" + " in " + selectedYear + "</div>";
         } else {
             document.getElementById('radarTitle').innerHTML =
-                "<div>Production CO2 emissions breakdown for " +" <strong class=\"usa_class\">" + "United States" + "</strong>" + "," + " <strong class=\"world_class\">" +  "World" + "</strong>" + " and " + "<span id=\"selected-country-name\" class=\"selected_country_class\">" + selectedCountry + "</span>" + " in " + selectedYear    + "</div>";
+                "<div>Production CO2 emissions breakdown for " + " <strong class=\"usa_class\">" + "United States" + "</strong>" + "," + " <strong class=\"world_class\">" + "World" + "</strong>" + " and " + "<span id=\"selected-country-name\" class=\"selected_country_class\">" + selectedCountry + "</span>" + " in " + selectedYear + "</div>";
 
         }
+        // Update the axes and radar blobs
         vis.drawAxes();
+        vis.drawBlobs();
 
-        // Remove any pre-existing blobs -- see comment below
-        vis.svg.selectAll(".radar-area").remove();
-
-        // TODO: Rework this to use update - enter - exit, so that paths are re-drawn with each new selection
-        for (let i = 0; i < vis.displayData.length; i++) {
-            let d = vis.displayData[i];
-            let color = vis.colors[i];
-            let coordinates = vis.getPathCoordinates(d);
-
-            //draw the path element
-            vis.svg.append("path")
-                .attr("class", "radar-area" + " " + d.country)
-                .datum(coordinates)
-                .attr("d", d3.line()
-                    .x(d => d.x)
-                    .y(d => d.y)
-                )
-                .attr("stroke-width", 3)
-                .attr("stroke", color)
-                .attr("fill", color)
-                .attr("stroke-opacity", 1)
-                .attr("opacity", 0.5)
-                .on('mouseover', function(event){
-                    //console.log(d);
-                    d3.select(this)
-                        .attr('stroke-width', '2px')
-                        .attr("stroke", 'red');
-
-                    vis.tooltip
-                        .style("opacity", 1)
-                        .style("left", event.pageX + 20 + "px")
-                        .style("top", event.pageY + "px")
-                        .html(`
-                             <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
-                                 <h3>${ d.country }</h3>
-                                 <h4>
-                                    <img src="/static/icons/coal.png" height="24" width="24" alt="coal">
-                                    <strong>Coal:</strong> ${ Math.round(d.percent_coal_co2 * 100) / 100 }%
-                                 </h4>       
-                                 <h4>
-                                    <img src="/static/icons/oil.png" height="24" width="24" alt="coal">
-                                    <strong>Oil:</strong> ${ Math.round(d.percent_oil_co2 * 100) / 100 }%
-                                 </h4>   
-                                 <h4>
-                                    <img src="/static/icons/gas.png" height="24" width="24" alt="coal">
-                                    <strong>Gas:</strong> ${ Math.round(d.percent_gas_co2 * 100) / 100 }%
-                                 </h4> 
-                                 <h4>
-                                    <img src="/static/icons/cement.png" height="24" width="24" alt="coal">
-                                    <strong>Cement:</strong> ${ Math.round(d.percent_cement_co2 * 100) / 100 }%
-                                 </h4> 
-                                 <h4>
-                                    <img src="/static/icons/flaring.png" height="24" width="24" alt="coal">
-                                    <strong>Flaring:</strong> ${ Math.round(d.percent_flaring_co2 * 100) / 100 }%
-                                 </h4>
-                                 <h4>
-                                    <img src="/static/icons/other-energy.png" height="24" width="24" alt="coal">
-                                    <strong>Other:</strong> ${ Math.round(d.percent_other_co2 * 100) / 100 }%
-                                 </h4>     
-                             </div>`);
-                })
-                .on('mouseout', function(event){
-                    d3.select(this)
-                        .attr('stroke-width', '1px')
-                        .attr('stroke', 'black');
-
-                    vis.tooltip
-                        .style("opacity", 0)
-                        .style("left", 0)
-                        .style("top", 0)
-                        .html(``);
-                })
-        }
-
-        // // Broken attempt at doing enter, update, remove -- return to later when there's more time
-        // let blobs = vis.svg.selectAll(".radar-blob")
-        //     .data(vis.displayData);
-        //
-        // blobs.enter()
-        //     .append("path")
-        //     .attr("class", (d) => "radar-blob radar-area " + d.iso_code)
-        //     .datum((d) => vis.getPathCoordinates(d))
-        //     .merge(blobs)
-        //     .attr("d", line)
-        //     .attr("stroke-width", 3)
-        //     .attr("stroke", (d, i) => vis.colors[i])
-        //     .attr("fill", (d, i) => vis.colors[i])
-        //     .attr("stroke-opacity", 1)
-        //     .attr("opacity", 0.5);
-        //
-        // blobs.exit().remove();
+        // Update radar title
+        vis.updateRadarTitle();
     }
-
 
     angleToCoordinate(angle, value){
         let vis = this;
 
+        // Calculate the appropriate (general) coordinates for this chunk of the circle
         let x = Math.cos(angle) * vis.radialScale(value);
         let y = Math.sin(angle) * vis.radialScale(value);
         return {"x": vis.maxRadius + x, "y": vis.maxRadius - y};
@@ -266,6 +171,7 @@ class RadarVis {
     getPathCoordinates(dataPoint){
         let vis = this;
 
+        // Calculate the coordinates for each point on the path for this chunk
         let coordinates = [];
         for (let i = 0; i < vis.features.length; i++){
             let ft_name = vis.features[i];
@@ -276,19 +182,22 @@ class RadarVis {
     }
 
     fieldToIconPath(field) {
+        // Return the correct icon based on param
         switch(field){
             case "percent_oil_co2":
                 return "static/icons/oil.png";
             case "percent_coal_co2":
                 return "static/icons/coal.png";
             case "percent_gas_co2":
-                return "static/icons/gas.png";
+                return "static/icons/propane.png";
             case "percent_flaring_co2":
                 return "static/icons/flaring.png";
             case "percent_cement_co2":
                 return "static/icons/cement.png";
             case "percent_other_co2":
                 return "static/icons/other-energy.png";
+            default:
+                throw new Error("Invalid field passed into radarVis.fieldToIconPath");
         }
     }
 
@@ -299,6 +208,7 @@ class RadarVis {
         let rings = vis.svg.selectAll(".radar-frame")
             .data(vis.ticks);
 
+        // Handle updates and rendering for axis rings
         rings.enter()
             .append("circle")
             .attr("class", "radar-frame")
@@ -309,12 +219,14 @@ class RadarVis {
             .attr("stroke", "gray")
             .attr("r", (t) => vis.radialScale(t))
 
+        // Remove when no longer necessary
         rings.exit().remove();
 
         // Segment the circles/add axis
         let axisLine = vis.svg.selectAll(".radar-axis")
             .data(vis.features);
 
+        // Handle updates and rendering for axis lines
         axisLine.enter()
             .append("line")
             .attr("class", "radar-axis")
@@ -335,12 +247,14 @@ class RadarVis {
             })
             .attr("stroke","black");
 
+        // Remove when no longer necessary
         axisLine.exit().remove();
 
         // Add labels to the rings
         let ringLabels = vis.svg.selectAll(".radar-ring-labels")
             .data(vis.ticks);
 
+        // Handle updates and rendering for labels
         ringLabels.enter()
             .append("text")
             .attr("class", "radar-frame")
@@ -349,12 +263,14 @@ class RadarVis {
             .attr("y", (t) => vis.maxRadius - vis.radialScale(t))
             .text((t) => t.toString() + "%")
 
+        // Remove when no longer necessary
         ringLabels.exit().remove();
 
         // Add Axis Icon Labels
         let axisIcons = vis.svg.selectAll(".radar-icon-label")
             .data(vis.features);
 
+        // Handle updates and rendering for icons
         axisIcons.enter()
             .append("svg:image")
             .attr("class", "radar-icon-label")
@@ -366,7 +282,7 @@ class RadarVis {
                 let angle = (Math.PI / 2) + (2 * Math.PI * i / vis.features.length);
                 let label_coordinate = vis.angleToCoordinate(angle, 100.5);
 
-                // Slight adjustments to get the labels exactly where I want em
+                // Slight adjustments to get the icon labels exactly where I want 'em
                 if (i === 0) {
                     label_coordinate.x -= 10;
                 } else if (i === 1) {
@@ -385,6 +301,7 @@ class RadarVis {
                 let angle = (Math.PI / 2) + (2 * Math.PI * i / vis.features.length);
                 let label_coordinate = vis.angleToCoordinate(angle, 100.5);
 
+                // Figure out where exactly to place each icon
                 if (i === 0) {
                     return label_coordinate.y - 45;
                 } else if (i === 1) {
@@ -399,6 +316,7 @@ class RadarVis {
                 return label_coordinate.y;
             })
             .on('mouseover', function(event, d){
+                // Show the tooltip with some info about the current icon
                 vis.tooltip
                     .style("opacity", 1)
                     .style("left", event.pageX + 20 + "px")
@@ -412,6 +330,7 @@ class RadarVis {
                         </div>`);
             })
             .on('mouseout', function(event){
+                // Hide the tooltip
                 vis.tooltip
                     .style("opacity", 0)
                     .style("left", 0)
@@ -419,6 +338,106 @@ class RadarVis {
                     .html(``);
             })
 
+        // Remove when no longer necessary
         axisIcons.exit().remove();
+    }
+
+    drawBlobs() {
+        let vis = this;
+
+        // Bind data to the blobs
+        let blobs = vis.svg.selectAll(".radar-blob")
+            .data(vis.displayData, (d) => d );
+
+        // Use helper function to generate blob path coordinates
+        const coords = vis.displayData.map(d => {
+            const theseCoords = vis.getPathCoordinates(d).map((coord) => {
+                const { x, y } = coord;
+                return [x, y];
+            })
+            return theseCoords;
+        });
+
+        // Handle updates and rendering
+        blobs.enter()
+            .append("path")
+            .attr("class", (d) => "radar-blob radar-area " + d.iso_code)
+            .merge(blobs)
+            .attr("d", (d, i) => d3.line()(coords[i]))
+            .attr("stroke-width", 3)
+            .attr("stroke", (d, i) => vis.colors[i])
+            .attr("fill", (d, i) => vis.colors[i])
+            .attr("stroke-opacity", 1)
+            .attr("opacity", 0.5)
+            .on('mouseover', function(event, d){
+                // Add a slight hover effect to the selected blob
+                d3.select(this)
+                    .attr('stroke-width', '2px')
+                    .attr("stroke", 'red');
+
+                // Show tooltip
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + 20 + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+                        <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
+                            <h3>${ d.country }</h3>
+                            <h4>
+                               <img src="/static/icons/coal.png" height="24" width="24" alt="coal">
+                               <strong>Coal:</strong> ${ Math.round(d.percent_coal_co2 * 100) / 100 }%
+                            </h4>
+                            <h4>
+                               <img src="/static/icons/oil.png" height="24" width="24" alt="coal">
+                               <strong>Oil:</strong> ${ Math.round(d.percent_oil_co2 * 100) / 100 }%
+                            </h4>
+                            <h4>
+                               <img src="/static/icons/propane.png" height="24" width="24" alt="coal">
+                               <strong>Gas:</strong> ${ Math.round(d.percent_gas_co2 * 100) / 100 }%
+                            </h4>
+                            <h4>
+                               <img src="/static/icons/cement.png" height="24" width="24" alt="coal">
+                               <strong>Cement:</strong> ${ Math.round(d.percent_cement_co2 * 100) / 100 }%
+                            </h4>
+                            <h4>
+                               <img src="/static/icons/flaring.png" height="24" width="24" alt="coal">
+                               <strong>Flaring:</strong> ${ Math.round(d.percent_flaring_co2 * 100) / 100 }%
+                            </h4>
+                            <h4>
+                               <img src="/static/icons/other-energy.png" height="24" width="24" alt="coal">
+                               <strong>Other:</strong> ${ Math.round(d.percent_other_co2 * 100) / 100 }%
+                            </h4>
+                        </div>`
+                    );
+            })
+            .on('mouseout', function(event, d){
+                // Hide tooltip
+                d3.select(this)
+                    .attr('stroke-width', '1px')
+                    .attr('stroke', 'black');
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            })
+
+        // Remove when no longer necessary
+        blobs.exit().remove();
+    }
+
+    updateRadarTitle() {
+        // Display slightly different titles depending on selected Country
+        if (selectedCountry == "United States") {
+            document.getElementById('radarTitle').innerHTML =
+                `<div>Production CO2 emissions breakdown for 
+                    <strong class=\"usa_class\">${selectedCountry}</strong> and the World in ${selectedYear}</div>`;
+        } else {
+            document.getElementById('radarTitle').innerHTML =
+                `<div>Production CO2 emissions breakdown for 
+                    <strong class=\"usa_class\">United States</strong>, World and 
+                    <span id="selected-country-name" class=\"selected_country_class\"> ${selectedCountry}</span>
+                     in ${selectedYear}</div>`;
+        }
     }
 }
