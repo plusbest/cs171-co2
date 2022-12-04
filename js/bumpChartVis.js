@@ -4,8 +4,6 @@
 
 
 class BumpChartVis {
-    // TODO: Add bumps (?) and hover tooltips
-
     constructor(parentElement, co2Data) {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
@@ -40,7 +38,7 @@ class BumpChartVis {
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
 
-        vis.z = d3.scaleOrdinal(d3.schemeCategory10); // color scale; TODO: might update to use this.colors
+        vis.z = d3.scaleOrdinal(d3.schemeCategory10); // color scale;
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y);
@@ -298,8 +296,6 @@ class BumpChartVis {
                 const parentGroup = d3.select(this.parentNode);
                 parentGroup.selectAll("text.line-label")
                     .style("fill", function(d) { return vis.z(d.field); });
-
-                // TODO: need to also maybe re-draw this element, so that it's always on top
             })
             .on('mouseout', function() {
                 // De-emphasize the selected line
@@ -342,7 +338,6 @@ class BumpChartVis {
 
         // Update title
         if (newView === "USA" || newView === selectedCountryCode || newView === "WORLD") {
-            console.log("selectedCountry", selectedCountry, selectedCountryCode)
             const displayTitle = newView === selectedCountryCode ? selectedCountry:
                                         newView === "USA" ? "United States": "the world";
             d3.select("#bumpchart-row .section-title").text(`Breakdown of production emissions over time for ${displayTitle}`);
@@ -356,12 +351,16 @@ class BumpChartVis {
                 .text("Reset to global comparison")
 
         } else if (newView === "ALL" && selectedCountryCode === "USA") {
+            // Update with slightly different contextual text
             d3.select("#bumpchart-row .section-title")
-                .html("And <strong class=\"px-3 py-1 bg-white\">United States</strong> production emissions compared to the World's total over time in the following ways:")
+                .html(`And <strong class="px-3 py-1 bg-white">United States</strong> production emissions compared to the 
+                    World's total over time in the following ways:`)
         } else {
+            // Update with slightly different contextual text that includes both countries selected
             d3.select("#bumpchart-row .section-title")
-                .html(`And the <strong class=\"px-3 py-1 bg-white\">United States</strong> and <span id=\"selected-country-name\" class=\"px-3 py-1 bg-warning fs-5\">${selectedCountry}</span>'s
-                 production emissions compared to the World's total over time in the following ways:`)
+                .html(`And the <strong class="px-3 py-1 bg-white">United States</strong> and 
+                    <span id="selected-country-name"class="px-3 py-1 bg-warning fs-5">${selectedCountry}</span>'s
+                    production emissions compared to the World's total over time in the following ways:`)
         }
 
         vis.wrangleData();

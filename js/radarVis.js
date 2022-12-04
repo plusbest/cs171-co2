@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*        RadarVis                                                                                         *
+*  RadarVis                                                                                               *
 *  Code adapted from tutorial here: https://yangdanny97.github.io/blog/2019/03/01/D3-Spider-Chart         *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -48,12 +48,15 @@ class RadarVis {
             .append("g")
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
+        // Add a scale
         vis.radialScale = d3.scaleLinear()
             .domain([0,100])
             .range([0, vis.maxRadiusWithMargin]);
 
+        // Space ticks out (so they add up to 100%)
         vis.ticks = [20,40,60,80,100];
 
+        // Initialize tooltip
         vis.tooltip = d3.select("body").append('div')
             .attr('class', "radar_tooltip")
             .attr('id', 'radarTooltip');
@@ -102,7 +105,8 @@ class RadarVis {
                 return row;
             }
             return null;
-        }).map((row) => { // Create new objects with just the data we need
+        }).map((row) => {
+            // Create new objects with just the data we need
             const {
                 country,
                 coal_co2,
@@ -114,6 +118,7 @@ class RadarVis {
                 co2
             } = row;
 
+            // Doing some calculating of percentage values
             const totalFromSelectedFieldsCO2 = (coal_co2 + oil_co2 + gas_co2 + cement_co2 + flaring_co2);
             const leftoverCO2 = co2 - totalFromSelectedFieldsCO2;
 
@@ -149,6 +154,7 @@ class RadarVis {
     angleToCoordinate(angle, value){
         let vis = this;
 
+        // Calculate the appropriate (general) coordinates for this chunk of the circle
         let x = Math.cos(angle) * vis.radialScale(value);
         let y = Math.sin(angle) * vis.radialScale(value);
         return {"x": vis.maxRadius + x, "y": vis.maxRadius - y};
@@ -157,6 +163,7 @@ class RadarVis {
     getPathCoordinates(dataPoint){
         let vis = this;
 
+        // Calculate the coordinates for each point on the path for this chunk
         let coordinates = [];
         for (let i = 0; i < vis.features.length; i++){
             let ft_name = vis.features[i];
@@ -167,6 +174,7 @@ class RadarVis {
     }
 
     fieldToIconPath(field) {
+        // Return the correct icon based on param
         switch(field){
             case "percent_oil_co2":
                 return "static/icons/oil.png";
@@ -180,6 +188,8 @@ class RadarVis {
                 return "static/icons/cement.png";
             case "percent_other_co2":
                 return "static/icons/other-energy.png";
+            default:
+                throw new Error("Invalid field passed into radarVis.fieldToIconPath");
         }
     }
 
@@ -264,7 +274,7 @@ class RadarVis {
                 let angle = (Math.PI / 2) + (2 * Math.PI * i / vis.features.length);
                 let label_coordinate = vis.angleToCoordinate(angle, 100.5);
 
-                // Slight adjustments to get the labels exactly where I want em
+                // Slight adjustments to get the icon labels exactly where I want 'em
                 if (i === 0) {
                     label_coordinate.x -= 10;
                 } else if (i === 1) {
@@ -283,6 +293,7 @@ class RadarVis {
                 let angle = (Math.PI / 2) + (2 * Math.PI * i / vis.features.length);
                 let label_coordinate = vis.angleToCoordinate(angle, 100.5);
 
+                // Figure out where exactly to place each icon
                 if (i === 0) {
                     return label_coordinate.y - 45;
                 } else if (i === 1) {
@@ -297,6 +308,7 @@ class RadarVis {
                 return label_coordinate.y;
             })
             .on('mouseover', function(event, d){
+                // Show the tooltip with some info about the current icon
                 vis.tooltip
                     .style("opacity", 1)
                     .style("left", event.pageX + 20 + "px")
@@ -310,6 +322,7 @@ class RadarVis {
                         </div>`);
             })
             .on('mouseout', function(event){
+                // Hide the tooltip
                 vis.tooltip
                     .style("opacity", 0)
                     .style("left", 0)
@@ -349,11 +362,12 @@ class RadarVis {
             .attr("stroke-opacity", 1)
             .attr("opacity", 0.5)
             .on('mouseover', function(event, d){
-                console.log("blobbity mouseover", event, d);
+                // Add a slight hover effect to the selected blob
                 d3.select(this)
                     .attr('stroke-width', '2px')
                     .attr("stroke", 'red');
 
+                // Show tooltip
                 vis.tooltip
                     .style("opacity", 1)
                     .style("left", event.pageX + 20 + "px")
@@ -389,7 +403,7 @@ class RadarVis {
                     );
             })
             .on('mouseout', function(event, d){
-                console.log()
+                // Hide tooltip
                 d3.select(this)
                     .attr('stroke-width', '1px')
                     .attr('stroke', 'black');
@@ -405,6 +419,7 @@ class RadarVis {
     }
 
     updateRadarTitle() {
+        // Display slightly different titles depending on selected Country
         if (selectedCountry == "United States") {
             document.getElementById('radarTitle').innerHTML =
                 `<div>Production CO2 emissions breakdown for 
