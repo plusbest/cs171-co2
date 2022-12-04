@@ -23,7 +23,6 @@ let selectedCountry = "United States";
 // Keep track of mappings for easier updating of selectedCountryCode
 const isoCodeToCountryNameMap = { };
 
-
 const excludedCountries = [
     "Asia",
     "Asia (excl. China & India)",
@@ -55,10 +54,8 @@ const promises = [
     d3.csv("data/owid-co2-data.csv"), // bumpchart
     d3.csv("data/owid-co2-data.csv"), // radarchart
 
-    // separate promises to workaround the shallow copy bug
+    // separate promises to work around the shallow copy bug where
     // change of co2 data in 1 viz impacts others with default shallow
-
-    excludedCountries, // to exclude continents from heatmap Viz
 
     d3.json("data/world_2.json"),
     //https://gist.github.com/whatsthebeef/6361969#file-world-json
@@ -90,38 +87,27 @@ function initMainPage(dataArray) {
         }
     });
 
+    // Update DOM with a clean list of countries for select options
+    populateCountrySelectionOptions();
 
+    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], excludedCountries, dataArray[7]);
 
-    myHeatMapVis = new HeatMapVis('heatMapDiv', dataArray[0], dataArray[6], dataArray[8]);
+    myMapVis = new MapVis('mapDiv', dataArray[1], excludedCountries, dataArray[6], dataArray[7]);
 
-    myMapVis = new MapVis('mapDiv', dataArray[1], dataArray[6], dataArray[7], dataArray[8]);
-
-    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[2],selectedCountryCode,selectedYear);
-
-
+    mySankeyVis = new SankeyVis('sankeyDiv', dataArray[2], selectedCountryCode, selectedYear);
     // to init Sankey to show USA data as default
-
-
     mySankeyVis.wrangleData();
-
-
 
     myGaugeVis = new GaugeVis('gaugeVis', dataArray[3]);
     myGaugeVis.wrangleData(); // Initialize Gauge with full checkbox params
 
-
-
     myBumpChart = new BumpChartVis('bumpChartDiv', dataArray[4]);
-
     myRadarVis = new RadarVis('radarDiv', dataArray[5]);
-
-
 }
 
 
 
 function categoryChange() {
-
     selectedCategory =  document.getElementById('categorySelector').value;
     console.log("on category change");
     console.log(selectedCategory);
@@ -133,13 +119,9 @@ function categoryChange() {
     myHeatMapVis.selectedCategory = selectedCategory;
     myHeatMapVis.wrangleData();
 
-
     //update the earth map
     myMapVis.selectedCategory = selectedCategory;
     myMapVis.wrangleData();
-
-
-
 }
 
 // Updates the sankey on slider move.
@@ -230,6 +212,45 @@ function updateStatBlock(){
     }
 }
 
+/**
+ * Populates the "country-dropdown" <select> in the sticky viz controller with options
+ */
+function populateCountrySelectionOptions() {
+    const countryDropdown = document.getElementById('country-dropdown');
+    const isoCodes = Object.keys(isoCodeToCountryNameMap);
+
+    // Populate the array
+    isoCodes.forEach((key) => {
+        const countryName = isoCodeToCountryNameMap[key];
+
+        // Ignore items that are not countries
+        if (excludedCountries.includes(countryName)) return;
+
+        // Add each option to the array
+        countryDropdown.add(new Option(countryName, key));
+    });
+
+    // Change default to current selected country
+    countryDropdown.value = selectedCountryCode;
+}
+
+function onSelectNewCountryFromDropdown(evt, val) {
+    console.log("evt", evt, val);
+
+    selectedCountryCode = val;
+    selectedCountry = isoCodeToCountryNameMap[val];
+
+    // Wrangle Data to update all of the relevant visualizations
+    mySankeyVis.wrangleData();
+    myBumpChart.changeCurrentView(myBumpChart.currentView);
+    myRadarVis.selectedCountryCode = selectedCountryCode;
+    myRadarVis.wrangleData();
+    myMapVis.wrangleData();
+    myHeatMapVis.wrangleData();
+
+    updateStatBlock();
+}
+
 // Reference: https://www.sitepoint.com/delay-sleep-pause-wait/
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -251,7 +272,6 @@ async function playAllYears() {
 
         UpdateVizOnYearChange(i);
         await sleep(4000);
-
 
 
     }

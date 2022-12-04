@@ -10,7 +10,7 @@
 <body>
 
 <!-- WRAPPER -->
-<div class="container-fluid p-0">
+<div class="container-fluid bg-light p-0">
     <div class="row vh-100 w-100 m-0" id="bg-image">
     </div>
     <div class="row vh-100 w-100 m-0" id="intro-row">
@@ -131,16 +131,40 @@
                 </div>
             </div>
         </div>
-
+    </div>
     <div class="row w-100" id="hook2-row">
-        <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
-            <div>
-                In 2019, CO2 was responsible for about
+            <div class="w-100 d-flex justify-content-center align-content-center text-center flex-column">
+                <div>
+                    In 2019, CO2 was responsible for about
+                </div>
+                <div class="big-stat">2/3</div>
+                <div>
+                    of the <span class="stat-highlight text-underline">total heating influence</span> of all human-produced greenhouse gases.
+                </div>
             </div>
-            <div class="big-stat">2/3</div>
-            <div>
-                of the <span class="stat-highlight text-underline">total heating influence</span> of all human-produced greenhouse gases.
-            </div>
+    </div>
+    <div class="row w-100 m-0 bg-white d-flex justify-content-center">
+        <div class="col-auto w-50 d-flex justify-content-center align-content-center text-center flex-column min-vh-100">
+            <div class="big-stat text-secondary">But human-produced greenhouse gases are
+                <strong class="text-dark">not produced equally</strong> by all humans.</div>
+        </div>
+    </div>
+    <div class="row w-100 m-0 p-4 sticky-top bg-dark text-light" id="selection-row">
+        <div class="col-6">
+            <label for="country-dropdown">Pick a country to compare to the USA:</label>
+            <select id="country-dropdown" onchange="onSelectNewCountryFromDropdown(event, value)">
+            </select>
+        </div>
+        <div class="col-6">
+            <form>
+                <label for="play-button">View changes over time: </label>
+                <button type="button" class="btn btn-default btn-sm btn-warning" id="play-button" onclick="playAllYears()">
+                    <span class="glyphicon glyphicon-play"></span> Play
+                </button>
+
+                <label id="yearSliderLabel" for="yearSlider" class="offset-1">Selected Year: <b>2019</b></label>
+                <input type="range" class="form-range justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
+            </form>
         </div>
     </div>
     <div class="row w-100 pt-5" id="heatmap-row">
@@ -164,14 +188,7 @@
 
 
 
-                    <form>
-                        <button type="button" id="play-button" class="btn btn-default btn-sm" onclick="playAllYears()">
-                            <span class="glyphicon glyphicon-play"></span> Play
-                        </button>
 
-                            <label id="yearSliderLabel" for="yearSlider" class="offset-1">Selected Year: <b>2019</b></label>
-                        <input type="range" class="form-range   justify-content-end" style="width: 100%"  min="1990" max="2019" step="1" value="2019" id="yearSlider" onchange="yearSliderChange(this.value)">
-                    </form>
 
 
                 </div>
