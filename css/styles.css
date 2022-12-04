@@ -5,17 +5,6 @@ html {
     scroll-behavior: smooth;
 }
 
-/* TODO: May need to make some of these selectors more specific/unify name conventions, so styles don't interfere across graphs */
-
-/*.section-title {*/
-/*	font-family: 'Roboto', sans-serif;*/
-/*	font-size: 16px;*/
-/*	margin-left: 20px;*/
-/*	margin-top: 20px;*/
-/*	color: #726D74;*/
-/*	font-style: italic;*/
-/*}*/
-
 .content-section {
 	font-family: 'Roboto', sans-serif;
 	height: 100%;
