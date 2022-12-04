@@ -186,17 +186,17 @@ class RadarVis {
         // Return the correct icon based on param
         switch(field){
             case "percent_oil_co2":
-                return "static/icons/oil.png";
+                return "../static/icons/oil.png";
             case "percent_coal_co2":
-                return "static/icons/coal.png";
+                return "../static/icons/coal.png";
             case "percent_gas_co2":
-                return "static/icons/propane.png";
+                return "../static/icons/propane.png";
             case "percent_flaring_co2":
-                return "static/icons/flaring.png";
+                return "../static/icons/flaring.png";
             case "percent_cement_co2":
-                return "static/icons/cement.png";
+                return "../static/icons/cement.png";
             case "percent_other_co2":
-                return "static/icons/other-energy.png";
+                return "../static/icons/other-energy.png";
             default:
                 throw new Error("Invalid field passed into radarVis.fieldToIconPath");
         }
