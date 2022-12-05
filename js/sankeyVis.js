@@ -9,18 +9,18 @@ class SankeyVis {
         this.parentElement = parentElement;
         this.co2Data = co2Data;
         this.displayData = [];
-    	this.parseDate = d3.timeParse("%m/%d/%Y");
+        this.parseDate = d3.timeParse("%m/%d/%Y");
         this.colors = ["#FDAE61",   // consumption
-                        "#3288BD",  // production
-                        "#1B9E77",  // t1
-                        "#D95F02",  // t2
-                        "#7570B3",  // t3
-                        "#66C2A5",  // trade color
-                        "#ABDDA4",
-                        "#E6F598", 
-                        "#FFFFBF",
-                        "#FEE08B",
-                        "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
+            "#3288BD",  // production
+            "#1B9E77",  // t1
+            "#D95F02",  // t2
+            "#7570B3",  // t3
+            "#66C2A5",  // trade
+            "#ABDDA4",
+            "#E6F598",
+            "#FFFFBF",
+            "#FEE08B",
+            "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"];
 
         //set up graph in same style as original example but empty
         this.sankeydata = {"nodes" : [], "links" : []};
@@ -30,14 +30,14 @@ class SankeyVis {
         this.selectedCategory = 'percountry';
 
         this.initVis()
-		}
+    }
 
 
-	initVis() {
-		let vis = this;
+    initVis() {
+        let vis = this;
 
         // set margins
-		//vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
+        //vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
         vis.margin = {top: 10, right: 10, bottom: 10, left: 10};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
@@ -48,7 +48,7 @@ class SankeyVis {
         // format variables
         vis.formatNumber = d3.format(",.0f")
         vis.format = function(d) { return vis.formatNumber(d); }
-      
+
         // append the svg object to the body of the page
         vis.svg = d3.select("#sankeyDiv").append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -69,9 +69,9 @@ class SankeyVis {
 
         vis.wrangleData();
 
-	}
+    }
 
-	wrangleData() {
+    wrangleData() {
         let vis = this
 
         vis.displayData = []
@@ -95,36 +95,22 @@ class SankeyVis {
 
                 var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2 - oil_co2)
                 var consumption_co2 = ((+co2) + (+trade_co2));
-                var production_co2 = ((+consumption_co2) + (+trade_co2));
+                var production_co2 = ((+consumption_co2) - (+trade_co2));
 
                 console.log("JW -- targetDataRow", typeof(+co2))
-
-                // Add trade node if positive
-                console.log("JW --- TRADE", trade_co2, typeof(trade_co2));
-                console.log("JW --- CONSUMPTION", consumption_co2);
-                console.log("JW --- DIFF", consumption_co2 + (+trade_co2));
-                console.log("JW --- PRODUCTION", production_co2, typeof(production_co2));
-
-
-                if (parseInt(trade_co2, 10) > 0) {
+                // first stage pushes
+                vis.displayData.push({
+                    source: "Consumption",
+                    target: "Production",
+                    value: co2,
+                    valueSource: consumption_co2
+                })
                 vis.displayData.push({
                     source: "Consumption",
                     target: "Trade",
                     value: (Math.abs(trade_co2)).toString(),
                     valueSource: consumption_co2
-                    })
-                }
-                // else {
-
-                // }
-
-                // first stage pushes
-                vis.displayData.push({
-                    source: "Consumption",
-                    target: "Production",
-                    value: production_co2,
-                    valueSource: consumption_co2
-                    })
+                })
                 // second stage pushes
                 vis.displayData.push({
                     source: "Production",
@@ -168,7 +154,7 @@ class SankeyVis {
                     target: "\u2000",  // invisible ascii code
                     value: 0,
                     valueSource: trade_co2
-                })    
+                })
             }
         })
 
@@ -187,13 +173,13 @@ class SankeyVis {
             vis.sankeydata.nodes.push({ "name": d.source });
             vis.sankeydata.nodes.push({ "name": d.target });
             vis.sankeydata.links.push({ "source": d.source,
-                                       "target": d.target,
-                                       "value": +d.value,
-                                        "valueSource": +d.valueSource});
+                "target": d.target,
+                "value": +d.value,
+                "valueSource": +d.valueSource});
         });
 
         console.log("JW --- sankeydata links", vis.sankeydata.links)
-        
+
         // return only the distinct / unique nodes
         vis.sankeydata.nodes = Array.from(
             d3.group(vis.sankeydata.nodes, d => d.name),
@@ -219,10 +205,10 @@ class SankeyVis {
 
         vis.updateVis()
 
-	}
+    }
 
-	updateVis() {
-		let vis = this;
+    updateVis() {
+        let vis = this;
 
         // // init sankey graph object
         vis.graph = vis.sankey(vis.sankeydata);
@@ -245,12 +231,12 @@ class SankeyVis {
         // add the link titles
         vis.link.append("title")
             .text(function(d) {
-                return d.source.name + " → " + 
-                d.target.name + "\n" + vis.format(d.value);
+                return d.source.name + " → " +
+                    d.target.name + "\n" + vis.format(d.value);
             });
 
         console.log("JW --- graphNodes", vis.graph.nodes)
-        
+
         // add in the nodes
         vis.node = vis.svg.selectAll(".node")
             .data(vis.graph.nodes)
@@ -276,10 +262,10 @@ class SankeyVis {
             .attr("width", vis.sankey.nodeWidth())
             .style("fill", function(d) {
                 return d.color = vis.color(d.name.replace(/ .*/, "")); })
-            .style("stroke", function(d) { 
+            .style("stroke", function(d) {
                 return d3.rgb(d.color).darker(2); })
             .append("title")
-            .text(function(d) { 
+            .text(function(d) {
                 return d.name + "\n" + vis.format(d.value); })
         // NODES PROPERLY UPDATE
 
@@ -307,7 +293,7 @@ class SankeyVis {
                 if ((d.value > 0) && (d.targetLinks[0])) {
                     var valSource = +d.targetLinks[0].valueSource;
                     var valEle = +d.value;
-                    return `${d.name} (${Math.floor((valEle/valSource)*100)})% : ${Math.floor(d.value)}`; 
+                    return `${d.name} (${Math.floor((valEle/valSource)*100)})% : ${Math.floor(d.value)}`;
                 }
                 else if (d.value > 0) {
                     return `${d.name} : ${Math.floor(d.value)}`
@@ -318,6 +304,6 @@ class SankeyVis {
             .attr("text-anchor", "start");
         // LABELS PROPERLY UPDATE
 
-	}
+    }
 
 }
