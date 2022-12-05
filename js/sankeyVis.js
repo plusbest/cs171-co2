@@ -95,22 +95,36 @@ class SankeyVis {
 
                 var remainder = (co2 - coal_co2 - cement_co2 - flaring_co2 - gas_co2 - oil_co2)
                 var consumption_co2 = ((+co2) + (+trade_co2));
-                var production_co2 = ((+consumption_co2) - (+trade_co2));
+                var production_co2 = ((+consumption_co2) + (+trade_co2));
 
                 console.log("JW -- targetDataRow", typeof(+co2))
-                // first stage pushes
-                vis.displayData.push({
-                    source: "Consumption",
-                    target: "Production",
-                    value: co2,
-                    valueSource: consumption_co2
-                    })
+
+                // Add trade node if positive
+                console.log("JW --- TRADE", trade_co2, typeof(trade_co2));
+                console.log("JW --- CONSUMPTION", consumption_co2);
+                console.log("JW --- DIFF", consumption_co2 + (+trade_co2));
+                console.log("JW --- PRODUCTION", production_co2, typeof(production_co2));
+
+
+                if (parseInt(trade_co2, 10) > 0) {
                 vis.displayData.push({
                     source: "Consumption",
                     target: "Trade",
                     value: (Math.abs(trade_co2)).toString(),
                     valueSource: consumption_co2
-                })
+                    })
+                }
+                // else {
+
+                // }
+
+                // first stage pushes
+                vis.displayData.push({
+                    source: "Consumption",
+                    target: "Production",
+                    value: production_co2,
+                    valueSource: consumption_co2
+                    })
                 // second stage pushes
                 vis.displayData.push({
                     source: "Production",
