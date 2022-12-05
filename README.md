@@ -25,6 +25,10 @@ CO2 emissions have been tied to global warming by leading scientific studies. Th
 * [ISO Codes](https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv)
 * [World map json data](https://gist.github.com/whatsthebeef/6361969#file-world-json)
 
+### Data dictionary
+* [Data dictionary](https://docs.google.com/spreadsheets/d/1RVqDy_oztXpEjn3i2QkY2vCH4V4stzCO4rwoIr4c40M/edit#gid=752987763)
+
+
 ### Website overview
 * **Introduction and the Hook:** The website starts off with carefully selected set of images that show the impact of global warming and then goes on to show statistics on how CO2 emissions contribute torwards global warming.
 * **Rising Insight:** The globe (map) visualization and heatmap (treemap) are paired (in synch) visualizations that show how different countries around the world contribute differently to CO2 Emissions. The heatmap ranks the countries in descending order of emission rankings while the globe viz gives a geographic perspective for those countries. Play button allows the viewer to see the changes over the years.
@@ -55,5 +59,5 @@ Clicking on a country in the heatmap or globe (map) viz can show drill down deta
 2. View using 
 [Public Website Link](https://plusbest.github.io/cs171-co2/)
 
-Also, view our [video story board]()
+Also, view our [video story board](https://www.youtube.com/watch?v=a_MKKVnC59A)
 
