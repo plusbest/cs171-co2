@@ -145,7 +145,6 @@ html {
 	position: absolute;
 	text-align: center;
 	font: 12px sans-serif;
-	/*  pointer-events: none;	This line needs to be removed */
 }
 .heatmap_tooltip h3,h4,
 .mapVis_tooltip h3,h4,
