@@ -37,8 +37,8 @@ class LineChartVis {
 
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
-        vis.colors = ["#1F78B4", "#A6CEE3", "#B2DF8A", "#ABDDA4", "#E6F598",
-            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#A6CEE3", "#9E0142"];
+        vis.colors = ["#1F78B4", "#A6CEE3", "#B2DF8A", "#A4ADDD", "#E6F598",
+            "#ffbfff", "#660000", "#6661fd", "#F46D43", "#6661FD", "#9E0142"];
         vis.z = d3.scaleOrdinal(vis.colors); // color scale;
 
         vis.yAxis = d3.axisLeft()
