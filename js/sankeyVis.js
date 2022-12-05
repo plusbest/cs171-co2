@@ -15,7 +15,7 @@ class SankeyVis {
                         "#1B9E77",  // t1
                         "#D95F02",  // t2
                         "#7570B3",  // t3
-                        "#66C2A5",  // trade
+                        "#66C2A5",  // trade color
                         "#ABDDA4",
                         "#E6F598", 
                         "#FFFFBF",
